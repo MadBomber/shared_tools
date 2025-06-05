@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "shared_tools/ruby_llm/tool"
+require "ruby_llm"
 
 module SharedTools
   module RubyLLM
-    class EditFile < Tool
+    class EditFile < RubyLLM::Tool
       
       description <<~DESCRIPTION
         Make edits to a text file.

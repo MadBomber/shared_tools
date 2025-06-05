@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "shared_tools/ruby_llm/tool"
+require "ruby_llm"
 
 module SharedTools
   module RubyLLM
-    class RunShellCommand < Tool
+    class RunShellCommand < RubyLLM::Tool
       
       description "Execute a shell command"
       param :command, desc: "The command to execute"

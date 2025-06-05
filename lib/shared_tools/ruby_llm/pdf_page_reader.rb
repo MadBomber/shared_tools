@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 # Credit: https://max.engineer/giant-pdf-llm
 
-require "shared_tools/ruby_llm/tool"
+require "ruby_llm"
 require "pdf-reader"
 
 module SharedTools
   module RubyLLM
-    class PdfPageReader < Tool
+    class PdfPageReader < RubyLLM::Tool
       
       description "Read the text of any set of pages from a PDF document."
       param :page_numbers,

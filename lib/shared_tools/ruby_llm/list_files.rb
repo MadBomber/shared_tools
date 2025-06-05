@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "shared_tools/ruby_llm/tool"
+require "ruby_llm"
 
 module SharedTools
   module RubyLLM
-    class ListFiles < Tool
+    class ListFiles < RubyLLM::Tool
       
       description "List files and directories at a given path. If no path is provided, lists files in the current directory."
       param :path, desc: "Optional relative path to list files from. Defaults to current directory if not provided."
