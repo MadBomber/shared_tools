@@ -11,7 +11,23 @@ module SharedTools
 
       def execute(path:)
         logger.info("Reading file: #{path}")
-        content = File.read(path)
+
+        # Handle both relative and absolute paths consistently
+        absolute_path = File.absolute_path(path)
+
+        if File.directory?(absolute_path)
+          error_msg = "Path is a directory, not a file: #{path}"
+          logger.error(error_msg)
+          return { error: error_msg }
+        end
+
+        unless File.exist?(absolute_path)
+          error_msg = "File does not exist: #{path}"
+          logger.error(error_msg)
+          return { error: error_msg }
+        end
+
+        content = File.read(absolute_path)
         logger.debug("Successfully read #{content.bytesize} bytes from #{path}")
         content
       rescue => e

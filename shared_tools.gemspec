@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "A collection of shared tools and utilities for Ruby applications"
   spec.description   = "SharedTools provides common functionality including configurable logging and LLM tools"
-  spec.homepage      = "https://github.com/yourusername/shared_tools"
+  spec.homepage      = "https://github.com/madbomber/shared_tools"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 2.7.0"
 

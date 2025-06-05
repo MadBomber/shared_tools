@@ -11,12 +11,34 @@ module SharedTools
 
       def execute(path: Dir.pwd)
         logger.info("Listing files in path: #{path}")
-        
-        files = Dir.glob(File.join(path, "*"))
-               .map { |filename| File.directory?(filename) ? "#{filename}/" : filename }
-        
-        logger.debug("Found #{files.size} files/directories")
-        files
+
+        # Convert to absolute path for consistency
+        absolute_path = File.absolute_path(path)
+
+        # Verify the path exists and is a directory
+        unless File.directory?(absolute_path)
+          error_msg = "Path does not exist or is not a directory: #{path}"
+          logger.error(error_msg)
+          return { error: error_msg }
+        end
+
+        # Get all files including hidden ones
+        visible_files = Dir.glob(File.join(absolute_path, "*"))
+        hidden_files = Dir.glob(File.join(absolute_path, ".*"))
+                          .reject { |f| f.end_with?("/.") || f.end_with?("/..") }
+
+        # Combine and format results
+        all_files = (visible_files + hidden_files).sort
+        formatted_files = all_files.map do |filename|
+          if File.directory?(filename)
+            "#{filename}/"
+          else
+            filename
+          end
+        end
+
+        logger.debug("Found #{formatted_files.size} files/directories (including #{hidden_files.size} hidden)")
+        formatted_files
       rescue => e
         logger.error("Failed to list files in '#{path}': #{e.message}")
         { error: e.message }

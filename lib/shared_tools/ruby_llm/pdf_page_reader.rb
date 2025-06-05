@@ -21,12 +21,25 @@ module SharedTools
           @doc ||= PDF::Reader.new(doc_path)
           logger.debug("PDF loaded successfully, total pages: #{@doc.pages.size}")
           
-          page_numbers = page_numbers.split(",").map { _1.strip.to_i }
+          page_numbers = page_numbers.split(",").map { |num| num.strip.to_i }
           logger.debug("Processing pages: #{page_numbers.join(', ')}")
-          
-          pages = page_numbers.map { |num| [num, @doc.pages[num.to_i - 1]] }
-          
+
+          # Validate page numbers
+          total_pages = @doc.pages.size
+          invalid_pages = page_numbers.select { |num| num < 1 || num > total_pages }
+
+          if invalid_pages.any?
+            logger.warn("Invalid page numbers requested: #{invalid_pages.join(', ')}. Document has #{total_pages} pages.")
+          end
+
+          # Filter valid pages and map to content
+          valid_pages = page_numbers.select { |num| num >= 1 && num <= total_pages }
+          pages = valid_pages.map { |num| [num, @doc.pages[num.to_i - 1]] }
+
           result = {
+            total_pages: total_pages,
+            requested_pages: page_numbers,
+            invalid_pages: invalid_pages,
             pages: pages.map { |num, p|
               logger.debug("Extracted text from page #{num} (#{p&.text&.bytesize || 0} bytes)")
               { page: num, text: p&.text }
