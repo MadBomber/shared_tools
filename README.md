@@ -1,16 +1,37 @@
-# tools
-A collection of local tool definitions for various Ruby-based AI libraries for use in generative AI applications.
+# shared_tools
+A Ruby gem providing a collection of shared tools and utilities for Ruby applications, including configurable logging and AI-related tools.
 
 ## Libraries Supported
 
 - ruby_llm: multi-provider
 
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'shared_tools'
+```
+
+And then execute:
+
+```bash
+bundle install
+```
+
+Or install it yourself as:
+
+```bash
+gem install shared_tools
+```
+
 ## Usage
 
 ```ruby
 require 'shared_tools'
-# Then require the library used by your application
-required 'shared_tools/ruby_llm'
+
+# To use specific components
+require 'shared_tools/ruby_llm'
 ```
 
 ## Shared Logging
