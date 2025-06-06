@@ -79,9 +79,9 @@ module SharedTools
   end
 
 
-  module LoggingSupport
-    def self.included(base)
-      base.include(SharedTools)
-    end
-  end
+  # module LoggingSupport
+  #   def self.included(base)
+  #     base.include(SharedTools)
+  #   end
+  # end
 end

@@ -118,5 +118,29 @@ RSpec.describe SharedTools::EditFile do
         expect(result).to have_key(:error)
       end
     end
+
+    context "with unexpected exceptions" do
+      it "handles exceptions during file operations gracefully" do
+        temp_file = Tempfile.new(["test", ".txt"])
+        temp_file.write("test content")
+        temp_file.flush
+
+        # Mock File.write to raise an exception
+        allow(File).to receive(:write).and_raise(StandardError.new("Disk full"))
+
+        result = tool.execute(
+          path: temp_file.path,
+          old_str: "test",
+          new_str: "replacement"
+        )
+
+        expect(result).to be_a(Hash)
+        expect(result).to have_key(:error)
+        expect(result[:error]).to eq("Disk full")
+
+        temp_file.close
+        temp_file.unlink
+      end
+    end
   end
 end

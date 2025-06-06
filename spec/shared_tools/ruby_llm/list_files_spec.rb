@@ -112,5 +112,22 @@ RSpec.describe SharedTools::ListFiles do
         end
       end
     end
+
+    context "with unexpected exceptions" do
+      it "handles exceptions during directory operations gracefully" do
+        temp_dir = Dir.mktmpdir
+
+        # Mock Dir.glob to raise an exception
+        allow(Dir).to receive(:glob).and_raise(StandardError.new("I/O error"))
+
+        result = tool.execute(path: temp_dir)
+
+        expect(result).to be_a(Hash)
+        expect(result).to have_key(:error)
+        expect(result[:error]).to eq("I/O error")
+
+        FileUtils.remove_entry(temp_dir)
+      end
+    end
   end
 end

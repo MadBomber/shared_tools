@@ -1,12 +1,12 @@
 <!-- ~/COMMITS.md  gem install aigcm -->
 
 The JIRA ticket reference should be the first thing mentioned in the commit message.
-It is useually the basename of the repository root. The repository root is
+It is usually the basename of the repository root directory. The repository root is
 found in the system environment variable $RR.
 
 A Git commit message includes:
 
-1. **Subject line**: starts with the JIRA ticket and is 50 characters or less, imperative mood.
+1. **Subject line**: starts with the JIRA ticket (if known) and is 50 characters or less, imperative mood.
   - Example: `Fix bug in user login`
 
 2. **Body** (optional): Explain the "why" and "how", wrapped at 72 characters.
@@ -18,6 +18,6 @@ A Git commit message includes:
 
   The body should also include bullet points for each change made.
 
-3. **Footer** (optional): Reference issues or breaking changes.
+3. **Footer** (optional): Reference issues or breaking changes if known.
   <example> Closes #123 </example>
   <example> BREAKING CHANGE: API changed </example>

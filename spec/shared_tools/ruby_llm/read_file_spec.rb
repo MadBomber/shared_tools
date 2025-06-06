@@ -57,5 +57,25 @@ RSpec.describe SharedTools::ReadFile do
         expect(result[:error]).to include("Path is a directory")
       end
     end
+
+    context "with unexpected exceptions" do
+      it "handles exceptions during file read operations gracefully" do
+        temp_file = Tempfile.new(["test", ".txt"])
+        temp_file.write("test content")
+        temp_file.flush
+
+        # Mock File.read to raise an exception
+        allow(File).to receive(:read).and_raise(StandardError.new("File corrupted"))
+
+        result = tool.execute(path: temp_file.path)
+
+        expect(result).to be_a(Hash)
+        expect(result).to have_key(:error)
+        expect(result[:error]).to eq("File corrupted")
+
+        temp_file.close
+        temp_file.unlink
+      end
+    end
   end
 end
