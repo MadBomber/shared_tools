@@ -30,8 +30,11 @@ gem install shared_tools
 ```ruby
 require 'shared_tools'
 
-# To use specific components
+# To load all tools for a specific library
 require 'shared_tools/ruby_llm'
+
+# To load a specific tool
+require 'shared_tools/ruby_llm/edit_file'
 ```
 
 ## Shared Logging
@@ -84,14 +87,14 @@ To use the SharedTools logger with Rails and make it use the same logger instanc
 Rails.application.config.after_initialize do
   # Make SharedTools use the Rails logger
   SharedTools.logger = Rails.logger
-  
+
   # Alternatively, configure the Rails logger to use SharedTools settings
   # SharedTools.configure_logger do |config|
   #   config.level = Rails.logger.level
   #   config.log_device = Rails.logger.instance_variable_get(:@logdev).dev
   # end
   # Rails.logger = SharedTools.logger
-  
+
   Rails.logger.info "SharedTools integrated with Rails logger"
 end
 ```
