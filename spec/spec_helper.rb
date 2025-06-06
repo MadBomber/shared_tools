@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "ruby_llm"
 require "shared_tools"
 
 RSpec.configure do |config|

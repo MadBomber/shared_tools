@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
   # Dependencies
   spec.add_dependency "logger", "~> 1.0"
   spec.add_dependency "pdf-reader", "~> 2.0"
+  spec.add_dependency "ruby_llm"
   
   # Development dependencies
   spec.add_development_dependency "bundler", "~> 2.0"

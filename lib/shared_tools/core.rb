@@ -6,26 +6,6 @@ require "singleton"
 module SharedTools
   DEFAULT_LOG_LEVEL = Logger::INFO
 
-  def self.included(base)
-    base.extend(ClassMethods)
-
-    if base.is_a?(Class)
-      base.class_eval do
-        include InstanceMethods
-      end
-    else
-      base.module_eval do
-        def self.included(sub_base)
-          sub_base.include(SharedTools)
-        end
-      end
-    end
-  end
-
-  def self.extended(object)
-    object.extend(ClassMethods)
-  end
-
   module InstanceMethods
     # @return [Logger] The shared logger instance
     def logger

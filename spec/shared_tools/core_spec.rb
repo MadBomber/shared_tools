@@ -8,6 +8,8 @@ RSpec.describe SharedTools do
       # Create a test class in the SharedTools namespace
       module SharedTools
         class TestClass
+          include SharedTools
+          
           def log_something
             logger.info("Test log message")
           end
@@ -17,6 +19,25 @@ RSpec.describe SharedTools do
       # The test class should have logger method automatically
       expect(SharedTools::TestClass.new).to respond_to(:logger)
       expect(SharedTools::TestClass).to respond_to(:logger)
+    end
+
+    it "automatically injects logger into RubyLLM::Tool subclasses" do
+      # Create a test RubyLLM::Tool subclass in the SharedTools namespace
+      module SharedTools
+        class TestTool < RubyLLM::Tool
+          def test_logger_access
+            logger.info("Test from RubyLLM tool")
+          end
+        end
+      end
+
+      # The tool class should have logger methods automatically injected
+      expect(SharedTools::TestTool.new).to respond_to(:logger)
+      expect(SharedTools::TestTool).to respond_to(:logger)
+      
+      # The logger should be the same instance as SharedTools.logger
+      expect(SharedTools::TestTool.new.logger).to eq(SharedTools.logger)
+      expect(SharedTools::TestTool.logger).to eq(SharedTools.logger)
     end
 
     it "allows configuration of the logger" do

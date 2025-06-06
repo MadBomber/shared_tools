@@ -4,8 +4,20 @@ require "spec_helper"
 require "shared_tools/ruby_llm/read_file"
 require "tempfile"
 
-RSpec.describe SharedTools::RubyLLM::ReadFile do
+RSpec.describe SharedTools::ReadFile do
   let(:tool) { described_class.new }
+
+  describe "logger integration" do
+    it "has logger methods automatically injected" do
+      expect(tool).to respond_to(:logger)
+      expect(described_class).to respond_to(:logger)
+    end
+
+    it "uses SharedTools logger instance" do
+      expect(tool.logger).to eq(SharedTools.logger)
+      expect(described_class.logger).to eq(SharedTools.logger)
+    end
+  end
 
   describe "#execute" do
     context "with an existing file" do
