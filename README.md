@@ -1,6 +1,6 @@
 # <div align="center">Shared Tools</div>
 <div align="center">
-  ![](images/shared_tools.png)
+  ![Shared Tools](images/shared_tools.png)
 </div>
 
 A Ruby gem providing a collection of shared tools and utilities for Ruby applications, including configurable logging and AI-related tools.
