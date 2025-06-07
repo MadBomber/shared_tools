@@ -1,6 +1,6 @@
 # <div align="center">Shared Tools</div>
 <div align="center">
-  ![Shared Tools](images/shared_tools.png)
+  ![Shared Tools](https://github.com/madbomber/shared_tools/blob/main/images/shared_tools.png?raw=true)
 </div>
 
 A Ruby gem providing a collection of shared tools and utilities for Ruby applications, including configurable logging and AI-related tools.
