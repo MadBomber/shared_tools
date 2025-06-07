@@ -3,8 +3,6 @@ PATH
   specs:
     shared_tools (0.1.0)
       logger (~> 1.0)
-      pdf-reader (~> 2.0)
-      ruby_llm
 
 GEM
   remote: https://rubygems.org/
@@ -80,10 +78,12 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 2.0)
+  pdf-reader (~> 2.0)
   rake (~> 13.0)
   rspec (~> 3.0)
+  ruby_llm
   shared_tools!
-  simplecov (~> 0.22)
+  simplecov
 
 BUNDLED WITH
    2.6.9

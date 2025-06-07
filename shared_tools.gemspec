@@ -31,10 +31,14 @@ Gem::Specification.new do |spec|
 
   # Dependencies
   spec.add_dependency "logger", "~> 1.0"
-  spec.add_dependency "pdf-reader", "~> 2.0"
-  spec.add_dependency "ruby_llm"
-  
+
   # Development dependencies
+
+  # For RubyLLM tools
+  spec.add_development_dependency "pdf-reader", "~> 2.0"
+  spec.add_development_dependency "ruby_llm"
+
+  # For SharedTools development
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
