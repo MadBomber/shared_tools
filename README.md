@@ -1,6 +1,8 @@
 # <div align="center">Shared Tools</div>
 <div align="center">
-  ![Image of two robots sharing tools](/MadBomber/shared_tools/images/shared_tools.png?raw=true "Friends Share Tools")
+  <!-- img src="/docs/assets/images/logotype.svg" alt="RubyLLM" height="120" width="250" -->
+
+  ![Image of two robots sharing tools](/images/shared_tools.png?raw=true "Friends Share Tools")
 </div>
 
 A Ruby gem providing a collection of shared tools and utilities for Ruby applications, including configurable logging and AI-related tools.
