@@ -10,7 +10,7 @@ module SharedTools
     param :path, desc: "Optional relative path to list files from. Defaults to current directory if not provided."
 
     def execute(path: Dir.pwd)
-      logger.info("Listing files in path: #{path}")
+      RubyLLM.logger.info("Listing files in path: #{path}")
 
       # Convert to absolute path for consistency
       absolute_path = File.absolute_path(path)
@@ -18,7 +18,7 @@ module SharedTools
       # Verify the path exists and is a directory
       unless File.directory?(absolute_path)
         error_msg = "Path does not exist or is not a directory: #{path}"
-        logger.error(error_msg)
+        RubyLLM.logger.error(error_msg)
         return { error: error_msg }
       end
 
@@ -37,10 +37,10 @@ module SharedTools
         end
       end
 
-      logger.debug("Found #{formatted_files.size} files/directories (including #{hidden_files.size} hidden)")
+      RubyLLM.logger.debug("Found #{formatted_files.size} files/directories (including #{hidden_files.size} hidden)")
       formatted_files
     rescue => e
-      logger.error("Failed to list files in '#{path}': #{e.message}")
+      RubyLLM.logger.error("Failed to list files in '#{path}': #{e.message}")
       { error: e.message }
     end
   end

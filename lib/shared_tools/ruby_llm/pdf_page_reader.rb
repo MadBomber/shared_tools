@@ -16,21 +16,21 @@ module SharedTools
       desc: "Path to the PDF document."
 
     def execute(page_numbers:, doc_path:)
-      logger.info("Reading PDF: #{doc_path}, pages: #{page_numbers}")
+      RubyLLM.logger.info("Reading PDF: #{doc_path}, pages: #{page_numbers}")
 
       begin
         @doc ||= PDF::Reader.new(doc_path)
-        logger.debug("PDF loaded successfully, total pages: #{@doc.pages.size}")
+        RubyLLM.logger.debug("PDF loaded successfully, total pages: #{@doc.pages.size}")
 
         page_numbers = page_numbers.split(",").map { |num| num.strip.to_i }
-        logger.debug("Processing pages: #{page_numbers.join(", ")}")
+        RubyLLM.logger.debug("Processing pages: #{page_numbers.join(", ")}")
 
         # Validate page numbers
         total_pages = @doc.pages.size
         invalid_pages = page_numbers.select { |num| num < 1 || num > total_pages }
 
         if invalid_pages.any?
-          logger.warn("Invalid page numbers requested: #{invalid_pages.join(", ")}. Document has #{total_pages} pages.")
+          RubyLLM.logger.warn("Invalid page numbers requested: #{invalid_pages.join(", ")}. Document has #{total_pages} pages.")
         end
 
         # Filter valid pages and map to content
@@ -42,15 +42,15 @@ module SharedTools
           requested_pages: page_numbers,
           invalid_pages: invalid_pages,
           pages: pages.map { |num, p|
-            logger.debug("Extracted text from page #{num} (#{p&.text&.bytesize || 0} bytes)")
+            RubyLLM.logger.debug("Extracted text from page #{num} (#{p&.text&.bytesize || 0} bytes)")
             { page: num, text: p&.text }
           },
         }
 
-        logger.info("Successfully extracted #{pages.size} pages from PDF")
+        RubyLLM.logger.info("Successfully extracted #{pages.size} pages from PDF")
         result
       rescue => e
-        logger.error("Failed to read PDF '#{doc_path}': #{e.message}")
+        RubyLLM.logger.error("Failed to read PDF '#{doc_path}': #{e.message}")
         { error: e.message }
       end
     end
