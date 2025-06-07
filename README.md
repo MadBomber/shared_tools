@@ -1,7 +1,5 @@
 # <div align="center">Shared Tools</div>
 <div align="center">
-  <!-- img src="/docs/assets/images/logotype.svg" alt="RubyLLM" height="120" width="250" -->
-
   ![Image of two robots sharing tools](/images/shared_tools.png?raw=true "Friends Share Tools")
 </div>
 
