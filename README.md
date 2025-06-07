@@ -28,12 +28,10 @@ gem install shared_tools
 ## Usage
 
 ```ruby
-require 'shared_tools'
-
 # To load all tools for a specific library
 require 'shared_tools/ruby_llm'
 
-# To load a specific tool
+# OR you can load a specific tool
 require 'shared_tools/ruby_llm/edit_file'
 ```
 

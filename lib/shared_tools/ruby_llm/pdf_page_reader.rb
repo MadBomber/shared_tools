@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 # Credit: https://max.engineer/giant-pdf-llm
 
-require "ruby_llm"
 require "pdf-reader"
+
+require("ruby_llm")     unless defined?(RubyLLM)
+require("shared_tools") unless defined?(SharedTools)
 
 module SharedTools
   class PdfPageReader < RubyLLM::Tool

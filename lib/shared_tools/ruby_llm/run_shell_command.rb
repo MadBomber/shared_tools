@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "ruby_llm"
+require("ruby_llm")     unless defined?(RubyLLM)
+require("shared_tools") unless defined?(SharedTools)
 
 module SharedTools
   class RunShellCommand < RubyLLM::Tool
