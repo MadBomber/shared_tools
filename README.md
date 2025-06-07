@@ -1,9 +1,16 @@
-# shared_tools
+# <div align="center">Shared Tools</div>
+<div align="center">
+  ![](images/shared_tools.png)
+</div>
+
 A Ruby gem providing a collection of shared tools and utilities for Ruby applications, including configurable logging and AI-related tools.
+
+> Is this an anti-Model Context Protocol (MCP) push back? Not really. The MCP is getting better. There is, however, still a need to support the local tool implementations in a way that is consistent with the Ruby library being used - especially when it comes to integrating with libraries that do not support the MCP. Using locally defined tools consistent with the primary library may save a few cycles of latency by eliminating the MCP layer in the architecture.
 
 ## Libraries Supported
 
-- ruby_llm: multi-provider
+- ruby_llm: multi-provider `gem install ruby_llm`
+- more to come ...
 
 ## Installation
 
@@ -58,7 +65,7 @@ module SharedTools
       logger.info "Action completed"
     end
   end
- end
+end
 ```
 
 ### Configuration
@@ -73,7 +80,7 @@ SharedTools.configure_logger do |config|
   config.formatter = proc do |severity, time, progname, msg|
     "[#{time.strftime('%Y-%m-%d %H:%M:%S')}] #{severity}: #{msg}\n"
   end
- end
+end
 ```
 
 ### Using with Rails
@@ -110,3 +117,9 @@ The logger supports the standard Ruby Logger levels:
 ### Thread Safety
 
 The shared logger is thread-safe and can be used across multiple threads in your application.
+
+---
+
+### Special Thanks
+
+A special shout-out to Kevin's [omniai-tools](https://github.com/your-github-url/omniai-tools) gem, which is a curated collection of tools for use with his OmniAI gem.
