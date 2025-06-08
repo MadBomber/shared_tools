@@ -7,9 +7,17 @@ A Ruby gem providing a collection of shared tools and utilities for Ruby applica
 
 > Is this an anti-Model Context Protocol (MCP) push back? Not really. The MCP is getting better. There is, however, still a need to support the local tool implementations in a way that is consistent with the Ruby library being used - especially when it comes to integrating with libraries that do not support the MCP. Using locally defined tools consistent with the primary library may save a few cycles of latency by eliminating the MCP layer in the architecture.
 
+> Warning: **NOT NOT NOT NOT READY FOR PRODUCTION**
+>
+> While this gem is in development your best approach if you see a tool within this gem that you want to use is to just copy it into your project without the `SharedTools` namespace and modify it to your needs. Think of this repository like your friendly neighborhood library where you can find and check out interesting books and keep them for as long as you want.
+>
+> If you find an issue with any of these tools please help us with a fix. If you find a tool tailored to one LLM API wrapper gem but not the one you are using, make a copy refactor as needed to work with your gem and feed it back here.
+
 ## Libraries Supported
 
 - ruby_llm: multi-provider `gem install ruby_llm`
+- llm: multi-provider `gem install llm.rb`
+- omniai: multi-provider `gem install omniai-tools` (Not part of the SharedTools namespace)
 - more to come ...
 
 ## Installation

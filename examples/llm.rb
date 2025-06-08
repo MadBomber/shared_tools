@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 # examples/llm.rb
-
-require "debug_me"
-include DebugMe
+# This library is installed via `gem install llm.rb`
+# It is required as "llm"
 
 require "shared_tools/llm/run_shell_command"
 

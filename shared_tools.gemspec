@@ -8,11 +8,16 @@ Gem::Specification.new do |spec|
   spec.authors       = ["MadBomber Team"]
   spec.email         = ["example@example.com"]
 
-  spec.summary       = "A collection of shared tools and utilities for Ruby applications"
-  spec.description   = "SharedTools provides common functionality including configurable logging and LLM tools"
+  spec.summary       = "Shared utilities and AI tools for Ruby applications with configurable logging"
+  spec.description   = <<~DESC
+    SharedTools provides a collection of reusable common tools (aka callback functions)
+    for Ruby applications using various LLM-focused libraries. This consistent tool set
+    across different LLM libraries is perfect for developers building AI applications who
+    need reliable, well-tested LLM tools.
+  DESC
   spec.homepage      = "https://github.com/madbomber/shared_tools"
   spec.license       = "MIT"
-  spec.required_ruby_version = ">= 2.7.0"
+  spec.required_ruby_version = ">= 3.3.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
@@ -35,11 +40,13 @@ Gem::Specification.new do |spec|
   # Development dependencies
 
   # For RubyLLM tools
+  spec.add_development_dependency "llm.rb"
   spec.add_development_dependency "pdf-reader", "~> 2.0"
   spec.add_development_dependency "ruby_llm"
 
   # For SharedTools development
   spec.add_development_dependency "bundler", "~> 2.0"
+  spec.add_development_dependency "debug_me"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
 end
