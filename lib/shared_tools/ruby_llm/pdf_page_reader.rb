@@ -7,7 +7,7 @@ require("ruby_llm")     unless defined?(RubyLLM)
 require("shared_tools") unless defined?(SharedTools)
 
 module SharedTools
-  class PdfPageReader < RubyLLM::Tool
+  class PdfPageReader < ::RubyLLM::Tool
 
     description "Read the text of any set of pages from a PDF document."
     param :page_numbers,

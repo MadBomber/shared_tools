@@ -4,7 +4,7 @@ require("ruby_llm")     unless defined?(RubyLLM)
 require("shared_tools") unless defined?(SharedTools)
 
 module SharedTools
-  class ReadFile < RubyLLM::Tool
+  class ReadFile < ::RubyLLM::Tool
 
     description "Read the contents of a given relative file path. Use this when you want to see what's inside a file. Do not use this with directory names."
     param :path, desc: "The relative path of a file in the working directory."

@@ -4,7 +4,7 @@ require("ruby_llm")     unless defined?(RubyLLM)
 require("shared_tools") unless defined?(SharedTools)
 
 module SharedTools
-  class EditFile < RubyLLM::Tool
+  class EditFile < ::RubyLLM::Tool
 
     description <<~DESCRIPTION
                   Make edits to a text file.
@@ -31,7 +31,7 @@ module SharedTools
         RubyLLM.logger.debug("File exists, reading content")
         content = File.read(absolute_path)
       else
-        RUbyLLM.logger.debug("File doesn't exist, creating new file")
+        RubyLLM.logger.debug("File doesn't exist, creating new file")
         content = ""
       end
 
@@ -50,7 +50,7 @@ module SharedTools
       if replace_all
         updated_content = content.gsub(old_str, new_str)
         replaced_count = matches
-        RUbyLLM.logger.info("Replacing all #{matches} occurrences")
+        RubyLLM.logger.info("Replacing all #{matches} occurrences")
       else
         updated_content = content.sub(old_str, new_str)
         replaced_count = 1

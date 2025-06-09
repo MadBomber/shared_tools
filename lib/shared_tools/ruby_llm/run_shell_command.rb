@@ -4,7 +4,7 @@ require("ruby_llm")     unless defined?(RubyLLM)
 require("shared_tools") unless defined?(SharedTools)
 
 module SharedTools
-  class RunShellCommand < RubyLLM::Tool
+  class RunShellCommand < ::RubyLLM::Tool
 
     description "Execute a shell command"
     param :command, desc: "The command to execute"

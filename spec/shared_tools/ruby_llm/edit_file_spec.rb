@@ -54,9 +54,9 @@ RSpec.describe SharedTools::EditFile do
           replace_all: true
         )
 
-        # Note: This test expects an error due to a typo in the business logic (RUbyLLM)
-        expect(result).to have_key(:error)
-        expect(result[:error]).to include("uninitialized constant")
+        expect(result).to include(success: true, matches: 2, replaced: 2)
+        updated_content = File.read(temp_file.path)
+        expect(updated_content).to eq("Hi world\nThis is a test\nHi again")
       end
 
       it "returns warning when no matches found" do
@@ -86,9 +86,9 @@ RSpec.describe SharedTools::EditFile do
           new_str: "New content"
         )
 
-        # Note: This test expects an error due to a typo in the business logic (RUbyLLM)
-        expect(result).to have_key(:error)
-        expect(result[:error]).to include("uninitialized constant")
+        expect(result).to include(success: true, matches: 1, replaced: 1)
+        expect(File.exist?(new_file_path)).to be true
+        expect(File.read(new_file_path)).to eq("New content")
       end
 
       it "returns warning when trying to replace in empty new file" do
@@ -98,9 +98,9 @@ RSpec.describe SharedTools::EditFile do
           new_str: "replacement"
         )
 
-        # Note: This test expects an error due to a typo in the business logic (RUbyLLM)
-        expect(result).to have_key(:error)
-        expect(result[:error]).to include("uninitialized constant")
+        expect(result).to include(success: false)
+        expect(result).to have_key(:warning)
+        expect(result[:warning]).to eq("No matches found for the string to replace")
       end
     end
 
