@@ -2,12 +2,12 @@
 # Credit: https://max.engineer/giant-pdf-llm
 
 require "pdf-reader"
-
-require("ruby_llm")     unless defined?(RubyLLM)
-require("shared_tools") unless defined?(SharedTools)
+require_relative '../../shared_tools'
 
 module SharedTools
-  class PdfPageReader < ::RubyLLM::Tool
+  verify_gem :ruby_llm
+
+  class PdfPageReader < RubyLLM::Tool
 
     description "Read the text of any set of pages from a PDF document."
     param :page_numbers,

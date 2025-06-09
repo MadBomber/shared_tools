@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
-require("ruby_llm")     unless defined?(RubyLLM)
-require("shared_tools") unless defined?(SharedTools)
+require_relative '../../shared_tools'
 
 module SharedTools
-  class PythonEval < ::RubyLLM::Tool
+  verify_gem :ruby_llm
+
+  class PythonEval < RubyLLM::Tool
 
     description <<~DESCRIPTION
                   Execute Python source code safely and return the result.
-                  
+
                   This tool evaluates Python code by writing it to a temporary file
                   and executing it with the python3 command, capturing both stdout
                   and the final expression result.
-                  
+
                   WARNING: This tool executes arbitrary Python code. Use with caution.
                   NOTE: Requires python3 to be available in the system PATH.
                 DESCRIPTION
@@ -20,7 +21,7 @@ module SharedTools
 
     def execute(code:)
       RubyLLM.logger.info("Requesting permission to execute Python code")
-      
+
       if code.strip.empty?
         error_msg = "Python code cannot be empty"
         RubyLLM.logger.error(error_msg)
@@ -46,21 +47,21 @@ module SharedTools
         require 'tempfile'
         require 'open3'
         require 'json'
-        
+
         # Create a Python script that captures both output and result
         python_script = create_python_wrapper(code)
-        
+
         # Write to temporary file
         temp_file = Tempfile.new(['python_eval', '.py'])
         temp_file.write(python_script)
         temp_file.flush
-        
+
         # Execute the Python script
         stdout, stderr, status = Open3.capture3("python3", temp_file.path)
-        
+
         temp_file.close
         temp_file.unlink
-        
+
         if status.success?
           RubyLLM.logger.debug("Python code execution completed successfully")
           parse_python_output(stdout)
@@ -86,7 +87,7 @@ module SharedTools
     def create_python_wrapper(user_code)
       require 'base64'
       encoded_code = Base64.strict_encode64(user_code)
-      
+
       <<~PYTHON
         import sys
         import json
@@ -99,7 +100,7 @@ module SharedTools
 
         # Capture stdout
         captured_output = io.StringIO()
-        
+
         try:
             with redirect_stdout(captured_output):
                 # Handle compound statements (semicolon-separated)
@@ -130,25 +131,25 @@ module SharedTools
                         # If not an expression, execute as statement
                         exec(user_code)
                         result = None
-            
+
             output = captured_output.getvalue()
-            
+
             # Prepare result for JSON serialization
             try:
                 json.dumps(result)  # Test if result is JSON serializable
                 serializable_result = result
             except (TypeError, ValueError):
                 serializable_result = str(result)
-            
+
             result_data = {
                 "success": True,
                 "result": serializable_result,
                 "output": output if output else None,
                 "python_type": type(result).__name__
             }
-            
+
             print("PYTHON_EVAL_RESULT:", json.dumps(result_data))
-            
+
         except Exception as e:
             error_data = {
                 "success": False,
@@ -162,11 +163,11 @@ module SharedTools
     def parse_python_output(stdout)
       lines = stdout.split("\n")
       result_line = lines.find { |line| line.start_with?("PYTHON_EVAL_RESULT:") }
-      
+
       if result_line
         json_data = result_line.sub("PYTHON_EVAL_RESULT:", "").strip
         result = JSON.parse(json_data)
-        
+
         # Add display formatting
         if result["success"]
           if result["output"].nil? || result["output"].empty?
@@ -176,7 +177,7 @@ module SharedTools
             result["display"] = result["output"] + result_part
           end
         end
-        
+
         # Convert string keys to symbols
         result.transform_keys(&:to_sym)
       else

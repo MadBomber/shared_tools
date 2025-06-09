@@ -1,24 +1,25 @@
 # frozen_string_literal: true
 
-require("ruby_llm")     unless defined?(RubyLLM)
-require("shared_tools") unless defined?(SharedTools)
+require_relative '../../shared_tools'
 
 module SharedTools
-  class RubyEval < ::RubyLLM::Tool
+  verify_gem :ruby_llm
+
+  class RubyEval < RubyLLM::Tool
 
     description <<~DESCRIPTION
                   Execute Ruby source code safely and return the result.
-                  
+
                   This tool evaluates Ruby code in a sandboxed context and returns
                   the result of the last expression or any output produced.
-                  
+
                   WARNING: This tool executes arbitrary Ruby code. Use with caution.
                 DESCRIPTION
     param :code, desc: "The Ruby code to execute"
 
     def execute(code:)
       RubyLLM.logger.info("Requesting permission to execute Ruby code")
-      
+
       if code.strip.empty?
         error_msg = "Ruby code cannot be empty"
         RubyLLM.logger.error(error_msg)
@@ -48,22 +49,22 @@ module SharedTools
       begin
         result = eval(code)
         output = captured_output.string
-        
+
         RubyLLM.logger.debug("Ruby code execution completed successfully")
-        
+
         response = {
           result: result,
           output: output.empty? ? nil : output,
           success: true
         }
-        
+
         # Include both result and output in a readable format
         if output.empty?
           response[:display] = result.inspect
         else
           response[:display] = output + (result.nil? ? "" : "\n=> #{result.inspect}")
         end
-        
+
         response
       rescue SyntaxError, StandardError => e
         RubyLLM.logger.error("Ruby code execution failed: #{e.message}")

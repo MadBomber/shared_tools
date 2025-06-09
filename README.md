@@ -55,8 +55,8 @@ RubyLLM tools are loaded conditionally when needed:
 ```ruby
 require 'shared_tools'
 
-# Load all RubyLLM tools (requires ruby_llm gem to be available)
-SharedTools.load_ruby_llm_tools
+# Load all RubyLLM tools (requires ruby_llm gem to be available and loaded first)
+require 'shared_tools/ruby_llm'
 
 # Or load a specific tool directly
 require 'shared_tools/ruby_llm/edit_file'
@@ -69,88 +69,6 @@ require 'shared_tools/ruby_llm/python_eval'
 
 This gem uses Zeitwerk for autoloading, making it fully compatible with Rails and other Ruby applications that use modern autoloaders. RubyLLM tools are excluded from autoloading and loaded manually to avoid namespace conflicts.
 
-## Shared Logging
-
-All classes within the SharedTools namespace automatically have access to a configurable logger without requiring any explicit includes or setup.
-
-### Basic Usage
-
-Within any class in the SharedTools namespace, you can directly use the logger:
-
-```ruby
-module SharedTools
-  class MyTool
-    def perform_action
-      logger.info "Starting action"
-      # Do something
-      logger.debug "Details about action"
-      # Handle errors
-    rescue => e
-      logger.error "Action failed: #{e.message}"
-      raise
-    ensure
-      logger.info "Action completed"
-    end
-  end
-end
-```
-
-### Configuration
-
-The logger can be configured using the `configure_logger` method:
-
-```ruby
-# Configure the logger in your application initialization
-SharedTools.configure_logger do |config|
-  config.level = Logger::DEBUG                   # Set log level
-  config.log_device = "logs/shared_tools.log"    # Set output file
-  config.formatter = proc do |severity, time, progname, msg|
-    "[#{time.strftime('%Y-%m-%d %H:%M:%S')}] #{severity}: #{msg}\n"
-  end
-end
-```
-
-### Using with Rails
-
-SharedTools is fully compatible with Rails applications and uses Zeitwerk for autoloading, so it integrates seamlessly with Rails' autoloader.
-
-To use the SharedTools logger with Rails and make it use the same logger instance:
-
-```ruby
-# In config/initializers/shared_tools.rb
-Rails.application.config.after_initialize do
-  # Make SharedTools use the Rails logger
-  SharedTools.logger = Rails.logger
-
-  # Load RubyLLM tools if needed
-  SharedTools.load_ruby_llm_tools if defined?(RubyLLM)
-
-  # Alternatively, configure the Rails logger to use SharedTools settings
-  # SharedTools.configure_logger do |config|
-  #   config.level = Rails.logger.level
-  #   config.log_device = Rails.logger.instance_variable_get(:@logdev).dev
-  # end
-  # Rails.logger = SharedTools.logger
-
-  Rails.logger.info "SharedTools integrated with Rails logger"
-end
-```
-
-### Available Log Levels
-
-The logger supports the standard Ruby Logger levels:
-
-- `logger.debug` - Detailed debug information
-- `logger.info` - General information messages
-- `logger.warn` - Warning messages
-- `logger.error` - Error messages
-- `logger.fatal` - Fatal error messages
-
-### Thread Safety
-
-The shared logger is thread-safe and can be used across multiple threads in your application.
-
----
 
 ### Special Thanks
 

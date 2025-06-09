@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require("ruby_llm")     unless defined?(RubyLLM)
-require("shared_tools") unless defined?(SharedTools)
+require_relative '../../shared_tools'
 
 module SharedTools
-  class EditFile < ::RubyLLM::Tool
+  verify_gem :ruby_llm
+
+  class EditFile < RubyLLM::Tool
 
     description <<~DESCRIPTION
                   Make edits to a text file.

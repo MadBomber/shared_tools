@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require("ruby_llm")     unless defined?(RubyLLM)
-require("shared_tools") unless defined?(SharedTools)
+require_relative '../../shared_tools'
 
 module SharedTools
-  class ListFiles < ::RubyLLM::Tool
+  verify_gem :ruby_llm
+
+  class ListFiles < RubyLLM::Tool
 
     description "List files and directories at a given path. If no path is provided, lists files in the current directory."
     param :path, desc: "Optional relative path to list files from. Defaults to current directory if not provided."

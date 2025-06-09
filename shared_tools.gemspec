@@ -11,17 +11,15 @@ Gem::Specification.new do |spec|
   spec.summary       = "Shared utilities and AI tools for Ruby applications with configurable logging"
   spec.description   = <<~DESC
     SharedTools provides a collection of reusable common tools (aka callback functions)
-    for Ruby applications using various LLM-focused libraries. This consistent tool set
-    across different LLM libraries is perfect for developers building AI applications who
-    need reliable, well-tested LLM tools.
+    for Ruby applications using various LLM-provider API gems.
   DESC
   spec.homepage      = "https://github.com/madbomber/shared_tools"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 3.3.0"
 
-  spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = spec.homepage
-  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/CHANGELOG.md"
+  spec.metadata["homepage_uri"]     = spec.homepage
+  spec.metadata["source_code_uri"]  = spec.homepage
+  spec.metadata["changelog_uri"]    = "#{spec.homepage}/blob/main/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   spec.files = Dir.glob(%w[
@@ -30,18 +28,17 @@ Gem::Specification.new do |spec|
     README.md
     CHANGELOG.md
   ])
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
+
   spec.require_paths = ["lib"]
 
   # Dependencies
-  spec.add_dependency "logger", "~> 1.0"
   spec.add_dependency "zeitwerk", "~> 2.6"
 
   # Development dependencies
 
-  # For RubyLLM tools
+  # Support gems
   spec.add_development_dependency "llm.rb"
+  spec.add_development_dependency "omniai"
   spec.add_development_dependency "pdf-reader", "~> 2.0"
   spec.add_development_dependency "ruby_llm"
 

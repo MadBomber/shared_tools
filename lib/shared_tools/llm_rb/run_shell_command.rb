@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-require("llm") unless defined?(LLM)
-require("shared_tools") unless defined?(SharedTools)
+require_relative '../../shared_tools'
 
 module SharedTools
+  verify_gem :llm_rb
+
   RunShellCommand = LLM.function(:system) do |fn|
     fn.description "Run a shell command"
 
