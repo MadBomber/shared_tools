@@ -3,6 +3,7 @@ PATH
   specs:
     shared_tools (0.1.1)
       logger (~> 1.0)
+      zeitwerk (~> 2.6)
 
 GEM
   remote: https://rubygems.org/

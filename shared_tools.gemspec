@@ -36,6 +36,7 @@ Gem::Specification.new do |spec|
 
   # Dependencies
   spec.add_dependency "logger", "~> 1.0"
+  spec.add_dependency "zeitwerk", "~> 2.6"
 
   # Development dependencies
 
