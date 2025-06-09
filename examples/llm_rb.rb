@@ -2,8 +2,23 @@
 # examples/llm.rb
 # This library is installed via `gem install llm.rb`
 # It is required as "llm"
+#
+###################################################################################################
+# WARNING: there is another gem named 'llm' (gem install llm) which is not compatible with llm.rb #
+#          make sure you have only the llm.rb gem installed and not both llm.rb and llm.          #
+###################################################################################################
 
-require "shared_tools/llm/run_shell_command"
+# Check for API key
+unless ENV["OPENAI_API_KEY"]
+  puts "OPENAI_API_KEY environment variable not set"
+  exit 1
+end
+
+require "debug_me"
+include DebugMe
+
+require "llm"
+require_relative "../lib/shared_tools/llm_rb/run_shell_command"
 
 llm   = LLM.openai(key: ENV["OPENAI_API_KEY"])
 bot   = LLM::Bot.new(llm, tools: [SharedTools::RunShellCommand])

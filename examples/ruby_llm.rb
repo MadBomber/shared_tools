@@ -1,11 +1,8 @@
 #!/usr/bin/env ruby
 # examples/ruby_llm.rb
-#
-# The following single require statement will not only load the
-# requested tool, it will also load the ruby_llm and shared_tools gems
-# if their primary class does not already exist
 
-require 'shared_tools/ruby_llm/read_file'
+require 'ruby_llm'
+require_relative '../lib/shared_tools/ruby_llm/read_file'
 
 RubyLLM.configure do |config|
   config.openai_api_key = ENV['OPENAI_API_KEY']
