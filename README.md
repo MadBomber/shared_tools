@@ -42,13 +42,32 @@ gem install shared_tools
 
 ## Usage
 
-```ruby
-# To load all tools for a specific library
-require 'shared_tools/ruby_llm'
+### Basic Loading
 
-# OR you can load a specific tool
-require 'shared_tools/ruby_llm/edit_file'
+```ruby
+require 'shared_tools'
 ```
+
+### Loading RubyLLM Tools
+
+RubyLLM tools are loaded conditionally when needed:
+
+```ruby
+require 'shared_tools'
+
+# Load all RubyLLM tools (requires ruby_llm gem to be available)
+SharedTools.load_ruby_llm_tools
+
+# Or load a specific tool directly
+require 'shared_tools/ruby_llm/edit_file'
+require 'shared_tools/ruby_llm/read_file'
+require 'shared_tools/ruby_llm/python_eval'
+# etc.
+```
+
+### Rails and Autoloader Compatibility
+
+This gem uses Zeitwerk for autoloading, making it fully compatible with Rails and other Ruby applications that use modern autoloaders. RubyLLM tools are excluded from autoloading and loaded manually to avoid namespace conflicts.
 
 ## Shared Logging
 
@@ -93,6 +112,8 @@ end
 
 ### Using with Rails
 
+SharedTools is fully compatible with Rails applications and uses Zeitwerk for autoloading, so it integrates seamlessly with Rails' autoloader.
+
 To use the SharedTools logger with Rails and make it use the same logger instance:
 
 ```ruby
@@ -100,6 +121,9 @@ To use the SharedTools logger with Rails and make it use the same logger instanc
 Rails.application.config.after_initialize do
   # Make SharedTools use the Rails logger
   SharedTools.logger = Rails.logger
+
+  # Load RubyLLM tools if needed
+  SharedTools.load_ruby_llm_tools if defined?(RubyLLM)
 
   # Alternatively, configure the Rails logger to use SharedTools settings
   # SharedTools.configure_logger do |config|
