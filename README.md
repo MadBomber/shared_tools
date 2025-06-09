@@ -1,6 +1,6 @@
-# <div align="center">Shared Tools</div>
 <div align="center">
-  ![Image of two robots sharing tools](images/shared_tools.png?raw=true "Friends Share Tools")
+  <h1>Shared Tools</h1>
+  <img src="images/shared_tools.png" alt="Two Robots sharing the same set of tools.">
 </div>
 
 A Ruby gem providing a collection of shared tools and utilities for Ruby applications, including configurable logging and AI-related tools.
