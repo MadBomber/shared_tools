@@ -1,8 +1,11 @@
 # Changelog
 
 ## Unreleased
-### [0.1.2] WIP
-- messing around with `zeitwerk` gem
+
+## Released
+
+### [0.1.2] 2025-06-10
+- added `zeitwerk` gem
 
 ### [0.1.0] - 2025-06-05
 - Initial gem release
