@@ -5,7 +5,7 @@ require_relative '../../shared_tools'
 module SharedTools
   verify_gem :ruby_llm
 
-  class RubyEval < RubyLLM::Tool
+  class RubyEval < ::RubyLLM::Tool
 
     description <<~DESCRIPTION
                   Execute Ruby source code safely and return the result.

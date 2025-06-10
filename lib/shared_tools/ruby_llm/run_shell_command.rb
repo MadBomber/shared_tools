@@ -5,7 +5,7 @@ require_relative '../../shared_tools'
 module SharedTools
   SharedTools.verify_gem :ruby_llm
 
-  class RunShellCommand < RubyLLM::Tool
+  class RunShellCommand < ::RubyLLM::Tool
 
     description "Execute a shell command"
     param :command, desc: "The command to execute"

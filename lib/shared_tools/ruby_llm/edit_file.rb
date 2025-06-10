@@ -5,7 +5,7 @@ require_relative '../../shared_tools'
 module SharedTools
   verify_gem :ruby_llm
 
-  class EditFile < RubyLLM::Tool
+  class EditFile < ::RubyLLM::Tool
 
     description <<~DESCRIPTION
                   Make edits to a text file.

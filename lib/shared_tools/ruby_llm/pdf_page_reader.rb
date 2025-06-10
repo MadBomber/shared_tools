@@ -7,7 +7,7 @@ require_relative '../../shared_tools'
 module SharedTools
   verify_gem :ruby_llm
 
-  class PdfPageReader < RubyLLM::Tool
+  class PdfPageReader < ::RubyLLM::Tool
 
     description "Read the text of any set of pages from a PDF document."
     param :page_numbers,

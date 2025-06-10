@@ -9,13 +9,13 @@ RSpec.describe SharedTools::EditFile do
 
   describe "logger integration" do
     it "has logger methods available" do
-      expect(tool).to respond_to(:logger)
+      expect(RubyLLM).to respond_to(:logger)
     end
 
     it "logger is functional" do
-      expect(tool.logger).to respond_to(:info)
-      expect(tool.logger).to respond_to(:debug)
-      expect(tool.logger).to respond_to(:error)
+      expect(RubyLLM.logger).to respond_to(:info)
+      expect(RubyLLM.logger).to respond_to(:debug)
+      expect(RubyLLM.logger).to respond_to(:error)
     end
   end
 

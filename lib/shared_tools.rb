@@ -2,6 +2,10 @@
 
 require "zeitwerk"
 loader = Zeitwerk::Loader.for_gem
+# Ignore aggregate loader files that don't define constants
+loader.ignore("#{__dir__}/shared_tools/ruby_llm.rb")
+loader.ignore("#{__dir__}/shared_tools/llm_rb.rb")
+loader.ignore("#{__dir__}/shared_tools/omniai.rb")
 loader.setup
 
 module SharedTools
