@@ -2,7 +2,7 @@
 # examples/ruby_llm.rb
 
 require 'ruby_llm'
-require_relative '../lib/shared_tools/ruby_llm/read_file'
+require 'shared_tools/ruby_llm/read_file'
 
 RubyLLM.configure do |config|
   config.openai_api_key = ENV['OPENAI_API_KEY']

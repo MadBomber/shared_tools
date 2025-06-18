@@ -20,11 +20,9 @@ module SharedTools
       end
 
       # Show user the command and ask for confirmation
-      puts "AI wants to execute the following shell command: '#{command}'"
-      print "Do you want to execute it? (y/n) "
-      response = gets.chomp.downcase
+      allowed = SharedTools.execute?(tool: self.class.name, stuff: command)
 
-      unless response == "y"
+      unless allowed
         RubyLLM.logger.warn("User declined to execute the command: '#{command}'")
         return { error: "User declined to execute the command" }
       end

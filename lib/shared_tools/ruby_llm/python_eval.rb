@@ -29,14 +29,9 @@ module SharedTools
       end
 
       # Show user the code and ask for confirmation
-      puts "AI wants to execute the following Python code:"
-      puts "=" * 50
-      puts code
-      puts "=" * 50
-      print "Do you want to execute it? (y/n) "
-      response = gets.chomp.downcase
+      allowed = SharedTools.execute?(tool: self.class.name, stuff: code)
 
-      unless response == "y"
+      unless allowed
         RubyLLM.logger.warn("User declined to execute the Python code")
         return { error: "User declined to execute the Python code" }
       end

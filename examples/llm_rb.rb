@@ -18,7 +18,7 @@ require "debug_me"
 include DebugMe
 
 require "llm"
-require_relative "../lib/shared_tools/llm_rb/run_shell_command"
+require 'shared_tools/llm_rb/run_shell_command"
 
 llm   = LLM.openai(key: ENV["OPENAI_API_KEY"])
 bot   = LLM::Bot.new(llm, tools: [SharedTools::RunShellCommand])
