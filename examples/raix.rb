@@ -8,8 +8,27 @@ include DebugMe
 require 'raix'
 require 'shared_tools/raix/what_is_the_weather'
 
-__END__
 
+OpenRouter.configure do |config|
+  config.faraday do |f|
+    f.request :retry, retry_options
+    f.response :logger, Logger.new($stdout), { headers: true, bodies: true, errors: true } do |logger|
+      logger.filter(/(Bearer) (\S+)/, '\1[REDACTED]')
+    end
+  end
+end
+
+Raix.configure do |config|
+  config.openrouter_client = OpenRouter::Client.new(access_token: ENV.fetch("OPENROUTER_API_KEY", nil))
+  config.openai_client = OpenAI::Client.new(access_token: ENV.fetch("OPENAI_API_KEY", nil)) do |f|
+    f.request :retry, retry_options
+    f.response :logger, Logger.new($stdout), { headers: true, bodies: true, errors: true } do |logger|
+      logger.filter(/(Bearer) (\S+)/, '\1[REDACTED]')
+    end
+  end
+end
+
+__END__
 
 class MeaningOfLife
   include Raix::ChatCompletion
