@@ -3,11 +3,11 @@
 require_relative "../../shared_tools"
 
 module SharedTools
-  verify_gem :ruby_llm
+  verify_gem :raix
 
   class WhatIsTheWeather
-    include Raix::ChatCompletion
-    include Raix::FunctionDispatch
+    include ::Raix::ChatCompletion
+    include ::Raix::FunctionDispatch
 
     function :check_weather,
              "Check the weather for a location",
