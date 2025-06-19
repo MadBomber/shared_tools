@@ -21,8 +21,13 @@ RSpec.describe SharedTools::RubyEval do
 
   describe "#execute" do
     before do
-      # Mock user input to always say "yes" for test execution
-      allow_any_instance_of(Object).to receive(:gets).and_return("y\n")
+      # Use auto_execute to avoid interactive prompts during tests
+      SharedTools.auto_execute(true)
+    end
+    
+    after do
+      # Reset to default state after tests
+      SharedTools.auto_execute(false)
     end
 
     context "with valid Ruby code" do
@@ -107,13 +112,53 @@ RSpec.describe SharedTools::RubyEval do
 
     context "when user declines execution" do
       it "returns an error when user says no" do
-        allow_any_instance_of(Object).to receive(:gets).and_return("n\n")
+        SharedTools.instance_variable_set(:@auto_execute, nil)
+        allow(SharedTools).to receive(:execute?).and_return(false)
         
         result = tool.execute(code: "puts 'Hello'")
         
         expect(result).to have_key(:error)
         expect(result[:error]).to eq("User declined to execute the Ruby code")
+        
+        SharedTools.auto_execute(true)
       end
+    end
+  end
+
+  describe "authorization integration" do
+    it "calls SharedTools.execute? with correct parameters when auto_execute is disabled" do
+      SharedTools.instance_variable_set(:@auto_execute, nil)
+      
+      expect(SharedTools).to receive(:execute?).with(
+        tool: "SharedTools::RubyEval",
+        stuff: "puts 'test'"
+      ).and_return(true)
+      
+      tool.execute(code: "puts 'test'")
+      
+      SharedTools.auto_execute(true)
+    end
+
+    it "returns true immediately when auto_execute is enabled" do
+      SharedTools.auto_execute(true)
+      
+      # execute? should be called but return true immediately
+      expect(SharedTools).to receive(:execute?).and_call_original
+      
+      result = tool.execute(code: "2 + 2")
+      expect(result[:success]).to be true
+    end
+
+    it "handles authorization denial gracefully" do
+      SharedTools.instance_variable_set(:@auto_execute, nil)
+      allow(SharedTools).to receive(:execute?).and_return(false)
+      
+      result = tool.execute(code: "puts 'test'")
+      
+      expect(result).to have_key(:error)
+      expect(result[:error]).to eq("User declined to execute the Ruby code")
+      
+      SharedTools.auto_execute(true)
     end
   end
 end

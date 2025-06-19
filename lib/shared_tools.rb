@@ -21,7 +21,8 @@ module SharedTools
     end
 
     def execute?(tool: 'unknown', stuff: '')
-      return true if @auto_execute
+      # Return true if auto_execute is explicitly enabled
+      return true if @auto_execute == true
 
       puts "\n\nThe AI (tool: #{tool}) wants to do the following ..."
       puts "="*42

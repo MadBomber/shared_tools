@@ -20,10 +20,13 @@ RSpec.describe SharedTools::RunShellCommand do
 
   describe "#execute" do
     before do
-      # Mock puts and gets to avoid interactive input during tests
-      allow(tool).to receive(:puts)
-      allow(tool).to receive(:print)
-      allow(tool).to receive(:gets).and_return("n")
+      # Use auto_execute to avoid interactive prompts during tests
+      SharedTools.auto_execute(true)
+    end
+    
+    after do
+      # Reset to default state after tests
+      SharedTools.auto_execute(false)
     end
 
     context "with empty command" do
@@ -46,7 +49,14 @@ RSpec.describe SharedTools::RunShellCommand do
 
     context "when user declines execution" do
       before do
-        allow(tool).to receive(:gets).and_return("n")
+        # Reset auto_execute to nil (default state) to test user interaction
+        SharedTools.instance_variable_set(:@auto_execute, nil)
+        allow(SharedTools).to receive(:execute?).and_return(false)
+      end
+      
+      after do
+        # Restore auto_execute for other tests
+        SharedTools.auto_execute(true)
       end
 
       it "returns an error when user says no" do
@@ -59,9 +69,6 @@ RSpec.describe SharedTools::RunShellCommand do
     end
 
     context "when user approves execution" do
-      before do
-        allow(tool).to receive(:gets).and_return("y")
-      end
 
       context "with successful commands" do
         it "executes simple echo command" do
@@ -117,30 +124,71 @@ RSpec.describe SharedTools::RunShellCommand do
 
     context "with various user inputs" do
       it "accepts 'Y' as approval" do
-        allow(tool).to receive(:gets).and_return("Y")
-        
         result = tool.execute(command: "echo test")
         
         expect(result).to have_key(:stdout)
       end
 
       it "rejects 'N' as decline" do
-        allow(tool).to receive(:gets).and_return("N")
+        SharedTools.instance_variable_set(:@auto_execute, nil)
+        allow(SharedTools).to receive(:execute?).and_return(false)
         
         result = tool.execute(command: "echo test")
         
         expect(result).to have_key(:error)
         expect(result[:error]).to include("User declined")
+        
+        SharedTools.auto_execute(true)
       end
 
       it "rejects random input as decline" do
-        allow(tool).to receive(:gets).and_return("maybe")
+        SharedTools.instance_variable_set(:@auto_execute, nil)
+        allow(SharedTools).to receive(:execute?).and_return(false)
         
         result = tool.execute(command: "echo test")
         
         expect(result).to have_key(:error)
         expect(result[:error]).to include("User declined")
+        
+        SharedTools.auto_execute(true)
       end
+    end
+  end
+
+  describe "authorization integration" do
+    it "calls SharedTools.execute? with correct parameters when auto_execute is disabled" do
+      SharedTools.instance_variable_set(:@auto_execute, nil)
+      
+      expect(SharedTools).to receive(:execute?).with(
+        tool: "SharedTools::RunShellCommand",
+        stuff: "echo test"
+      ).and_return(true)
+      
+      tool.execute(command: "echo test")
+      
+      SharedTools.auto_execute(true)
+    end
+
+    it "returns true immediately when auto_execute is enabled" do
+      SharedTools.auto_execute(true)
+      
+      # execute? should be called but return true immediately
+      expect(SharedTools).to receive(:execute?).and_call_original
+      
+      result = tool.execute(command: "echo test")
+      expect(result).to have_key(:stdout)
+    end
+
+    it "handles authorization denial gracefully" do
+      SharedTools.instance_variable_set(:@auto_execute, nil)
+      allow(SharedTools).to receive(:execute?).and_return(false)
+      
+      result = tool.execute(command: "echo test")
+      
+      expect(result).to have_key(:error)
+      expect(result[:error]).to eq("User declined to execute the command")
+      
+      SharedTools.auto_execute(true)
     end
   end
 end
