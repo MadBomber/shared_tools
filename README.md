@@ -55,11 +55,18 @@ require 'shared_tools/ruby_llm/python_eval'
 # etc.
 ```
 
-### Rails and Autoloader Compatibility
+## Tips for Tool Authors
+
+- Provide a clear comprehensive description for your tool and its parameters
+- Include usage examples in your documentation
+- Ensure your tool is compatible with different Ruby versions and environments
+- Make sure your tool is in the correct directory for the library to which it belongs
+
+## Rails and Autoloader Compatibility
 
 This gem uses Zeitwerk for autoloading, making it fully compatible with Rails and other Ruby applications that use modern autoloaders. RubyLLM tools are excluded from autoloading and loaded manually to avoid namespace conflicts.
 
 
-### Special Thanks
+ Special Thanks
 
 A special shout-out to Kevin's [omniai-tools](https://github.com/your-github-url/omniai-tools) gem, which is a curated collection of tools for use with his OmniAI gem.
