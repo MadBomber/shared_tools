@@ -41,7 +41,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "omniai"
   spec.add_development_dependency "pdf-reader", "~> 2.0"
   spec.add_development_dependency "raix"
-  spec.add_development_dependency "ruby_llm"
+  spec.add_development_dependency "ruby_llm", "~> 1.3.1"
+  spec.add_development_dependency "ruby_llm-mcp", "~> 0.3.1"
+
 
   # For SharedTools development
   spec.add_development_dependency "bundler", "~> 2.0"

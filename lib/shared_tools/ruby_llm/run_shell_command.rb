@@ -6,6 +6,7 @@ module SharedTools
   SharedTools.verify_gem :ruby_llm
 
   class RunShellCommand < ::RubyLLM::Tool
+    def self.name = 'run_shell_command'
 
     description "Execute a shell command"
     param :command, desc: "The command to execute"

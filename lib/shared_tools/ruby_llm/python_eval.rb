@@ -6,6 +6,7 @@ module SharedTools
   verify_gem :ruby_llm
 
   class PythonEval < ::RubyLLM::Tool
+      def self.name = 'python_eval'
 
     description <<~DESCRIPTION
                   Execute Python source code safely and return the result.

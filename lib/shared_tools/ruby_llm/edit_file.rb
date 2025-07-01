@@ -6,6 +6,7 @@ module SharedTools
   verify_gem :ruby_llm
 
   class EditFile < ::RubyLLM::Tool
+      def self.name = 'edit_file'
 
     description <<~DESCRIPTION
                   Make edits to a text file.

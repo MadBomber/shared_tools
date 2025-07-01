@@ -8,6 +8,7 @@ module SharedTools
   verify_gem :ruby_llm
 
   class PdfPageReader < ::RubyLLM::Tool
+      def self.name = 'pdf_page_reader'
 
     description "Read the text of any set of pages from a PDF document."
     param :page_numbers,

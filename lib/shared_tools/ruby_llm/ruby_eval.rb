@@ -6,6 +6,7 @@ module SharedTools
   verify_gem :ruby_llm
 
   class RubyEval < ::RubyLLM::Tool
+    def self.name = 'ruby_eval'
 
     description <<~DESCRIPTION
                   Execute Ruby source code safely and return the result.
