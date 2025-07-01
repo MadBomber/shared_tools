@@ -9,8 +9,6 @@ require 'ruby_llm/mcp'
 
 require_relative '../../../shared_tools'
 
-
-
 module SharedTools
   verify_gem :ruby_llm
 
@@ -19,7 +17,7 @@ module SharedTools
     transport_type: :stdio,
     config: {
       command: "/opt/homebrew/bin/github-mcp-server", # brew install github-mcp-server
-      args: %w[stdio --read-only],
+      args: %w[stdio],
       env: { "GITHUB_PERSONAL_ACCESS_TOKEN" => ENV.fetch('GITHUB_PERSONAL_ACCESS_TOKEN') }
     }
   )
