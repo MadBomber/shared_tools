@@ -28,7 +28,7 @@ module SharedTools
       end
 
       # Show user the code and ask for confirmation
-      allowed = SharedTools.execute?(tool: self.class.name, stuff: code)
+      allowed = SharedTools.execute?(tool: self.class.to_s, stuff: code)
 
       unless allowed
         RubyLLM.logger.warn("User declined to execute the Ruby code")
