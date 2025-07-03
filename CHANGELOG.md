@@ -3,6 +3,8 @@
 ## Unreleased
 
 ## Released
+### [0.2.1] 2025-07-03
+- iMCP server app for MacOS is noisy logger so redirect stderr to /dev/null
 
 ### [0.2.0] 2025-07-01
 - added ruby_llm/mcp/github_mcp_server.rb example
