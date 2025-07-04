@@ -14,16 +14,7 @@ loader.setup
 module SharedTools
   SUPPORTED_GEMS  ||= %i(ruby_llm llm_rb omniai raix)
   @auto_execute   ||= false # Human in the loop
-  @mcp_servers    ||= []
-
   class << self
-    def mcp_servers
-      @mcp_servers
-    end
-
-    def mcp_servers=(client)
-      @mcp_servers << client
-    end
 
     def auto_execute(wildwest=true)
       @auto_execute = wildwest

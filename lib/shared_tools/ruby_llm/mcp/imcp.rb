@@ -12,22 +12,18 @@
 #       If you messages then you might want to redirect STDERR to a file.
 #
 
-require 'debug_me'
-include DebugMe
+require_relative 'mcp_client'
 
-require 'ruby_llm'
-require 'ruby_llm/mcp'
+class Imcp < McpClient
+  private
 
-require_relative '../../../shared_tools'
-
-module SharedTools
-  verify_gem :ruby_llm
-
-  mcp_servers << RubyLLM::MCP.client(
-    name: "imcp-server",
-    transport_type: :stdio,
-    config: {
-      command: "/Applications/iMCP.app/Contents/MacOS/imcp-server 2> /dev/null"
-    }
-  )
+  def self.create_client
+    RubyLLM::MCP.client(
+      name: "imcp-server",
+      transport_type: :stdio,
+      config: {
+        command: "/Applications/iMCP.app/Contents/MacOS/imcp-server 2> /dev/null"
+      }
+    )
+  end
 end

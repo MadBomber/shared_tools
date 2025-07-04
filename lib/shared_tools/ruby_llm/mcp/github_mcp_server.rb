@@ -1,28 +1,23 @@
 # shared_tools/ruby_llm/mcp/github_mcp_server.rb
 # brew install github_mcp_server
 
-require 'debug_me'
-include DebugMe
+require_relative "mcp_client"
 
-require 'ruby_llm'
-require 'ruby_llm/mcp'
+class GithubMcpServer < McpClient
+  private
 
-require_relative '../../../shared_tools'
-
-module SharedTools
-  verify_gem :ruby_llm
-
-  mcp_servers << RubyLLM::MCP.client(
-    name: "github-mcp-server",
-    transport_type: :stdio,
-    config: {
-      command: "/opt/homebrew/bin/github-mcp-server", # brew install github-mcp-server
-      args: %w[stdio],
-      env: { "GITHUB_PERSONAL_ACCESS_TOKEN" => ENV.fetch('GITHUB_PERSONAL_ACCESS_TOKEN') }
-    }
-  )
+  def self.create_client
+    RubyLLM::MCP.client(
+      name: "github-mcp-server",
+      transport_type: :stdio,
+      config: {
+        command: "/opt/homebrew/bin/github-mcp-server", # brew install github-mcp-server
+        args: %w[stdio],
+        env: { "GITHUB_PERSONAL_ACCESS_TOKEN" => ENV.fetch("GITHUB_PERSONAL_ACCESS_TOKEN") },
+      },
+    )
+  end
 end
-
 
 __END__
 

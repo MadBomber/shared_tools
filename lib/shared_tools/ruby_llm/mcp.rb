@@ -1,6 +1,8 @@
 # shared_tools/ruby_llm/mcp.rb
 # This file loads all Ruby files in the mcp directory
 
+require_relative '../../shared_tools'
+
 # Get the directory path
 mcp_dir = File.join(__dir__, 'mcp')
 
