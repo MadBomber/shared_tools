@@ -1,16 +1,15 @@
 <div align="center">
   <h1>Shared Tools</h1>
   <img src="images/shared_tools.png" alt="Two Robots sharing the same set of tools.">
+  <p>A Ruby gem providing a collection of tools for use with tool-supporting LLMs</p>
 </div>
 
-A Ruby gem providing a collection of common tools (call-back functions) for use with the following gems:
-
-- ruby_llm: multi-provider `gem install ruby_llm`
-- llm: multi-provider `gem install llm.rb`
-- omniai: multi-provider `gem install omniai-tools` (Not part of the SharedTools namespace)
-- more to come ...
-
 ## Recent Changes
+
+### Unreleased
+
+> Changing the focus of the gem to just support the [ruby_llm gem](https://rubyllm.com)
+> I will be working in the `develop` branch to make this change in direction.
 
 ### Version 0.2.0
 
