@@ -1,6 +1,7 @@
 # Changelog
 
-## Unreleased
+### Unreleased
+- Changing direction.  Beginning with 0.3.0 will only support RubyLLM.
 
 ## Released
 ### [0.2.1] 2025-07-03
