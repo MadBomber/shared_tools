@@ -106,7 +106,64 @@ ruby examples/computer_tool_example.rb
 
 ---
 
-### 5. Comprehensive Workflow Example (`comprehensive_workflow_example.rb`)
+### 5. Eval Tool Example (`eval_tool_example.rb`)
+
+Demonstrates code evaluation capabilities including:
+- Evaluating Ruby code with results and console output
+- Evaluating Python code (if python3 is available)
+- Executing shell commands with output capture
+- Handling errors in code execution
+- Using authorization system for safe execution
+- Practical calculator example
+
+**Run it:**
+```bash
+ruby examples/eval_tool_example.rb
+```
+
+**Key Features:**
+- Supports Ruby, Python, and Shell code execution
+- Built-in authorization system (bypassed for demo with auto_execute)
+- Captures both output and result values
+- Error handling with detailed messages
+- Individual tools can be used directly for more control
+
+**Security Note:**
+- Auto-execution is enabled for this demo only
+- In production, always use `SharedTools.auto_execute(false)` to require user confirmation
+
+---
+
+### 6. Doc Tool Example (`doc_tool_example.rb`)
+
+Demonstrates PDF document processing including:
+- Reading single pages from PDF documents
+- Reading multiple specific pages
+- Handling invalid page numbers gracefully
+- Extracting text for search and analysis
+- Document statistics (word count, character count)
+- Finding section headers
+- Word frequency analysis
+
+**Run it:**
+```bash
+ruby examples/doc_tool_example.rb
+```
+
+**Key Features:**
+- Uses the test fixture PDF (automatically available)
+- Demonstrates single and multi-page extraction
+- Shows practical text analysis examples
+- Error handling for missing files and invalid pages
+- Individual PdfReaderTool can be used directly
+
+**Requirements:**
+- PDF-Reader gem (automatically installed with shared_tools)
+- Sample PDF at `test/fixtures/test.pdf` (included)
+
+---
+
+### 7. Comprehensive Workflow Example (`comprehensive_workflow_example.rb`)
 
 Demonstrates using multiple tools together in a realistic scenario:
 
@@ -194,6 +251,14 @@ SharedTools::Tools::DiskTool::Action::DIRECTORY_LIST
 # Computer actions
 SharedTools::Tools::ComputerTool::Action::MOUSE_CLICK
 SharedTools::Tools::ComputerTool::Action::TYPE
+
+# Eval actions
+SharedTools::Tools::EvalTool::Action::RUBY
+SharedTools::Tools::EvalTool::Action::PYTHON
+SharedTools::Tools::EvalTool::Action::SHELL
+
+# Doc actions
+SharedTools::Tools::DocTool::Action::PDF_READ
 
 # Database - uses SQL statements directly
 database.execute(statements: ["SELECT * FROM users"])

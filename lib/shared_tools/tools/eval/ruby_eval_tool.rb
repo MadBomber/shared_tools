@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'stringio'
 
 module SharedTools
   module Tools
