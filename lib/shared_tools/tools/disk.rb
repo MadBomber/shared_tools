@@ -3,6 +3,8 @@
 # Collection loader for all disk tools
 # Usage: require 'shared_tools/tools/disk'
 
+require 'shared_tools'
+
 require_relative 'disk/file_read_tool'
 require_relative 'disk/file_write_tool'
 require_relative 'disk/file_create_tool'

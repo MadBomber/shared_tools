@@ -3,6 +3,8 @@
 # Collection loader for all browser tools
 # Usage: require 'shared_tools/tools/browser'
 
+require 'shared_tools'
+
 require_relative 'browser/visit_tool'
 require_relative 'browser/click_tool'
 require_relative 'browser/inspect_tool'

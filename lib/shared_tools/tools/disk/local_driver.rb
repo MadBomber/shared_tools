@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "base_driver"
+
 module SharedTools
   module Tools
     module Disk

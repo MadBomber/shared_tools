@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative "local_driver"
 
 module SharedTools
   module Tools
@@ -16,7 +17,7 @@ module SharedTools
         param :destination, desc: "a path (e.g. `./new`)"
 
         def initialize(driver: nil, logger: nil)
-          @driver = driver || LocalDriver.new(root: Dir.pwd)
+          @driver = driver || SharedTools::Tools::Disk::LocalDriver.new(root: Dir.pwd)
           @logger = logger || RubyLLM.logger
         end
 
