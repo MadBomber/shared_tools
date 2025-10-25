@@ -67,6 +67,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.13.2)
     simplecov_json_formatter (0.1.4)
+    sqlite3 (2.7.4-arm64-darwin)
     ttfunk (1.8.0)
       bigdecimal (~> 3.1)
     uri (1.0.4)
@@ -85,6 +86,7 @@ DEPENDENCIES
   ruby_llm-mcp (~> 0.5.1)
   shared_tools!
   simplecov
+  sqlite3
 
 BUNDLED WITH
    2.6.9
