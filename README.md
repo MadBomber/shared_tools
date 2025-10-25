@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Shared Tools</h1>
-  <img src="images/shared_tools.png" alt="Two Robots sharing the same set of tools.">
+  <img src="docs/assets/images/shared_tools.png" alt="Two Robots sharing the same set of tools.">
   <p>A Ruby gem providing a collection of tools for use with tool-supporting LLMs</p>
 </div>
 
