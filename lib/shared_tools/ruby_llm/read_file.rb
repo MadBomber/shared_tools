@@ -3,7 +3,6 @@
 require_relative '../../shared_tools'
 
 module SharedTools
-  verify_gem :ruby_llm
 
   class ReadFile < ::RubyLLM::Tool
     def self.name = 'read_file'

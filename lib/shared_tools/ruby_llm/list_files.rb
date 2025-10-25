@@ -3,7 +3,6 @@
 require_relative '../../shared_tools'
 
 module SharedTools
-  verify_gem :ruby_llm
 
   class ListFiles < ::RubyLLM::Tool
       def self.name = 'list_files'

@@ -3,7 +3,6 @@
 require_relative '../../shared_tools'
 
 module SharedTools
-  SharedTools.verify_gem :ruby_llm
 
   class RunShellCommand < ::RubyLLM::Tool
     def self.name = 'run_shell_command'

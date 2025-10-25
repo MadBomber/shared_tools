@@ -1,0 +1,36 @@
+# frozen_string_literal: true
+
+
+module SharedTools
+  module Tools
+    module Disk
+      # @example
+      #   tool = SharedTools::Tools::Disk::DirectoryCreateTool.new(root: "./project")
+      #   tool.execute(path: "./foo/bar")
+      class DirectoryCreateTool < ::RubyLLM::Tool
+        def self.name = 'disk_directory_create'
+
+        description "Creates a directory."
+
+        param :path, desc: "a path to the directory (e.g. `./foo/bar`)"
+
+        def initialize(driver: nil, logger: nil)
+          @driver = driver || LocalDriver.new(root: Dir.pwd)
+          @logger = logger || RubyLLM.logger
+        end
+
+        # @param path [String]
+        #
+        # @return [String]
+        def execute(path:)
+          @logger.info("#{self.class.name}#execute path=#{path.inspect}")
+
+          @driver.directory_create(path:)
+        rescue SecurityError => e
+          @logger.error(e.message)
+          raise e
+        end
+      end
+    end
+  end
+end

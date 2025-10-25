@@ -5,7 +5,6 @@ require "pdf-reader"
 require_relative '../../shared_tools'
 
 module SharedTools
-  verify_gem :ruby_llm
 
   class PdfPageReader < ::RubyLLM::Tool
       def self.name = 'pdf_page_reader'

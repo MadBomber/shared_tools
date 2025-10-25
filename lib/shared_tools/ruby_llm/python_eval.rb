@@ -3,7 +3,6 @@
 require_relative '../../shared_tools'
 
 module SharedTools
-  verify_gem :ruby_llm
 
   class PythonEval < ::RubyLLM::Tool
       def self.name = 'python_eval'

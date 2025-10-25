@@ -11,6 +11,6 @@
 gem install shared_tools
 ```
 
- Special Thanks
+## Special Thanks
 
-A special shout-out to Kevin's [omniai-tools](https://github.com/ksylvest/omniai-tools) gem, which is a curated collection of tools for use with his OmniAI gem.
+This gem was originally inspired by Kevin's [omniai-tools](https://github.com/ksylvest/omniai-tools) gem. SharedTools has since evolved to focus exclusively on RubyLLM support.
