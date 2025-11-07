@@ -19,7 +19,10 @@ module SharedTools
 
                       WARNING: This tool executes arbitrary Ruby code. Use with caution.
                     DESCRIPTION
-        param :code, desc: "The Ruby code to execute"
+
+        params do
+          string :code, description: "The Ruby code to execute"
+        end
 
         # @param logger [Logger] optional logger
         def initialize(logger: nil)

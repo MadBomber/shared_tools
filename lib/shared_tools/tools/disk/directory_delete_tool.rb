@@ -13,7 +13,9 @@ module SharedTools
 
         description "Deletes a directory."
 
-        param :path, desc: "a path to the directory (e.g. `./foo/bar`)"
+        params do
+          string :path, description: "a path to the directory (e.g. `./foo/bar`)"
+        end
 
         def initialize(driver: nil, logger: nil)
           @driver = driver || SharedTools::Tools::Disk::LocalDriver.new(root: Dir.pwd)

@@ -13,7 +13,9 @@ module SharedTools
 
         description "Reads the contents of a file."
 
-        param :path, desc: "a path (e.g. `./main.rb`)"
+        params do
+          string :path, description: "a path (e.g. `./main.rb`)"
+        end
 
         # @param driver [SharedTools::Tools::Disk::BaseDriver] optional, defaults to LocalDriver with current directory
         # @param logger [Logger] optional logger

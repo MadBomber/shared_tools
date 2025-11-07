@@ -57,7 +57,9 @@ module SharedTools
             ]
       TEXT
 
-      param :statements, desc: "A list of SQL statements to run sequentially (e.g. ['SELECT * FROM users', 'INSERT INTO ...'])"
+      params do
+        array :statements, description: "A list of SQL statements to run sequentially (e.g. ['SELECT * FROM users', 'INSERT INTO ...'])"
+      end
 
 
       # @param driver [SharedTools::Tools::Database::BaseDriver] required database driver (SqliteDriver, PostgresDriver, etc.)

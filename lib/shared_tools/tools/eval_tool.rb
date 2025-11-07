@@ -58,23 +58,25 @@ module SharedTools
           {"action": "#{Action::SHELL}", "command": "uname -a"}
       TEXT
 
-      param :action, desc: <<~TEXT
-        The evaluation action to perform. Options:
-        * `#{Action::RUBY}`: Execute Ruby code
-        * `#{Action::PYTHON}`: Execute Python code (requires python3)
-        * `#{Action::SHELL}`: Execute shell commands
-      TEXT
+      params do
+        string :action, description: <<~TEXT.strip
+          The evaluation action to perform. Options:
+          * `#{Action::RUBY}`: Execute Ruby code
+          * `#{Action::PYTHON}`: Execute Python code (requires python3)
+          * `#{Action::SHELL}`: Execute shell commands
+        TEXT
 
-      param :code, desc: <<~TEXT
-        The code to execute. Required for the following actions:
-        * `#{Action::RUBY}`
-        * `#{Action::PYTHON}`
-      TEXT
+        string :code, description: <<~TEXT.strip, required: false
+          The code to execute. Required for the following actions:
+          * `#{Action::RUBY}`
+          * `#{Action::PYTHON}`
+        TEXT
 
-      param :command, desc: <<~TEXT
-        The shell command to execute. Required for the following actions:
-        * `#{Action::SHELL}`
-      TEXT
+        string :command, description: <<~TEXT.strip, required: false
+          The shell command to execute. Required for the following actions:
+          * `#{Action::SHELL}`
+        TEXT
+      end
 
       # @param logger [Logger] optional logger
       def initialize(logger: nil)

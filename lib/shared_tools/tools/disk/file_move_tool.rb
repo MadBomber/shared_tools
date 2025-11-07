@@ -16,8 +16,10 @@ module SharedTools
 
         description "Moves a file."
 
-        param :path, desc: "a path (e.g. `./old.rb`)"
-        param :destination, desc: "a path (e.g. `./new.rb`)"
+        params do
+          string :path, description: "a path (e.g. `./old.rb`)"
+          string :destination, description: "a path (e.g. `./new.rb`)"
+        end
 
         def initialize(driver: nil, logger: nil)
           @driver = driver || SharedTools::Tools::Disk::LocalDriver.new(root: Dir.pwd)

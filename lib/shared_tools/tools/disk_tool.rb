@@ -44,49 +44,51 @@ module SharedTools
         Action::FILE_REPLACE,
       ].freeze
 
-      param :action, desc: <<~TEXT
-        Options:
-        * `#{Action::DIRECTORY_CREATE}`: creates a directory at a specific `path`
-        * `#{Action::DIRECTORY_DELETE}`: deletes a directory at a specific `path`
-        * `#{Action::DIRECTORY_MOVE}`: moves a directory from `path` to (`to`)
-        * `#{Action::DIRECTORY_LIST}`: lists the contents of a directory at a specific `path` (use '.' for root)
-        * `#{Action::FILE_CREATE}`: creates a file at a specific `path`
-        * `#{Action::FILE_DELETE}`: deletes a file at a specific `path`
-        * `#{Action::FILE_MOVE}`: moves a file from `path` to another
-        * `#{Action::FILE_READ}`: reads the contents of a file at a specific path
-        * `#{Action::FILE_WRITE}`: writes the contents of a file at a specific path
-        * `#{Action::FILE_REPLACE}`: replaces the contents of a file at a specific path
-      TEXT
+      params do
+        string :action, description: <<~TEXT.strip
+          Options:
+          * `#{Action::DIRECTORY_CREATE}`: creates a directory at a specific `path`
+          * `#{Action::DIRECTORY_DELETE}`: deletes a directory at a specific `path`
+          * `#{Action::DIRECTORY_MOVE}`: moves a directory from `path` to (`to`)
+          * `#{Action::DIRECTORY_LIST}`: lists the contents of a directory at a specific `path` (use '.' for root)
+          * `#{Action::FILE_CREATE}`: creates a file at a specific `path`
+          * `#{Action::FILE_DELETE}`: deletes a file at a specific `path`
+          * `#{Action::FILE_MOVE}`: moves a file from `path` to another
+          * `#{Action::FILE_READ}`: reads the contents of a file at a specific path
+          * `#{Action::FILE_WRITE}`: writes the contents of a file at a specific path
+          * `#{Action::FILE_REPLACE}`: replaces the contents of a file at a specific path
+        TEXT
 
-      param :path, desc: <<~TEXT
-        A file or directory path that is required for the following actions:
-        * `#{Action::DIRECTORY_CREATE}`
-        * `#{Action::DIRECTORY_DELETE}`
-        * `#{Action::DIRECTORY_MOVE}`
-        * `#{Action::DIRECTORY_LIST}`
-        * `#{Action::FILE_DELETE}`
-        * `#{Action::FILE_READ}`
-        * `#{Action::FILE_WRITE}`
-        * `#{Action::FILE_REPLACE}`
-      TEXT
+        string :path, description: <<~TEXT.strip
+          A file or directory path that is required for the following actions:
+          * `#{Action::DIRECTORY_CREATE}`
+          * `#{Action::DIRECTORY_DELETE}`
+          * `#{Action::DIRECTORY_MOVE}`
+          * `#{Action::DIRECTORY_LIST}`
+          * `#{Action::FILE_DELETE}`
+          * `#{Action::FILE_READ}`
+          * `#{Action::FILE_WRITE}`
+          * `#{Action::FILE_REPLACE}`
+        TEXT
 
-      param :destination, desc: <<~TEXT
-        A file or directory path that is required for the following actions:
-        * `#{Action::DIRECTORY_MOVE}`
-        * `#{Action::FILE_MOVE}`
-      TEXT
+        string :destination, description: <<~TEXT.strip, required: false
+          A file or directory path that is required for the following actions:
+          * `#{Action::DIRECTORY_MOVE}`
+          * `#{Action::FILE_MOVE}`
+        TEXT
 
-      param :text, desc: <<~TEXT
-        The text to be written to a file for the `#{Action::FILE_WRITE}` action.
-      TEXT
+        string :text, description: <<~TEXT.strip, required: false
+          The text to be written to a file for the `#{Action::FILE_WRITE}` action.
+        TEXT
 
-      param :old_text, desc: <<~TEXT
-        The old text to be replaced in a file for the `#{Action::FILE_REPLACE}` action.
-      TEXT
+        string :old_text, description: <<~TEXT.strip, required: false
+          The old text to be replaced in a file for the `#{Action::FILE_REPLACE}` action.
+        TEXT
 
-      param :new_text, desc: <<~TEXT
-        The new text to replace in a few file for the `#{Action::FILE_REPLACE}` action.
-      TEXT
+        string :new_text, description: <<~TEXT.strip, required: false
+          The new text to replace in a few file for the `#{Action::FILE_REPLACE}` action.
+        TEXT
+      end
 
 
       # @param driver [SharedTools::Tools::Disk::BaseDriver] optional, defaults to LocalDriver with current directory

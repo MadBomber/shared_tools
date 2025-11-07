@@ -13,8 +13,10 @@ module SharedTools
 
         description "Writes the contents of a file."
 
-        param :path, desc: "a path for the file (e.g. `./main.rb`)"
-        param :text, desc: "the text to write to the file (e.g. `puts 'Hello World'`)"
+        params do
+          string :path, description: "a path for the file (e.g. `./main.rb`)"
+          string :text, description: "the text to write to the file (e.g. `puts 'Hello World'`)"
+        end
 
         def initialize(driver: nil, logger: nil)
           @driver = driver || SharedTools::Tools::Disk::LocalDriver.new(root: Dir.pwd)

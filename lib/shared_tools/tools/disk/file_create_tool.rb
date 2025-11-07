@@ -13,7 +13,9 @@ module SharedTools
 
         description "Creates a file."
 
-        param :path, desc: "a path to the file (e.g. `./README.md`)"
+        params do
+          string :path, description: "a path to the file (e.g. `./README.md`)"
+        end
 
         def initialize(driver: nil, logger: nil)
           @driver = driver || SharedTools::Tools::Disk::LocalDriver.new(root: Dir.pwd)

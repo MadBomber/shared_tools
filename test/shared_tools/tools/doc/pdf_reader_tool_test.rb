@@ -4,6 +4,8 @@ require "test_helper"
 
 class PdfReaderToolTest < Minitest::Test
   def setup
+    skip "pdf-reader gem not installed" unless defined?(PDF::Reader)
+
     @tool = SharedTools::Tools::Doc::PdfReaderTool.new
     @test_pdf = File.expand_path("../../../fixtures/test.pdf", __dir__)
     @nonexistent_pdf = File.expand_path("../../../fixtures/nonexistent.pdf", __dir__)

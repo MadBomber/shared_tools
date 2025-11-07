@@ -12,7 +12,9 @@ module SharedTools
 
         description "Execute a shell command safely and return the result."
 
-        param :command, desc: "The shell command to execute"
+        params do
+          string :command, description: "The shell command to execute"
+        end
 
         # @param logger [Logger] optional logger
         def initialize(logger: nil)

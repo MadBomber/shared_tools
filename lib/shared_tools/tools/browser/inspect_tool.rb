@@ -17,9 +17,11 @@ module SharedTools
 
         description "A browser automation tool for finding UI elements by their text content."
 
-        param :text_content, desc: "Search for elements containing this text"
-        param :selector, desc: "Optional CSS selector to further filter results"
-        param :context_size, desc: "Number of parent elements to include for context"
+        params do
+          string :text_content, description: "Search for elements containing this text"
+          string :selector, description: "Optional CSS selector to further filter results", required: false
+          integer :context_size, description: "Number of parent elements to include for context", required: false
+        end
 
         def initialize(driver: nil, logger: nil)
           @driver = driver || default_driver

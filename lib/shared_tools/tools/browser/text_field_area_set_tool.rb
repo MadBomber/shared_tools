@@ -12,8 +12,10 @@ module SharedTools
 
         description "A browser automation tool for clicking a specific link."
 
-        param :selector, desc: "The ID / name of the text field / area to interact with."
-        param :text, desc: "The text to set."
+        params do
+          string :selector, description: "The ID / name of the text field / area to interact with."
+          string :text, description: "The text to set."
+        end
 
         def initialize(driver: nil, logger: nil)
           @driver = driver || default_driver

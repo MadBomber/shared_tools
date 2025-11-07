@@ -21,6 +21,7 @@ class DocToolTest < Minitest::Test
   end
 
   def test_pdf_read_action
+    skip "pdf-reader gem not installed" unless defined?(PDF::Reader)
     skip "Test PDF file not available" unless File.exist?(@test_pdf)
 
     result = @tool.execute(
@@ -35,6 +36,7 @@ class DocToolTest < Minitest::Test
   end
 
   def test_pdf_read_with_multiple_pages
+    skip "pdf-reader gem not installed" unless defined?(PDF::Reader)
     skip "Test PDF file not available" unless File.exist?(@test_pdf)
 
     result = @tool.execute(

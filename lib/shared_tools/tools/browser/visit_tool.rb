@@ -12,7 +12,9 @@ module SharedTools
 
         description "A browser automation tool for navigating to a specific URL."
 
-        param :url, desc: "A URL (e.g. https://news.ycombinator.com)."
+        params do
+          string :url, description: "A URL (e.g. https://news.ycombinator.com)."
+        end
 
         def initialize(driver: nil, logger: nil)
           @driver = driver || default_driver

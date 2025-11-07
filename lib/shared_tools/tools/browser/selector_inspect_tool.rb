@@ -17,8 +17,10 @@ module SharedTools
 
         description "A browser automation tool for finding and inspecting elements by CSS selector."
 
-        param :selector, desc: "CSS selector to target specific elements"
-        param :context_size, desc: "Number of parent elements to include for context"
+        params do
+          string :selector, description: "CSS selector to target specific elements"
+          integer :context_size, description: "Number of parent elements to include for context", required: false
+        end
 
         def initialize(driver: nil, logger: nil)
           @driver = driver || default_driver

@@ -13,8 +13,10 @@ module SharedTools
 
         description "Moves a directory from one location to another."
 
-        param :path, desc: "a path (e.g. `./old`)"
-        param :destination, desc: "a path (e.g. `./new`)"
+        params do
+          string :path, description: "a path (e.g. `./old`)"
+          string :destination, description: "a path (e.g. `./new`)"
+        end
 
         def initialize(driver: nil, logger: nil)
           @driver = driver || SharedTools::Tools::Disk::LocalDriver.new(root: Dir.pwd)

@@ -44,22 +44,24 @@ module SharedTools
           {"action": "#{Action::PDF_READ}", "doc_path": "./manual.pdf", "page_numbers": "1, 5-8, 15, 20-25"}
       TEXT
 
-      param :action, desc: <<~TEXT
-        The document action to perform. Options:
-        * `#{Action::PDF_READ}`: Read pages from a PDF document
-      TEXT
+      params do
+        string :action, description: <<~TEXT.strip
+          The document action to perform. Options:
+          * `#{Action::PDF_READ}`: Read pages from a PDF document
+        TEXT
 
-      param :doc_path, desc: <<~TEXT
-        Path to the document file. Required for the following actions:
-        * `#{Action::PDF_READ}`
-      TEXT
+        string :doc_path, description: <<~TEXT.strip, required: false
+          Path to the document file. Required for the following actions:
+          * `#{Action::PDF_READ}`
+        TEXT
 
-      param :page_numbers, desc: <<~TEXT
-        Comma-separated page numbers to read (first page is 1).
-        Examples: "1", "1, 3, 5", "1-10", "1, 5-8, 15"
-        Required for the following actions:
-        * `#{Action::PDF_READ}`
-      TEXT
+        string :page_numbers, description: <<~TEXT.strip, required: false
+          Comma-separated page numbers to read (first page is 1).
+          Examples: "1", "1, 3, 5", "1-10", "1, 5-8, 15"
+          Required for the following actions:
+          * `#{Action::PDF_READ}`
+        TEXT
+      end
 
       # @param logger [Logger] optional logger
       def initialize(logger: nil)

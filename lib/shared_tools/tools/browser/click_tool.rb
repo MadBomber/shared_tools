@@ -15,15 +15,17 @@ module SharedTools
 
         description "A browser automation tool for clicking any clickable element."
 
-        param :selector, desc: <<~TEXT
-          A CSS selector to locate or interact with an element on the page:
+        params do
+          string :selector, description: <<~TEXT.strip
+            A CSS selector to locate or interact with an element on the page:
 
-           * 'form button[type="submit"]': selects a button with type submit
-           * '.example': selects elements with the foo and bar classes
-           * '#example': selects an element by ID
-           * 'div#parent > span.child': selects span elements that are direct children of div elements
-           * 'a[href="/login"]': selects an anchor tag with a specific href attribute
-        TEXT
+             * 'form button[type="submit"]': selects a button with type submit
+             * '.example': selects elements with the foo and bar classes
+             * '#example': selects an element by ID
+             * 'div#parent > span.child': selects span elements that are direct children of div elements
+             * 'a[href="/login"]': selects an anchor tag with a specific href attribute
+          TEXT
+        end
 
         def initialize(driver: nil, logger: nil)
           @driver = driver || default_driver

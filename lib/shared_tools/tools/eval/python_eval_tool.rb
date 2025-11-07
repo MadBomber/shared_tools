@@ -20,7 +20,10 @@ module SharedTools
                       WARNING: This tool executes arbitrary Python code. Use with caution.
                       NOTE: Requires python3 to be available in the system PATH.
                     DESCRIPTION
-        param :code, desc: "The Python code to execute"
+
+        params do
+          string :code, description: "The Python code to execute"
+        end
 
         # @param logger [Logger] optional logger
         def initialize(logger: nil)

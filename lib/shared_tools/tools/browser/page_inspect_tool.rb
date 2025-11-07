@@ -17,7 +17,9 @@ module SharedTools
 
         description "A browser automation tool for viewing the full HTML of the current page."
 
-        param :summarize, desc: "If true, returns a summary instead of full HTML"
+        params do
+          boolean :summarize, description: "If true, returns a summary instead of full HTML", required: false
+        end
 
         def initialize(driver: nil, logger: nil)
           @driver = driver || default_driver

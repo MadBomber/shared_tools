@@ -86,61 +86,63 @@ module SharedTools
           {"action": "#{Action::SCREENSHOT}"}
       TEXT
 
-      param :action, desc: <<~TEXT
-        The browser action to perform. Options:
-        * `#{Action::VISIT}`: Navigate to a website
-        * `#{Action::PAGE_INSPECT}`: Get full HTML or summarized page information
-        * `#{Action::UI_INSPECT}`: Find elements containing specific text
-        * `#{Action::SELECTOR_INSPECT}`: Find elements matching CSS selectors
-        * `#{Action::CLICK}`: Click an element by CSS selector
-        * `#{Action::TEXT_FIELD_SET}`: Enter text in input fields or text areas
-        * `#{Action::SCREENSHOT}`: Take a screenshot of the current page
-      TEXT
+      params do
+        string :action, description: <<~TEXT.strip
+          The browser action to perform. Options:
+          * `#{Action::VISIT}`: Navigate to a website
+          * `#{Action::PAGE_INSPECT}`: Get full HTML or summarized page information
+          * `#{Action::UI_INSPECT}`: Find elements containing specific text
+          * `#{Action::SELECTOR_INSPECT}`: Find elements matching CSS selectors
+          * `#{Action::CLICK}`: Click an element by CSS selector
+          * `#{Action::TEXT_FIELD_SET}`: Enter text in input fields or text areas
+          * `#{Action::SCREENSHOT}`: Take a screenshot of the current page
+        TEXT
 
-      param :url, desc: <<~TEXT
-        The URL to visit. Required for the following actions:
-        * `#{Action::VISIT}`
-      TEXT
+        string :url, description: <<~TEXT.strip, required: false
+          The URL to visit. Required for the following actions:
+          * `#{Action::VISIT}`
+        TEXT
 
-      param :selector, desc: <<~TEXT
-        A CSS selector to locate an element:
+        string :selector, description: <<~TEXT.strip, required: false
+          A CSS selector to locate an element:
 
-          * 'form button[type="submit"]': selects a button with type submit
-          * '.example': selects elements with the foo and bar classes
-          * '#example': selects an element by ID
-          * 'div#parent > span.child': selects span elements that are direct children of div elements
-          * 'a[href="/login"]': selects an anchor tag with a specific href attribute
-          * 'button[aria-label="Close"]': selects an element by ARIA label
+            * 'form button[type="submit"]': selects a button with type submit
+            * '.example': selects elements with the foo and bar classes
+            * '#example': selects an element by ID
+            * 'div#parent > span.child': selects span elements that are direct children of div elements
+            * 'a[href="/login"]': selects an anchor tag with a specific href attribute
+            * 'button[aria-label="Close"]': selects an element by ARIA label
 
-        Required for the following actions:
-        * `#{Action::CLICK}`
-        * `#{Action::TEXT_FIELD_SET}`
-        * `#{Action::SELECTOR_INSPECT}`
+          Required for the following actions:
+          * `#{Action::CLICK}`
+          * `#{Action::TEXT_FIELD_SET}`
+          * `#{Action::SELECTOR_INSPECT}`
 
-        Optional for the following actions:
-        * `#{Action::UI_INSPECT}` (search within specific container)
-      TEXT
+          Optional for the following actions:
+          * `#{Action::UI_INSPECT}` (search within specific container)
+        TEXT
 
-      param :value, desc: <<~TEXT
-        The value to set in the text field. Required for the following actions:
-        * `#{Action::TEXT_FIELD_SET}`
-      TEXT
+        string :value, description: <<~TEXT.strip, required: false
+          The value to set in the text field. Required for the following actions:
+          * `#{Action::TEXT_FIELD_SET}`
+        TEXT
 
-      param :context_size, desc: <<~TEXT
-        Number of parent elements to include in inspect results (default: 2). Optional for the following actions:
-        * `#{Action::UI_INSPECT}`
-        * `#{Action::SELECTOR_INSPECT}`
-      TEXT
+        integer :context_size, description: <<~TEXT.strip, required: false
+          Number of parent elements to include in inspect results (default: 2). Optional for the following actions:
+          * `#{Action::UI_INSPECT}`
+          * `#{Action::SELECTOR_INSPECT}`
+        TEXT
 
-      param :full_html, desc: <<~TEXT
-        Return the full HTML of the page instead of a summary. Optional for the following actions:
-        * `#{Action::PAGE_INSPECT}`
-      TEXT
+        boolean :full_html, description: <<~TEXT.strip, required: false
+          Return the full HTML of the page instead of a summary. Optional for the following actions:
+          * `#{Action::PAGE_INSPECT}`
+        TEXT
 
-      param :text_content, desc: <<~TEXT
-        Search for elements containing this text. Required for the following actions:
-        * `#{Action::UI_INSPECT}`
-      TEXT
+        string :text_content, description: <<~TEXT.strip, required: false
+          Search for elements containing this text. Required for the following actions:
+          * `#{Action::UI_INSPECT}`
+        TEXT
+      end
 
 
       # @param logger [Logger] optional logger

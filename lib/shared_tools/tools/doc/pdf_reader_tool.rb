@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 # Credit: https://max.engineer/giant-pdf-llm
 
-require "pdf-reader"
+begin
+  require "pdf-reader"
+rescue LoadError
+  # pdf-reader is optional - will raise error when tool is used without it
+end
 
 module SharedTools
   module Tools
@@ -14,10 +18,10 @@ module SharedTools
 
         description "Read the text of any set of pages from a PDF document."
 
-        param :page_numbers,
-          desc: 'Comma-separated page numbers (first page: 1). (e.g. "12, 14, 15")'
-        param :doc_path,
-          desc: "Path to the PDF document."
+        params do
+          string :page_numbers, description: 'Comma-separated page numbers (first page: 1). (e.g. "12, 14, 15")'
+          string :doc_path, description: "Path to the PDF document."
+        end
 
         # @param logger [Logger] optional logger
         def initialize(logger: nil)
@@ -29,6 +33,8 @@ module SharedTools
         #
         # @return [Hash] extraction result
         def execute(page_numbers:, doc_path:)
+          raise LoadError, "PdfReaderTool requires the 'pdf-reader' gem. Install it with: gem install pdf-reader" unless defined?(PDF::Reader)
+
           @logger.info("Reading PDF: #{doc_path}, pages: #{page_numbers}")
 
           begin

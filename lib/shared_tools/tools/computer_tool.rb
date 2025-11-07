@@ -70,68 +70,70 @@ module SharedTools
         ScrollDirection::RIGHT,
       ].freeze
 
-      param :action, desc: <<~TEXT
-        Options:
-        * `#{Action::KEY}`: Press a single key / combination of keys on the keyboard:
-          - supports xdotool's `key` syntax (e.g. "alt+Tab", "Return", "ctrl+s", etc)
-        * `#{Action::HOLD_KEY}`: Hold down a key or multiple keys for a specified duration (in seconds):
-          - supports xdotool's `key` syntax (e.g. "alt+Tab", "Return", "ctrl+s", etc)
-        * `#{Action::MOUSE_POSITION}`: Get the current (x,y) pixel coordinate of the cursor on the screen.
-        * `#{Action::MOUSE_MOVE}`: Move the cursor to a specified (x,y) pixel coordinate on the screen.
-        * `#{Action::MOUSE_CLICK}`: Click the mouse button at the specified (x,y) pixel coordinate on the screen.
-        * `#{Action::MOUSE_DOUBLE_CLICK}`: Double click at the specified (x,y) pixel coordinate on the screen.
-        * `#{Action::MOUSE_TRIPLE_CLICK}`: Triple click at the specified (x,y) pixel coordinate on the screen.
-        * `#{Action::MOUSE_DOWN}`: Press the mouse button at the specified (x,y) pixel coordinate on the screen.
-        * `#{Action::MOUSE_DRAG}`: Click and drag the cursor to a specified (x, y) pixel coordinate on the screen.
-        * `#{Action::MOUSE_UP}`: Release the mouse button at the specified (x,y) pixel coordinate on the screen.
-        * `#{Action::TYPE}`: Type a string of text on the keyboard.
-        * `#{Action::SCROLL}`: Scroll the screen in a specified direction by a specified amount of clicks of the scroll wheel.
-        * `#{Action::WAIT}`: Wait for a specified duration (in seconds).
-      TEXT
+      params do
+        string :action, description: <<~TEXT.strip
+          Options:
+          * `#{Action::KEY}`: Press a single key / combination of keys on the keyboard:
+            - supports xdotool's `key` syntax (e.g. "alt+Tab", "Return", "ctrl+s", etc)
+          * `#{Action::HOLD_KEY}`: Hold down a key or multiple keys for a specified duration (in seconds):
+            - supports xdotool's `key` syntax (e.g. "alt+Tab", "Return", "ctrl+s", etc)
+          * `#{Action::MOUSE_POSITION}`: Get the current (x,y) pixel coordinate of the cursor on the screen.
+          * `#{Action::MOUSE_MOVE}`: Move the cursor to a specified (x,y) pixel coordinate on the screen.
+          * `#{Action::MOUSE_CLICK}`: Click the mouse button at the specified (x,y) pixel coordinate on the screen.
+          * `#{Action::MOUSE_DOUBLE_CLICK}`: Double click at the specified (x,y) pixel coordinate on the screen.
+          * `#{Action::MOUSE_TRIPLE_CLICK}`: Triple click at the specified (x,y) pixel coordinate on the screen.
+          * `#{Action::MOUSE_DOWN}`: Press the mouse button at the specified (x,y) pixel coordinate on the screen.
+          * `#{Action::MOUSE_DRAG}`: Click and drag the cursor to a specified (x, y) pixel coordinate on the screen.
+          * `#{Action::MOUSE_UP}`: Release the mouse button at the specified (x,y) pixel coordinate on the screen.
+          * `#{Action::TYPE}`: Type a string of text on the keyboard.
+          * `#{Action::SCROLL}`: Scroll the screen in a specified direction by a specified amount of clicks of the scroll wheel.
+          * `#{Action::WAIT}`: Wait for a specified duration (in seconds).
+        TEXT
 
-      param :coordinate, desc: <<~TEXT
-        An (x,y) coordinate hash with integer values (e.g. {x: 100, y: 200}). Required for the following actions:
-        * `#{Action::MOUSE_MOVE}`
-        * `#{Action::MOUSE_CLICK}`
-        * `#{Action::MOUSE_DOWN}`
-        * `#{Action::MOUSE_DRAG}`
-        * `#{Action::MOUSE_UP}`
-        * `#{Action::MOUSE_DOUBLE_CLICK}`
-        * `#{Action::MOUSE_TRIPLE_CLICK}`
-      TEXT
+        object :coordinate, description: <<~TEXT.strip, required: false
+          An (x,y) coordinate hash with integer values (e.g. {x: 100, y: 200}). Required for the following actions:
+          * `#{Action::MOUSE_MOVE}`
+          * `#{Action::MOUSE_CLICK}`
+          * `#{Action::MOUSE_DOWN}`
+          * `#{Action::MOUSE_DRAG}`
+          * `#{Action::MOUSE_UP}`
+          * `#{Action::MOUSE_DOUBLE_CLICK}`
+          * `#{Action::MOUSE_TRIPLE_CLICK}`
+        TEXT
 
-      param :text, desc: <<~TEXT
-        The text to type. Required for the following actions:
-        * `#{Action::KEY}`
-        * `#{Action::HOLD_KEY}`
-        * `#{Action::TYPE}`
-      TEXT
+        string :text, description: <<~TEXT.strip, required: false
+          The text to type. Required for the following actions:
+          * `#{Action::KEY}`
+          * `#{Action::HOLD_KEY}`
+          * `#{Action::TYPE}`
+        TEXT
 
-      param :duration, desc: <<~TEXT
-        A duration in seconds. Required for the following actions:
-        * `#{Action::HOLD_KEY}`
-        * `#{Action::WAIT}`
-      TEXT
+        integer :duration, description: <<~TEXT.strip, required: false
+          A duration in seconds. Required for the following actions:
+          * `#{Action::HOLD_KEY}`
+          * `#{Action::WAIT}`
+        TEXT
 
-      param :mouse_button, desc: <<~TEXT
-        The mouse button to use. Required for the following actions:
-        * `#{Action::MOUSE_CLICK}`
-        * `#{Action::MOUSE_DOWN}`
-        * `#{Action::MOUSE_DRAG}`
-        * `#{Action::MOUSE_UP}`
-        * `#{Action::MOUSE_DOUBLE_CLICK}`
-        * `#{Action::MOUSE_TRIPLE_CLICK}`
-      TEXT
+        string :mouse_button, description: <<~TEXT.strip, required: false
+          The mouse button to use. Required for the following actions:
+          * `#{Action::MOUSE_CLICK}`
+          * `#{Action::MOUSE_DOWN}`
+          * `#{Action::MOUSE_DRAG}`
+          * `#{Action::MOUSE_UP}`
+          * `#{Action::MOUSE_DOUBLE_CLICK}`
+          * `#{Action::MOUSE_TRIPLE_CLICK}`
+        TEXT
 
-      param :scroll_direction, desc: <<~TEXT
-        The direction to scroll. Required for the following actions:
-        * `#{Action::SCROLL}`
-      TEXT
+        string :scroll_direction, description: <<~TEXT.strip, required: false
+          The direction to scroll. Required for the following actions:
+          * `#{Action::SCROLL}`
+        TEXT
 
-      param :scroll_amount, desc: <<~TEXT
-        The amount of clicks to scroll. Required for the following actions:
-        * `#{Action::SCROLL}`
-      TEXT
+        integer :scroll_amount, description: <<~TEXT.strip, required: false
+          The amount of clicks to scroll. Required for the following actions:
+          * `#{Action::SCROLL}`
+        TEXT
+      end
 
 
       # @param driver [Computer::BaseDriver] optional, will attempt to create platform-specific driver if not provided
