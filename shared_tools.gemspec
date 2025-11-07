@@ -33,14 +33,15 @@ Gem::Specification.new do |spec|
 
   # Dependencies
   spec.add_dependency "ruby_llm"
+  spec.add_dependency "ruby_llm-mcp"
   spec.add_dependency "zeitwerk"
   spec.add_dependency "nokogiri"
 
   # Development dependencies
 
   # Support gems
-  spec.add_development_dependency "pdf-reader", "~> 2.0"
-  spec.add_development_dependency "ruby_llm-mcp", "~> 0.5.1"
+  # spec.add_development_dependency "pdf-reader"
+  # spec.add_development_dependency "sqlite3"
 
 
   # For SharedTools development
@@ -48,5 +49,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "debug_me"
   spec.add_development_dependency "minitest"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "sqlite3"
 end
