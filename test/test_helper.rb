@@ -15,3 +15,16 @@ require "minitest/autorun"
 require "minitest/pride"
 require "ruby_llm"
 require "shared_tools"
+
+# Load optional dependencies for tests
+begin
+  require "nokogiri"
+rescue LoadError
+  # Nokogiri not available - some tests will be skipped
+end
+
+begin
+  require "pdf-reader"
+rescue LoadError
+  # pdf-reader not available - some tests will be skipped
+end

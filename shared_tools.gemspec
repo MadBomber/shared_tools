@@ -36,12 +36,16 @@ Gem::Specification.new do |spec|
   spec.add_dependency "ruby_llm-mcp"
   spec.add_dependency "zeitwerk"
   spec.add_dependency "nokogiri"
+  spec.add_dependency "dentaku"
+  spec.add_dependency "sequel"
+  spec.add_dependency "openweathermap"
 
   # Development dependencies
 
   # Support gems
-  # spec.add_development_dependency "pdf-reader"
-  # spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency "openweathermap"
+  spec.add_development_dependency "pdf-reader"
+  spec.add_development_dependency "sqlite3"
 
 
   # For SharedTools development
