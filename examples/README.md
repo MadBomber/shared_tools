@@ -558,6 +558,67 @@ Demonstrates comprehensive error handling patterns including:
 
 ---
 
+### 16. MCP Client Example (`mcp_client_example.rb`)
+
+Demonstrates Model Context Protocol (MCP) client integration including:
+- Connecting to MCP servers (Tavily, GitHub, iMCP)
+- Using MCP tools in LLM conversations
+- Multi-client orchestration
+- Accessing MCP resources and prompts
+- Real-world integration patterns
+- Environment configuration and setup
+
+**Requirements:**
+```bash
+gem install ruby_llm-mcp
+```
+
+**Additional Requirements:**
+- **For Tavily (web search):**
+  - Set `TAVILY_API_KEY` environment variable
+  - Get your API key at: https://tavily.com
+
+- **For GitHub operations:**
+  - Set `GITHUB_PERSONAL_ACCESS_TOKEN` environment variable
+  - Install: `brew install github-mcp-server`
+
+- **For iMCP (macOS only):**
+  - Install: `brew install --cask loopwork/tap/iMCP`
+
+**Run it:**
+```bash
+export TAVILY_API_KEY="your-api-key"
+export GITHUB_PERSONAL_ACCESS_TOKEN="your-token"
+./mcp_client_example.rb
+```
+
+**Key Features:**
+- Supports ruby_llm-mcp v0.7.0+ (requires RubyLLM 1.9+)
+- Automatically detects available MCP servers
+- Shows integration with multiple MCP clients simultaneously
+- Demonstrates tools, resources, and prompts
+- Production-ready configuration patterns
+- Comprehensive error handling examples
+
+**About MCP:**
+Model Context Protocol (MCP) is an open protocol that standardizes how AI applications interact with external data sources and tools. MCP provides:
+- **Standardized Integration**: Connect to any MCP server with consistent APIs
+- **Tool Discovery**: Automatically discover available tools from servers
+- **Resource Access**: Read files, databases, and other resources
+- **Prompt Templates**: Reusable prompts with parameters
+
+**Available MCP Clients:**
+- **Tavily**: AI-powered web search and research
+- **GitHub**: Repository management and operations
+- **iMCP**: macOS system integration (Notes, Calendar, Contacts)
+
+**Documentation:**
+- Official MCP docs: https://www.rubyllm-mcp.com
+- GitHub repository: https://github.com/patvice/ruby_llm-mcp
+- SharedTools MCP README: ../lib/shared_tools/mcp/README.md
+
+---
+
 ## General Usage Patterns
 
 ### Tool Initialization

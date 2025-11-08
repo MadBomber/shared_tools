@@ -1,5 +1,22 @@
-# shared_tools/ruby_llm/mcp/github_mcp_server.rb
-# brew install github_mcp_server
+# shared_tools/mcp/github_mcp_server.rb
+#
+# GitHub MCP Server Client Configuration for ruby_llm-mcp >= 0.7.0
+#
+# Provides access to GitHub operations including:
+#   - Repository management
+#   - Issue and PR operations
+#   - Code search
+#   - Branch operations
+#   - And more GitHub API functionality
+#
+# Installation:
+#   brew install github-mcp-server
+#
+# Configuration:
+#   Set environment variable: GITHUB_PERSONAL_ACCESS_TOKEN
+#   export GITHUB_PERSONAL_ACCESS_TOKEN=your_token_here
+#
+# Compatible with ruby_llm-mcp v0.7.0+
 
 require "ruby_llm/mcp"
 
@@ -7,7 +24,7 @@ RubyLLM::MCP.add_client(
   name: "github-mcp-server",
   transport_type: :stdio,
   config: {
-    command: "/opt/homebrew/bin/github-mcp-server", # brew install github-mcp-server
+    command: "/opt/homebrew/bin/github-mcp-server",
     args: %w[stdio],
     env: { "GITHUB_PERSONAL_ACCESS_TOKEN" => ENV.fetch("GITHUB_PERSONAL_ACCESS_TOKEN") },
   },
