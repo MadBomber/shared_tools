@@ -1,9 +1,11 @@
 # Changelog
 
-### Unreleased
-- Changing direction.  Beginning with 0.3.0 will only support RubyLLM.
+## Unreleased
 
 ## Released
+### [0.3.0] 2025-11-08
+- changed focus of shared_tools to only support the ruby_llm and ruby_llm-mcp ecosystem
+
 ### [0.2.1] 2025-07-03
 - iMCP server app for MacOS is noisy logger so redirect stderr to /dev/null
 
