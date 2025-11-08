@@ -1,21 +1,16 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Example: Using DiskTool for file and directory operations
+# Example: Using DiskTool with LLM Integration
 #
-# This example demonstrates how to use the DiskTool facade to perform
-# file system operations like creating, reading, writing, moving, and deleting
-# files and directories.
+# This example demonstrates how an LLM can perform file system operations
+# through natural language prompts using the DiskTool.
 
-require 'bundler/setup'
-require 'shared_tools'
-require 'fileutils'
+require_relative 'ruby_llm_config'
 require 'tmpdir'
+require 'fileutils'
 
-puts "=" * 80
-puts "DiskTool Example - File System Operations"
-puts "=" * 80
-puts
+title "DiskTool Example - LLM-Powered File Operations"
 
 # Create a temporary directory for our examples
 temp_dir = Dir.mktmpdir('disk_tool_demo')
@@ -24,232 +19,109 @@ puts
 
 # Initialize the disk tool with a local driver
 # The LocalDriver is sandboxed to the specified root directory for security
-disk = SharedTools::Tools::DiskTool.new(
-  driver: SharedTools::Tools::Disk::LocalDriver.new(root: temp_dir)
-)
+disk_driver = SharedTools::Tools::Disk::LocalDriver.new(root: temp_dir)
+
+# Register the DiskTools with RubyLLM
+tools = [
+  SharedTools::Tools::Disk::FileCreateTool.new(driver: disk_driver),
+  SharedTools::Tools::Disk::FileReadTool.new(driver: disk_driver),
+  SharedTools::Tools::Disk::FileWriteTool.new(driver: disk_driver),
+  SharedTools::Tools::Disk::FileReplaceTool.new(driver: disk_driver),
+  SharedTools::Tools::Disk::FileMoveTool.new(driver: disk_driver),
+  SharedTools::Tools::Disk::FileDeleteTool.new(driver: disk_driver),
+  SharedTools::Tools::Disk::DirectoryCreateTool.new(driver: disk_driver),
+  SharedTools::Tools::Disk::DirectoryListTool.new(driver: disk_driver),
+  SharedTools::Tools::Disk::DirectoryMoveTool.new(driver: disk_driver),
+  SharedTools::Tools::Disk::DirectoryDeleteTool.new(driver: disk_driver)
+]
+
+# Create a chat instance using ollama_chat helper
+@chat = ollama_chat()
+
+# Add tools to the chat
+tools.each { |tool| @chat = @chat.with_tool(tool) }
 
 begin
-  # Example 1: Create a directory
-  puts "1. Creating a directory"
-  puts "-" * 40
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::DIRECTORY_CREATE,
-    path: "./projects"
-  )
-  puts "Created directory: projects"
-  puts
+  # Example 1: Create a project structure
+  title "Example 1: Create Project Structure", bc: '-'
+  prompt = <<~PROMPT
+    Create a new Ruby project structure with the following:
+    - A directory called 'my_app'
+    - Inside it: lib, spec, and bin directories
+    - A README.md file with "# My App" as content
+    - A Gemfile with just "source 'https://rubygems.org'"
+  PROMPT
+  test_with_prompt prompt
 
-  # Example 2: Create nested directories
-  puts "2. Creating nested directories"
-  puts "-" * 40
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::DIRECTORY_CREATE,
-    path: "./projects/ruby/shared_tools"
-  )
-  puts "Created nested path: projects/ruby/shared_tools"
-  puts
+  # Example 2: Create and write a file
+  title "Example 2: Create and Write Content", bc: '-'
+  prompt = "Create a file called 'notes.txt' and write 'Meeting at 3pm tomorrow' in it."
+  test_with_prompt prompt
 
-  # Example 3: Create a file
-  puts "3. Creating a file"
-  puts "-" * 40
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::FILE_CREATE,
-    path: "./README.md"
-  )
-  puts "Created file: README.md"
-  puts
+  # Example 3: Read file contents
+  title "Example 3: Read File Contents", bc: '-'
+  prompt = "What's in the notes.txt file?"
+  test_with_prompt prompt
 
-  # Example 4: Write content to a file
-  puts "4. Writing content to a file"
-  puts "-" * 40
-  content = <<~TEXT
-    # SharedTools Demo
+  # Example 4: Update file content
+  title "Example 4: Update File Content", bc: '-'
+  prompt = "In the notes.txt file, change '3pm' to '4pm'."
+  test_with_prompt prompt
 
-    This is a demo file created by DiskTool.
+  # Example 5: List directory contents
+  title "Example 5: List Directory", bc: '-'
+  prompt = "Show me what files and directories are in the my_app folder."
+  test_with_prompt prompt
 
-    ## Features
-    - File operations
-    - Directory management
-    - Path security
-  TEXT
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::FILE_WRITE,
-    path: "./README.md",
-    text: content
-  )
-  puts "Wrote content to README.md"
-  puts
+  # Example 6: Organize files
+  title "Example 6: Organize Files", bc: '-'
+  prompt = "Move the notes.txt file into the my_app directory."
+  test_with_prompt prompt
 
-  # Example 5: Read a file
-  puts "5. Reading a file"
-  puts "-" * 40
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::FILE_READ,
-    path: "./README.md"
-  )
-  puts "File contents:"
-  puts result
-  puts
+  # Example 7: Multi-step workflow
+  title "Example 7: Multi-Step Workflow", bc: '-'
+  prompt = <<~PROMPT
+    I need to:
+    1. Create a new directory called 'docs'
+    2. Create a file in it called 'setup.md'
+    3. Write installation instructions in that file
+    Can you do that for me?
+  PROMPT
+  test_with_prompt prompt
 
-  # Example 6: Replace text in a file
-  puts "6. Replacing text in a file"
-  puts "-" * 40
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::FILE_REPLACE,
-    path: "./README.md",
-    old_text: "demo file",
-    new_text: "example file"
-  )
-  puts "Replaced 'demo file' with 'example file'"
+  # Example 8: Conversational context
+  title "Example 8: Conversational File Management", bc: '-'
 
-  # Read it back to verify
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::FILE_READ,
-    path: "./README.md"
-  )
-  puts "Updated contents:"
-  puts result
-  puts
+  prompt = "Create a file called 'todo.txt' with the text 'Buy groceries'"
+  test_with_prompt prompt
 
-  # Example 7: List directory contents
-  puts "7. Listing directory contents"
-  puts "-" * 40
+  prompt = "Now add 'Call dentist' to that file."
+  test_with_prompt prompt
 
-  # Create some more files for demonstration
-  disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::FILE_CREATE,
-    path: "./projects/ruby/app.rb"
-  )
-  disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::FILE_CREATE,
-    path: "./projects/ruby/Gemfile"
-  )
+  prompt = "Show me what's in the file now."
+  test_with_prompt prompt
 
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::DIRECTORY_LIST,
-    path: "."
-  )
-  puts "Directory listing:"
-  puts result
-  puts
-
-  # Example 8: Move a file
-  puts "8. Moving a file"
-  puts "-" * 40
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::FILE_MOVE,
-    path: "./README.md",
-    destination: "./projects/README.md"
-  )
-  puts "Moved README.md to projects/"
-  puts
-
-  # Example 9: Move a directory
-  puts "9. Moving a directory"
-  puts "-" * 40
-  disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::DIRECTORY_CREATE,
-    path: "./backup"
-  )
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::DIRECTORY_MOVE,
-    path: "./projects/ruby",
-    destination: "./backup/ruby_project"
-  )
-  puts "Moved projects/ruby to backup/ruby_project"
-  puts
-
-  # Example 10: Delete a file
-  puts "10. Deleting a file"
-  puts "-" * 40
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::FILE_DELETE,
-    path: "./projects/README.md"
-  )
-  puts "Deleted projects/README.md"
-  puts
-
-  # Example 11: Delete an empty directory
-  puts "11. Deleting an empty directory"
-  puts "-" * 40
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::DIRECTORY_DELETE,
-    path: "./projects"
-  )
-  puts "Deleted empty directory: projects"
-  puts
-
-  # Example 12: Demonstrate security - path traversal protection
-  puts "12. Security: Path traversal protection"
-  puts "-" * 40
-  puts "Attempting to access parent directory (should fail)..."
-  begin
-    disk.execute(
-      action: SharedTools::Tools::DiskTool::Action::FILE_CREATE,
-      path: "../../../etc/evil.txt"
-    )
-  rescue SecurityError => e
-    puts "✓ Security check passed! Prevented path traversal attack."
-    puts "  Error: #{e.message}"
-  end
-  puts
-
-  # Example 13: Complete workflow - Project setup
-  puts "13. Complete Workflow - Project Setup"
-  puts "-" * 40
-  puts "Creating a new Ruby project structure..."
-
-  # Create directories
-  %w[
-    ./my_app
-    ./my_app/lib
-    ./my_app/spec
-    ./my_app/bin
-  ].each do |dir|
-    disk.execute(
-      action: SharedTools::Tools::DiskTool::Action::DIRECTORY_CREATE,
-      path: dir
-    )
-    puts "  ✓ Created #{dir}"
-  end
-
-  # Create files
-  files = {
-    "./my_app/Gemfile" => "source 'https://rubygems.org'\n\ngem 'shared_tools'\n",
-    "./my_app/lib/my_app.rb" => "# frozen_string_literal: true\n\nmodule MyApp\n  VERSION = '0.1.0'\nend\n",
-    "./my_app/spec/spec_helper.rb" => "require 'bundler/setup'\nrequire 'my_app'\n",
-    "./my_app/README.md" => "# My App\n\nA new Ruby application.\n"
-  }
-
-  files.each do |path, content|
-    disk.execute(
-      action: SharedTools::Tools::DiskTool::Action::FILE_CREATE,
-      path: path
-    )
-    disk.execute(
-      action: SharedTools::Tools::DiskTool::Action::FILE_WRITE,
-      path: path,
-      text: content
-    )
-    puts "  ✓ Created #{path}"
-  end
-
-  puts "\nProject structure:"
-  result = disk.execute(
-    action: SharedTools::Tools::DiskTool::Action::DIRECTORY_LIST,
-    path: "./my_app"
-  )
-  puts result
-  puts
+  # Example 9: List all created files
+  title "Example 9: Review All Files", bc: '-'
+  prompt = "Can you list all the files and directories we've created in this session?"
+  test_with_prompt prompt
 
 ensure
   # Cleanup: Remove temporary directory
-  puts "Cleaning up temporary directory..."
+  title "Cleaning up temporary directory...", bc: '-'
   FileUtils.rm_rf(temp_dir)
   puts "Temporary directory removed: #{temp_dir}"
 end
 
-puts
-puts "=" * 80
-puts "Example completed successfully!"
-puts "=" * 80
+title "Example completed!"
+
+puts <<~TAKEAWAYS
+
+  Key Takeaways:
+  - The LLM can perform complex file operations through natural language
+  - Security is built-in with sandboxed directory access
+  - Multi-step workflows are handled intelligently
+  - The LLM maintains context about files and operations
+  - File management becomes conversational and intuitive
+
+TAKEAWAYS

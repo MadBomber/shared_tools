@@ -16,7 +16,7 @@ SharedTools is a comprehensive collection of production-ready tools designed for
 
 ### Key Features
 
-- 🔧 **6 Tool Collections** - Browser automation, file operations, database queries, code evaluation, PDF processing, and system control
+- 🔧 **13+ Production Tools** - Browser automation, file operations, database queries, code evaluation, PDF processing, system control, mathematical calculations, weather data, workflow management, data analysis, Docker integration, and more
 - 🔒 **Human-in-the-Loop Authorization** - Built-in safety system for sensitive operations
 - 🎯 **Facade Pattern** - Simplified interfaces with complex capabilities under the hood
 - 🔌 **Pluggable Drivers** - Swap implementations for testing or different backends
@@ -47,11 +47,17 @@ Depending on which tools you use, you may need additional gems:
 gem 'watir'
 gem 'webdrivers'
 
-# For DatabaseTool
+# For DatabaseTool and DatabaseQueryTool
 gem 'sqlite3'  # or pg, mysql2, etc.
 
 # For DocTool
-gem 'pdf-reader'  # included in SharedTools dependencies
+gem 'pdf-reader'
+
+# Core dependencies (automatically installed)
+gem 'dentaku'          # For CalculatorTool
+gem 'openweathermap'   # For WeatherTool
+gem 'sequel'           # For DatabaseQueryTool
+gem 'nokogiri'         # For various tools
 ```
 
 ## Quick Start
@@ -65,7 +71,10 @@ agent = RubyLLM::Agent.new(
   tools: [
     SharedTools::Tools::BrowserTool.new,
     SharedTools::Tools::DiskTool.new,
-    SharedTools::Tools::DatabaseTool.new
+    SharedTools::Tools::DatabaseTool.new,
+    SharedTools::Tools::CalculatorTool.new,
+    SharedTools::Tools::WeatherTool.new,
+    SharedTools::Tools::WorkflowManagerTool.new
   ]
 )
 
@@ -75,7 +84,7 @@ agent.process("Visit example.com and save the page title to title.txt")
 
 # Or enable auto-execution for automated workflows
 SharedTools.auto_execute(true)
-agent.process("Read all .rb files in the current directory")
+agent.process("Calculate the square root of 144 and tell me the weather in London")
 ```
 
 ## Tool Collections
@@ -240,6 +249,189 @@ computer.execute(action: "key", text: "Return")
 
 ---
 
+### 🧮 Calculator Tool
+
+Safe mathematical calculations without code execution risks.
+
+**Features:**
+- Safe expression evaluation using Dentaku parser
+- Basic arithmetic: +, -, *, /, %, ^
+- Mathematical functions: sqrt, round, abs
+- Trigonometric functions: sin, cos, tan
+- Configurable precision (0-10 decimal places)
+- Comprehensive error handling
+
+**Example:**
+```ruby
+calculator = SharedTools::Tools::CalculatorTool.new
+
+calculator.execute(expression: "2 + 2")
+# => {success: true, result: 4.0, precision: 2}
+
+calculator.execute(expression: "sqrt(16) * 2", precision: 4)
+# => {success: true, result: 8.0, precision: 4}
+```
+
+---
+
+### 🌤️ Weather Tool
+
+Real-time weather data from OpenWeatherMap API.
+
+**Features:**
+- Current weather conditions for any city worldwide
+- Multiple temperature units (metric, imperial, kelvin)
+- Optional 3-day forecast data
+- Comprehensive atmospheric data (humidity, pressure, wind)
+- Requires OPENWEATHER_API_KEY environment variable
+
+**Example:**
+```ruby
+weather = SharedTools::Tools::WeatherTool.new
+
+weather.execute(city: "London,UK", units: "metric")
+# => {success: true, current: {temperature: 15.5, ...}}
+
+weather.execute(city: "New York,US", units: "imperial", include_forecast: true)
+# => Includes current weather and 3-day forecast
+```
+
+---
+
+### 🔄 Workflow Manager Tool
+
+Manage complex multi-step workflows with persistent state.
+
+**Features:**
+- Create and track stateful workflows
+- Step-by-step execution with state persistence
+- Status monitoring and progress tracking
+- Workflow completion and cleanup
+- Survives process restarts
+
+**Example:**
+```ruby
+workflow = SharedTools::Tools::WorkflowManagerTool.new
+
+# Start a workflow
+result = workflow.execute(action: "start", step_data: {project: "demo"})
+workflow_id = result[:workflow_id]
+
+# Execute steps
+workflow.execute(action: "step", workflow_id: workflow_id, step_data: {task: "compile"})
+workflow.execute(action: "step", workflow_id: workflow_id, step_data: {task: "test"})
+
+# Check status
+workflow.execute(action: "status", workflow_id: workflow_id)
+
+# Complete
+workflow.execute(action: "complete", workflow_id: workflow_id)
+```
+
+---
+
+### 📊 Composite Analysis Tool
+
+Multi-stage data analysis orchestration.
+
+**Features:**
+- Automatic data source detection (files or URLs)
+- Data structure analysis
+- Statistical insights generation
+- Visualization suggestions
+- Correlation analysis
+- Supports CSV, JSON, and text formats
+
+**Example:**
+```ruby
+analyzer = SharedTools::Tools::CompositeAnalysisTool.new
+
+analyzer.execute(
+  data_source: "./sales_data.csv",
+  analysis_type: "comprehensive",
+  options: {include_correlations: true, visualization_limit: 5}
+)
+# => Complete analysis with structure, insights, and visualizations
+```
+
+---
+
+### 🗄️ Database Query Tool
+
+Safe, read-only database query execution.
+
+**Features:**
+- SELECT-only queries for security
+- Automatic LIMIT clause enforcement
+- Query timeout protection
+- Prepared statement support
+- Connection pooling
+- Supports PostgreSQL, MySQL, SQLite, and more
+
+**Example:**
+```ruby
+db_query = SharedTools::Tools::DatabaseQueryTool.new
+
+db_query.execute(
+  query: "SELECT * FROM users WHERE active = ?",
+  params: [true],
+  limit: 50,
+  timeout: 10
+)
+# => {success: true, row_count: 50, data: [...]}
+```
+
+---
+
+### 🐳 Docker Compose Tool
+
+Execute Docker Compose commands safely.
+
+**Features:**
+- Run commands in Docker containers
+- Service specification
+- Automatic container cleanup
+- Build and run in one step
+
+**Example:**
+```ruby
+docker = SharedTools::Tools::Docker::ComposeRunTool.new
+
+docker.execute(
+  service: "app",
+  command: "rspec",
+  args: ["spec/main_spec.rb"]
+)
+```
+
+---
+
+### 🛠️ Error Handling Tool
+
+Reference implementation for robust error handling patterns.
+
+**Features:**
+- Multiple error type handling
+- Retry mechanisms with exponential backoff
+- Input/output validation
+- Resource cleanup patterns
+- Detailed error categorization
+- Support reference IDs for debugging
+
+**Example:**
+```ruby
+error_tool = SharedTools::Tools::ErrorHandlingTool.new
+
+error_tool.execute(
+  operation: "process",
+  data: {name: "test", value: 42},
+  max_retries: 3
+)
+# => Demonstrates comprehensive error handling patterns
+```
+
+---
+
 ## Authorization System
 
 SharedTools includes a human-in-the-loop authorization system for safety:
@@ -375,13 +567,24 @@ Found a bug or have a feature request? Please [open an issue](https://github.com
 
 See the [Changelog](https://madbomber.github.io/shared_tools/development/changelog/) for version history and upcoming features.
 
+### Recent Additions (v0.12+)
+
+- ✅ Calculator Tool - Safe mathematical calculations with Dentaku
+- ✅ Weather Tool - Real-time weather data via OpenWeatherMap API
+- ✅ Workflow Manager Tool - Stateful multi-step workflow orchestration
+- ✅ Composite Analysis Tool - Multi-stage data analysis
+- ✅ Database Query Tool - Safe read-only database queries
+- ✅ Docker Compose Tool - Container command execution
+- ✅ Error Handling Tool - Reference implementation for robust patterns
+
 ### Future Enhancements
 
 - Additional browser drivers (Selenium, Playwright)
-- More database adapters
+- More database adapters and query builders
 - Enhanced PDF processing capabilities
 - Additional document formats (Word, Excel)
 - Video and image processing tools
+- Extended data science and analytics capabilities
 
 ## Requirements
 

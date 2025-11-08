@@ -42,11 +42,12 @@ Gem::Specification.new do |spec|
 
   # Development dependencies
 
-  # Support gems
-  spec.add_development_dependency "openweathermap"
-  spec.add_development_dependency "pdf-reader"
-  spec.add_development_dependency "sqlite3"
-
+  # Optional tool dependencies - install as needed
+  spec.add_development_dependency "pdf-reader"        # For Doc/PDF tools
+  spec.add_development_dependency "sqlite3"           # For Database examples
+  spec.add_development_dependency "watir"             # For Browser tools
+  spec.add_development_dependency "webdrivers"        # For Browser tools (driver management)
+  spec.add_development_dependency "macos"             # For Computer tools (macOS only)
 
   # For SharedTools development
   spec.add_development_dependency "bundler"

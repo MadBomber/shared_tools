@@ -1,22 +1,35 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Example: Using DocTool for document processing
+# Example: Using DocTool with LLM Integration
 #
-# This example demonstrates how to use the DocTool facade to read and
-# extract text from PDF documents.
+# This example demonstrates how an LLM can use the DocTool to read and
+# extract information from PDF documents through natural language prompts.
 
-require 'bundler/setup'
-require 'shared_tools'
-require 'fileutils'
+require_relative 'ruby_llm_config'
 
-puts "=" * 80
-puts "DocTool Example - PDF Document Processing"
-puts "=" * 80
-puts
+begin
+  require 'pdf-reader'
+  require 'shared_tools/tools/doc'
+rescue LoadError => e
+  title "ERROR: Missing required dependencies for DocTool"
 
-# Initialize the doc tool
-doc_tool = SharedTools::Tools::DocTool.new
+  puts <<~ERROR_MSG
+
+    This example requires the 'pdf-reader' gem:
+      gem install pdf-reader
+
+    Or add to your Gemfile:
+      gem 'pdf-reader'
+
+    Then run: bundle install
+    #{'=' * 80}
+  ERROR_MSG
+
+  exit 1
+end
+
+title "DocTool Example - LLM-Powered PDF Processing"
 
 # Path to a sample PDF (using the test fixture)
 sample_pdf = File.expand_path('../test/fixtures/test.pdf', __dir__)
@@ -28,218 +41,67 @@ unless File.exist?(sample_pdf)
 end
 
 puts "Using sample PDF: #{sample_pdf}"
-puts "File size: #{(File.size(sample_pdf) / 1024.0 / 1024.0).round(2)} MB"
 puts
 
-begin
-  # Example 1: Read a single page
-  puts "1. Reading a Single Page"
-  puts "-" * 40
+# Register the PdfReaderTool with RubyLLM
+tools = [
+  SharedTools::Tools::Doc::PdfReaderTool.new
+]
 
-  result = doc_tool.execute(
-    action: SharedTools::Tools::DocTool::Action::PDF_READ,
-    doc_path: sample_pdf,
-    page_numbers: "1"
-  )
+# Create a chat instance using ollama_chat helper
+@chat = ollama_chat()
 
-  puts "Total pages in document: #{result[:total_pages]}"
-  puts "Pages requested: #{result[:requested_pages].inspect}"
-  puts "Pages extracted: #{result[:pages].size}"
-  puts
-  puts "First 200 characters of page 1:"
-  puts result[:pages].first[:text][0..200] + "..."
-  puts
+# Add tools to the chat
+tools.each { |tool| @chat = @chat.with_tool(tool) }
 
-  # Example 2: Read multiple specific pages
-  puts "2. Reading Multiple Specific Pages"
-  puts "-" * 40
+# Example 1: Extract content from first page
+title "Example 1: Read First Page", bc: '-'
+prompt = "Please read the first page of the PDF document at '#{sample_pdf}' and tell me what it's about."
+test_with_prompt prompt
 
-  result = doc_tool.execute(
-    action: SharedTools::Tools::DocTool::Action::PDF_READ,
-    doc_path: sample_pdf,
-    page_numbers: "1, 2, 3"
-  )
+# Example 2: Search for specific information
+title "Example 2: Search for Specific Content", bc: '-'
+prompt = "Read pages 1-3 of '#{sample_pdf}' and tell me if there are any section headers or important titles."
+test_with_prompt prompt
 
-  puts "Requested pages: 1, 2, 3"
-  puts "Successfully extracted: #{result[:pages].size} pages"
+# Example 3: Count pages
+title "Example 3: Document Statistics", bc: '-'
+prompt = "How many total pages are in the PDF document at '#{sample_pdf}'?"
+test_with_prompt prompt
 
-  result[:pages].each do |page|
-    text_length = page[:text]&.length || 0
-    puts "  Page #{page[:page]}: #{text_length} characters"
-  end
-  puts
+# Example 4: Extract and summarize
+title "Example 4: Content Summarization", bc: '-'
+prompt = "Read the first 2 pages of '#{sample_pdf}' and give me a brief summary of the main topics."
+test_with_prompt prompt
 
-  # Example 3: Handling invalid page numbers
-  puts "3. Handling Invalid Page Numbers"
-  puts "-" * 40
+# Example 5: Find specific keywords
+title "Example 5: Keyword Search", bc: '-'
+prompt = "Search the first 3 pages of '#{sample_pdf}' for any mentions of numbers or statistics."
+test_with_prompt prompt
 
-  result = doc_tool.execute(
-    action: SharedTools::Tools::DocTool::Action::PDF_READ,
-    doc_path: sample_pdf,
-    page_numbers: "1, 999"
-  )
+# Example 6: Conversational context
+title "Example 6: Multi-Turn Conversation", bc: '-'
 
-  puts "Requested pages: 1, 999"
-  puts "Valid pages: #{result[:pages].size}"
-  puts "Invalid pages: #{result[:invalid_pages].inspect}"
-  puts "The tool automatically filters out invalid page numbers."
-  puts
+prompt = "Read page 1 of '#{sample_pdf}' for me."
+test_with_prompt prompt
 
-  # Example 4: Extract text for search/analysis
-  puts "4. Extracting Text for Search"
-  puts "-" * 40
+prompt = "Based on what you just read, what are the key takeaways?"
+test_with_prompt prompt
 
-  result = doc_tool.execute(
-    action: SharedTools::Tools::DocTool::Action::PDF_READ,
-    doc_path: sample_pdf,
-    page_numbers: "1"
-  )
+# Example 7: Compare pages
+title "Example 7: Compare Content Across Pages", bc: '-'
+prompt = "Read pages 1 and 2 of '#{sample_pdf}' and tell me how they differ in content or structure."
+test_with_prompt prompt
 
-  text = result[:pages].first[:text]
+title "Example completed!"
 
-  # Search for specific terms
-  search_terms = ['the', 'and', 'of']
+puts <<~TAKEAWAYS
 
-  puts "Searching for common words in page 1:"
-  search_terms.each do |term|
-    count = text.downcase.scan(/\b#{term}\b/).size
-    puts "  '#{term}': #{count} occurrences"
-  end
-  puts
+  Key Takeaways:
+  - The LLM can extract and understand PDF content through natural language
+  - Complex document analysis tasks are simplified with conversational prompts
+  - The LLM maintains context about the document across multiple queries
+  - Page-specific or multi-page extraction is handled intelligently
+  - Document understanding goes beyond simple text extraction
 
-  # Example 5: Extract metadata and statistics
-  puts "5. Document Statistics"
-  puts "-" * 40
-
-  result = doc_tool.execute(
-    action: SharedTools::Tools::DocTool::Action::PDF_READ,
-    doc_path: sample_pdf,
-    page_numbers: "1, 2, 3"
-  )
-
-  total_chars = 0
-  total_words = 0
-  total_lines = 0
-
-  result[:pages].each do |page|
-    text = page[:text] || ""
-    total_chars += text.length
-    total_words += text.split.size
-    total_lines += text.lines.count
-  end
-
-  puts "Statistics for pages 1-3:"
-  puts "  Total characters: #{total_chars}"
-  puts "  Total words: #{total_words}"
-  puts "  Total lines: #{total_lines}"
-  puts "  Average words per page: #{total_words / result[:pages].size}"
-  puts
-
-  # Example 6: Using individual tool directly
-  puts "6. Using PdfReaderTool Directly"
-  puts "-" * 40
-  puts "You can also use the PDF reader tool directly:"
-  puts
-
-  pdf_tool = SharedTools::Tools::Doc::PdfReaderTool.new
-  result = pdf_tool.execute(
-    doc_path: sample_pdf,
-    page_numbers: "1"
-  )
-
-  puts "Tool: PdfReaderTool"
-  puts "Pages extracted: #{result[:pages].size}"
-  puts "Total document pages: #{result[:total_pages]}"
-  puts
-
-  # Example 7: Practical use case - Extract table of contents
-  puts "7. Practical Example - Finding Section Headers"
-  puts "-" * 40
-
-  result = doc_tool.execute(
-    action: SharedTools::Tools::DocTool::Action::PDF_READ,
-    doc_path: sample_pdf,
-    page_numbers: "1, 2, 3"
-  )
-
-  puts "Looking for potential section headers (all-caps lines):"
-  result[:pages].each do |page|
-    next unless page[:text]
-
-    lines = page[:text].lines
-    headers = lines.select do |line|
-      line.strip.length > 5 &&
-      line.strip == line.strip.upcase &&
-      line.strip.match?(/^[A-Z\s]+$/)
-    end
-
-    if headers.any?
-      puts "\nPage #{page[:page]}:"
-      headers.first(3).each do |header|
-        puts "  - #{header.strip}"
-      end
-    end
-  end
-  puts
-
-  # Example 8: Batch processing multiple pages
-  puts "8. Batch Processing - Word Frequency"
-  puts "-" * 40
-
-  # Read first 5 pages or all pages if less than 5
-  max_page = [result[:total_pages], 5].min
-  page_range = (1..max_page).to_a.join(", ")
-
-  result = doc_tool.execute(
-    action: SharedTools::Tools::DocTool::Action::PDF_READ,
-    doc_path: sample_pdf,
-    page_numbers: page_range
-  )
-
-  # Combine all text
-  all_text = result[:pages].map { |p| p[:text] }.join(" ")
-
-  # Count word frequencies
-  words = all_text.downcase.scan(/\b[a-z]{4,}\b/)
-  freq = Hash.new(0)
-  words.each { |word| freq[word] += 1 }
-
-  puts "Top 10 most common words (4+ letters) in pages 1-#{max_page}:"
-  freq.sort_by { |_, count| -count }.first(10).each_with_index do |(word, count), i|
-    puts "  #{i + 1}. '#{word}': #{count} times"
-  end
-  puts
-
-  # Example 9: Error handling
-  puts "9. Error Handling"
-  puts "-" * 40
-
-  result = doc_tool.execute(
-    action: SharedTools::Tools::DocTool::Action::PDF_READ,
-    doc_path: "/nonexistent/file.pdf",
-    page_numbers: "1"
-  )
-
-  if result[:error]
-    puts "Attempting to read non-existent file:"
-    puts "Error caught: #{result[:error]}"
-    puts "The tool gracefully handles errors and returns error information."
-  end
-  puts
-
-rescue => e
-  puts "Error: #{e.message}"
-  puts e.backtrace.first(5)
-end
-
-puts "=" * 80
-puts "Example completed!"
-puts "=" * 80
-puts
-puts "Key Takeaways:"
-puts "- DocTool provides a unified interface for document processing"
-puts "- PDF reading supports single pages, multiple pages, and ranges"
-puts "- Invalid page numbers are automatically filtered out"
-puts "- Extracted text can be used for search, analysis, and processing"
-puts "- Error handling is built-in with descriptive error messages"
-puts "- Individual tools (PdfReaderTool) can be used directly for more control"
+TAKEAWAYS

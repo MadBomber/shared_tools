@@ -90,7 +90,7 @@ module SharedTools
           * `#{Action::WAIT}`: Wait for a specified duration (in seconds).
         TEXT
 
-        object :coordinate, description: <<~TEXT.strip, required: false
+        object :coordinate, description: <<~TEXT.strip, required: false do
           An (x,y) coordinate hash with integer values (e.g. {x: 100, y: 200}). Required for the following actions:
           * `#{Action::MOUSE_MOVE}`
           * `#{Action::MOUSE_CLICK}`
@@ -100,6 +100,9 @@ module SharedTools
           * `#{Action::MOUSE_DOUBLE_CLICK}`
           * `#{Action::MOUSE_TRIPLE_CLICK}`
         TEXT
+          integer :x, description: "The x pixel coordinate on the screen"
+          integer :y, description: "The y pixel coordinate on the screen"
+        end
 
         string :text, description: <<~TEXT.strip, required: false
           The text to type. Required for the following actions:
@@ -168,6 +171,9 @@ module SharedTools
           scroll_direction:,
           scroll_amount:,
         }.compact.map { |key, value| "#{key}=#{value.inspect}" }.join(" "))
+
+        # Convert coordinate hash keys to symbols if coordinate is provided
+        coordinate = coordinate&.transform_keys(&:to_sym)
 
         case action
         when Action::KEY then @driver.key(text:)

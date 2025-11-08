@@ -5,4 +5,5 @@
 
 require 'shared_tools'
 
+require_relative 'database/base_driver'
 require_relative 'database_tool'

@@ -1,29 +1,38 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Example: Using DatabaseTool for SQL operations
+# Example: Using DatabaseTool with LLM Integration
 #
-# This example demonstrates how to use the DatabaseTool to execute
-# SQL statements on a database. We'll use SQLite3 as the database.
+# This example demonstrates how an LLM can execute SQL operations
+# through natural language prompts using the DatabaseTool.
 #
 # Note: This example requires the 'sqlite3' gem:
 #   gem install sqlite3
 
-require 'bundler/setup'
-require 'shared_tools'
+require_relative 'ruby_llm_config'
 
 begin
   require 'sqlite3'
-rescue LoadError
-  puts "Error: This example requires the 'sqlite3' gem."
-  puts "Install it with: gem install sqlite3"
+  require 'shared_tools/tools/database'
+rescue LoadError => e
+  title "ERROR: Missing required dependencies for DatabaseTool"
+
+  puts <<~ERROR_MSG
+
+    This example requires the 'sqlite3' gem:
+      gem install sqlite3
+
+    Or add to your Gemfile:
+      gem 'sqlite3'
+
+    Then run: bundle install
+    #{'=' * 80}
+  ERROR_MSG
+
   exit 1
 end
 
-puts "=" * 80
-puts "DatabaseTool Example - SQL Operations with SQLite"
-puts "=" * 80
-puts
+title "DatabaseTool Example - LLM-Powered SQL Operations"
 
 # Create a SQLite3 database driver
 class SimpleSqliteDriver < SharedTools::Tools::Database::BaseDriver
@@ -73,203 +82,110 @@ end
 # Create an in-memory SQLite database
 db = SQLite3::Database.new(':memory:')
 driver = SimpleSqliteDriver.new(db: db)
-database_tool = SharedTools::Tools::DatabaseTool.new(driver: driver)
 
-# Example 1: Create a table
-puts "1. Creating a users table"
-puts "-" * 40
-results = database_tool.execute(
-  statements: [
-    "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL, age INTEGER)"
-  ]
-)
-results.each do |result|
-  puts "Status: #{result[:status]}"
-  puts "Result: #{result[:result]}"
-end
-puts
+# Register the DatabaseTool with RubyLLM
+tools = [
+  SharedTools::Tools::DatabaseTool.new(driver: driver)
+]
 
-# Example 2: Insert data
-puts "2. Inserting users"
-puts "-" * 40
-results = database_tool.execute(
-  statements: [
-    "INSERT INTO users (name, email, age) VALUES ('Alice Smith', 'alice@example.com', 30)",
-    "INSERT INTO users (name, email, age) VALUES ('Bob Johnson', 'bob@example.com', 25)",
-    "INSERT INTO users (name, email, age) VALUES ('Carol White', 'carol@example.com', 28)"
-  ]
-)
-results.each do |result|
-  puts "Statement: #{result[:statement]}"
-  puts "Status: #{result[:status]}"
-  puts "Result: #{result[:result]}"
-  puts
-end
+# Create a chat instance using ollama_chat helper
+@chat = ollama_chat()
 
-# Example 3: Query data
-puts "3. Querying all users"
-puts "-" * 40
-results = database_tool.execute(
-  statements: ["SELECT * FROM users"]
-)
-results.each do |result|
-  puts "Status: #{result[:status]}"
-  puts "Results:"
-  puts result[:result]
-end
-puts
+# Add tools to the chat
+tools.each { |tool| @chat = @chat.with_tool(tool) }
 
-# Example 4: Update data
-puts "4. Updating user age"
-puts "-" * 40
-results = database_tool.execute(
-  statements: [
-    "UPDATE users SET age = 31 WHERE name = 'Alice Smith'"
-  ]
-)
-results.each do |result|
-  puts "Statement: #{result[:statement]}"
-  puts "Result: #{result[:result]}"
-end
-puts
+begin
+  # Example 1: Create a table
+  title "Example 1: Create a Database Table", bc: '-'
+  prompt = "Create a table called 'users' with columns: id (primary key), name (text), email (text), and age (integer)."
+  test_with_prompt prompt
 
-# Example 5: Query with WHERE clause
-puts "5. Querying users over 25"
-puts "-" * 40
-results = database_tool.execute(
-  statements: ["SELECT name, age FROM users WHERE age > 25 ORDER BY age DESC"]
-)
-results.each do |result|
-  puts "Results:"
-  puts result[:result]
-end
-puts
+  # Example 2: Insert data
+  title "Example 2: Insert Records", bc: '-'
+  prompt = <<~PROMPT
+    Insert three users into the users table:
+    - Alice Smith, alice@example.com, age 30
+    - Bob Johnson, bob@example.com, age 25
+    - Carol White, carol@example.com, age 28
+  PROMPT
+  test_with_prompt prompt
 
-# Example 6: Create another table with foreign key
-puts "6. Creating posts table with foreign key"
-puts "-" * 40
-results = database_tool.execute(
-  statements: [
-    "CREATE TABLE posts (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, title TEXT, body TEXT, FOREIGN KEY(user_id) REFERENCES users(id))"
-  ]
-)
-results.each do |result|
-  puts "Status: #{result[:status]}"
-  puts "Result: #{result[:result]}"
-end
-puts
+  # Example 3: Query data
+  title "Example 3: Retrieve All Users", bc: '-'
+  prompt = "Show me all the users in the database."
+  test_with_prompt prompt
 
-# Example 7: Insert related data
-puts "7. Inserting posts"
-puts "-" * 40
-results = database_tool.execute(
-  statements: [
-    "INSERT INTO posts (user_id, title, body) VALUES (1, 'Hello World', 'My first post')",
-    "INSERT INTO posts (user_id, title, body) VALUES (1, 'Ruby is Great', 'I love Ruby programming')",
-    "INSERT INTO posts (user_id, title, body) VALUES (2, 'Database Tools', 'Working with SQLite')"
-  ]
-)
-results.each do |result|
-  puts "Result: #{result[:result]}"
-end
-puts
+  # Example 4: Filtered query
+  title "Example 4: Filtered Query", bc: '-'
+  prompt = "Find all users who are older than 25 and show their names and ages, ordered by age."
+  test_with_prompt prompt
 
-# Example 8: Join query
-puts "8. Querying posts with user names (JOIN)"
-puts "-" * 40
-results = database_tool.execute(
-  statements: [
-    "SELECT users.name, posts.title FROM posts JOIN users ON posts.user_id = users.id"
-  ]
-)
-results.each do |result|
-  puts "Results:"
-  puts result[:result]
-end
-puts
+  # Example 5: Update data
+  title "Example 5: Update Records", bc: '-'
+  prompt = "Update Alice Smith's age to 31."
+  test_with_prompt prompt
 
-# Example 9: Transaction-like sequence (stops on error)
-puts "9. Sequential execution (stops on first error)"
-puts "-" * 40
-puts "Attempting to insert valid and invalid data..."
-results = database_tool.execute(
-  statements: [
-    "INSERT INTO users (name, email, age) VALUES ('David Brown', 'david@example.com', 35)",
-    "INSERT INTO invalid_table (foo) VALUES ('bar')",  # This will fail
-    "INSERT INTO users (name, email, age) VALUES ('Eve Wilson', 'eve@example.com', 32)"  # Should not execute
-  ]
-)
+  # Example 6: Create related table
+  title "Example 6: Create Related Table", bc: '-'
+  prompt = <<~PROMPT
+    Create a posts table with:
+    - id (primary key)
+    - user_id (foreign key to users)
+    - title (text)
+    - body (text)
+  PROMPT
+  test_with_prompt prompt
 
-results.each_with_index do |result, i|
-  puts "Statement #{i + 1}: #{result[:statement]}"
-  puts "Status: #{result[:status]}"
-  puts "Result: #{result[:result]}"
-  puts
+  # Example 7: Insert related data
+  title "Example 7: Insert Related Data", bc: '-'
+  prompt = <<~PROMPT
+    Add some posts to the posts table:
+    - User 1: "Hello World", "My first post"
+    - User 1: "Ruby is Great", "I love Ruby programming"
+    - User 2: "Database Tools", "Working with SQLite"
+  PROMPT
+  test_with_prompt prompt
+
+  # Example 8: Join query
+  title "Example 8: Join Query", bc: '-'
+  prompt = "Show me all posts with the author's name."
+  test_with_prompt prompt
+
+  # Example 9: Aggregate query
+  title "Example 9: Aggregate Calculations", bc: '-'
+  prompt = "How many users are in the database and what's their average age?"
+  test_with_prompt prompt
+
+  # Example 10: Conversational database interaction
+  title "Example 10: Conversational Database Operations", bc: '-'
+
+  prompt = "Count how many posts each user has written."
+  test_with_prompt prompt
+
+  prompt = "Who has the most posts?"
+  test_with_prompt prompt
+
+  prompt = "Delete all posts by user 2."
+  test_with_prompt prompt
+
+rescue => e
+  puts "\nError during database operations: #{e.message}"
+  puts e.backtrace.first(3)
+ensure
+  # Close database connection
+  db.close
+  puts "\nDatabase connection closed."
 end
 
-if results.size < 3
-  puts "✓ Execution stopped after error (transaction-like behavior)"
-end
-puts
+title "Example completed!"
 
-# Example 10: Count and aggregate
-puts "10. Aggregate queries"
-puts "-" * 40
-results = database_tool.execute(
-  statements: [
-    "SELECT COUNT(*) as total_users FROM users",
-    "SELECT AVG(age) as average_age FROM users",
-    "SELECT name, COUNT(*) as post_count FROM users JOIN posts ON users.id = posts.user_id GROUP BY users.name"
-  ]
-)
-results.each do |result|
-  puts "Query: #{result[:statement]}"
-  puts "Result: #{result[:result]}"
-  puts
-end
+puts <<~TAKEAWAYS
 
-# Example 11: Delete data
-puts "11. Deleting a user"
-puts "-" * 40
-results = database_tool.execute(
-  statements: [
-    "DELETE FROM posts WHERE user_id = 2",
-    "DELETE FROM users WHERE id = 2"
-  ]
-)
-results.each do |result|
-  puts "Statement: #{result[:statement]}"
-  puts "Result: #{result[:result]}"
-end
-puts
+  Key Takeaways:
+  - The LLM translates natural language into SQL queries
+  - Complex joins and aggregations become conversational
+  - Database operations don't require SQL expertise
+  - The LLM maintains context about database schema and operations
+  - Data analysis and manipulation are intuitive
 
-# Verify deletion
-results = database_tool.execute(
-  statements: ["SELECT name FROM users"]
-)
-puts "Remaining users:"
-puts results.first[:result]
-puts
-
-# Example 12: Drop tables
-puts "12. Cleaning up (dropping tables)"
-puts "-" * 40
-results = database_tool.execute(
-  statements: [
-    "DROP TABLE posts",
-    "DROP TABLE users"
-  ]
-)
-results.each do |result|
-  puts "Status: #{result[:status]}"
-  puts "Result: #{result[:result]}"
-end
-puts
-
-# Close database connection
-db.close
-puts "Database connection closed."
-puts
-puts "=" * 80
-puts "Example completed successfully!"
-puts "=" * 80
+TAKEAWAYS
