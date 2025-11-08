@@ -319,6 +319,15 @@ gem install dentaku
 - Natural language to mathematical expressions
 - Maintains conversational context across calculations
 
+**⚠️ Note on Modern LLM Capabilities:**
+Modern LLMs (GPT-4, Claude 3+, Gemini, and even advanced open-source models like those from Meta and Mistral) have excellent built-in arithmetic capabilities and can accurately perform most mathematical calculations without requiring a calculator tool. This example demonstrates the tool architecture and safety patterns (using Dentaku to prevent code injection), but in practice, **this tool may be largely unnecessary with today's frontier and advanced open-source models**.
+
+The tool might still be useful for:
+- **Legacy or smaller models** with weaker math capabilities
+- **Extremely high-precision calculations** where you need exact decimal control
+- **Compliance/audit requirements** where calculations must be verifiably performed by a specific evaluator
+- **Learning purposes** to understand tool integration patterns
+
 ---
 
 ### 9. Weather Tool Example (`weather_tool_example.rb`)
