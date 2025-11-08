@@ -1,0 +1,79 @@
+# frozen_string_literal: true
+# Credit: https://max.engineer/giant-pdf-llm
+
+begin
+  require "pdf-reader"
+rescue LoadError
+  # pdf-reader is optional - will raise error when tool is used without it
+end
+
+module SharedTools
+  module Tools
+    module Doc
+      # @example
+      #   tool = SharedTools::Tools::Doc::PdfReaderTool.new
+      #   tool.execute(doc_path: "./document.pdf", page_numbers: "1, 5, 10")
+      class PdfReaderTool < ::RubyLLM::Tool
+        def self.name = 'doc_pdf_read'
+
+        description "Read the text of any set of pages from a PDF document."
+
+        params do
+          string :page_numbers, description: 'Comma-separated page numbers (first page: 1). (e.g. "12, 14, 15")'
+          string :doc_path, description: "Path to the PDF document."
+        end
+
+        # @param logger [Logger] optional logger
+        def initialize(logger: nil)
+          @logger = logger || RubyLLM.logger
+        end
+
+        # @param page_numbers [String] comma-separated page numbers
+        # @param doc_path [String] path to PDF file
+        #
+        # @return [Hash] extraction result
+        def execute(page_numbers:, doc_path:)
+          raise LoadError, "PdfReaderTool requires the 'pdf-reader' gem. Install it with: gem install pdf-reader" unless defined?(PDF::Reader)
+
+          @logger.info("Reading PDF: #{doc_path}, pages: #{page_numbers}")
+
+          begin
+            @doc ||= PDF::Reader.new(doc_path)
+            @logger.debug("PDF loaded successfully, total pages: #{@doc.pages.size}")
+
+            page_numbers = page_numbers.split(",").map { |num| num.strip.to_i }
+            @logger.debug("Processing pages: #{page_numbers.join(", ")}")
+
+            # Validate page numbers
+            total_pages = @doc.pages.size
+            invalid_pages = page_numbers.select { |num| num < 1 || num > total_pages }
+
+            if invalid_pages.any?
+              @logger.warn("Invalid page numbers requested: #{invalid_pages.join(", ")}. Document has #{total_pages} pages.")
+            end
+
+            # Filter valid pages and map to content
+            valid_pages = page_numbers.select { |num| num >= 1 && num <= total_pages }
+            pages = valid_pages.map { |num| [num, @doc.pages[num.to_i - 1]] }
+
+            result = {
+              total_pages: total_pages,
+              requested_pages: page_numbers,
+              invalid_pages: invalid_pages,
+              pages: pages.map { |num, p|
+                @logger.debug("Extracted text from page #{num} (#{p&.text&.bytesize || 0} bytes)")
+                { page: num, text: p&.text }
+              },
+            }
+
+            @logger.info("Successfully extracted #{pages.size} pages from PDF")
+            result
+          rescue => e
+            @logger.error("Failed to read PDF '#{doc_path}': #{e.message}")
+            { error: e.message }
+          end
+        end
+      end
+    end
+  end
+end

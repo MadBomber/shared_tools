@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
+require 'ruby_llm'
 require 'io/console'
 
 require "zeitwerk"
 loader = Zeitwerk::Loader.for_gem
 # Ignore aggregate loader files that don't define constants
 loader.ignore("#{__dir__}/shared_tools/ruby_llm.rb")
-loader.ignore("#{__dir__}/shared_tools/llm_rb.rb")
-loader.ignore("#{__dir__}/shared_tools/omniai.rb")
-loader.ignore("#{__dir__}/shared_tools/raix.rb")
+loader.ignore("#{__dir__}/shared_tools/tools/browser.rb")
+loader.ignore("#{__dir__}/shared_tools/tools/computer.rb")
+loader.ignore("#{__dir__}/shared_tools/tools/database.rb")
+loader.ignore("#{__dir__}/shared_tools/tools/disk.rb")
+loader.ignore("#{__dir__}/shared_tools/tools/doc.rb")
+loader.ignore("#{__dir__}/shared_tools/tools/docker.rb")
+loader.ignore("#{__dir__}/shared_tools/tools/eval.rb")
 loader.setup
 
 module SharedTools
-  SUPPORTED_GEMS  ||= %i(ruby_llm llm_rb omniai raix)
-  @auto_execute   ||= false # Human in the loop
+  @auto_execute   ||= true # Auto-execute by default, no human-in-the-loop
   class << self
 
     def auto_execute(wildwest=true)
@@ -33,24 +37,5 @@ module SharedTools
       print "\nIs it okay to proceed? (y/N"
       STDIN.getch == "y"
     end
-
-
-    def detected_gem
-      return :ruby_llm  if defined?(::RubyLLM::Tool)
-      return :llm_rb    if defined?(::LLM) || defined?(::Llm)
-      return :omniai    if defined?(::OmniAI) || defined?(::Omniai)
-      return :raix      if defined?(::Raix::FunctionDispatch)
-      nil
-    end
-
-    def verify_gem(a_symbol)
-      loaded = a_symbol == detected_gem
-      return true if loaded
-      raise "SharedTools: Please require '#{a_symbol}' gem before requiring 'shared_tools'."
-    end
-  end
-
-  if detected_gem.nil?
-    warn "⚠️  SharedTools: No supported gem detected. Supported gems are: #{SUPPORTED_GEMS.join(', ')}"
   end
 end

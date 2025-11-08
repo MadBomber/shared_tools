@@ -1,67 +1,620 @@
 <div align="center">
-  <h1>Shared Tools</h1>
-  <img src="images/shared_tools.png" alt="Two Robots sharing the same set of tools.">
-  <p>A Ruby gem providing a collection of tools for use with tool-supporting LLMs</p>
+  <h1>SharedTools</h1>
+  <img src="docs/assets/images/shared_tools.png" alt="Two Robots sharing the same set of tools" width="400">
+  <p><em>A Ruby gem providing LLM-callable tools for browser automation, file operations, code evaluation, and more</em></p>
+
+  [![Gem Version](https://badge.fury.io/rb/shared_tools.svg)](https://badge.fury.io/rb/shared_tools)
+  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
+  [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue.svg)](https://madbomber.github.io/shared_tools)
 </div>
 
-## Recent Changes
+---
 
-### Unreleased
+## Overview
 
-> Changing the focus of the gem to just support the [ruby_llm gem](https://rubyllm.com)
-> I will be working in the `develop` branch to make this change in direction.
+SharedTools is a comprehensive collection of production-ready tools designed for LLM (Large Language Model) applications. Built on the [RubyLLM](https://github.com/mariochavez/ruby_llm) framework, it provides a unified interface for common automation tasks while maintaining safety through a human-in-the-loop authorization system.
 
-### Version 0.2.0
+### Key Features
 
-- ability to use the `ruby_llm-mcp` gem was added with two example MCP client instances for some useful MCP servers: github-mcp-server and iMCP.app
-- added `SharedTools.mcp_servers` Array to hold defined client instances.
-- added a class method `name` to `RubyLLM::Tool` subclasses to define the snake_case String format of the class basename.
+- 🔧 **13+ Production Tools** - Browser automation, file operations, database queries, code evaluation, PDF processing, system control, mathematical calculations, weather data, workflow management, data analysis, Docker integration, and more
+- 🔒 **Human-in-the-Loop Authorization** - Built-in safety system for sensitive operations
+- 🎯 **Facade Pattern** - Simplified interfaces with complex capabilities under the hood
+- 🔌 **Pluggable Drivers** - Swap implementations for testing or different backends
+- 📚 **Comprehensive Documentation** - Detailed guides, examples, and API reference
+- ✅ **Well Tested** - 85%+ test coverage with Minitest
 
 ## Installation
 
+Add to your Gemfile:
+
 ```ruby
-gem install shared_tools
-
-# Load all RubyLLM tools (requires ruby_llm gem to be available and loaded first)
-require 'shared_tools/ruby_llm' # multiple API libraries are supported besides ruby_llm
-
-# Or load a specific tool directly
-require 'shared_tools/ruby_llm/edit_file'
-require 'shared_tools/ruby_llm/read_file'
-require 'shared_tools/ruby_llm/python_eval'
-
-# Or load clients for defined MCP servers
-# Load all the MCP clients for the ruby_llm library
-require 'shared_tools/ruby_llm/mcp'
-
-# Or just the ones you want
-require 'shared_tools/ruby_llm/mcp/github_mcp_server'
-require 'shared_tools/ruby_llm/mcp/icmp' # MacOS data server
-
-# The client instances for ruby_llm/mcp servers are available
-SharedTools.mcp_servers # An Array of MCP clients
-
-# In ruby_llm library access the tools from MCP servers
-@tools = []
-SharedTools.mcp_servers.size.time  do |server_inx|
-  @tools += SharedTools.mcp_servers[server_inx].tools
-end
-chat = RubyLLM.chat
-chat.with_tools(@tools)
+gem 'shared_tools'
+gem 'ruby_llm'  # Required LLM framework
 ```
 
-## Tips for Tool Authors
+Or install directly:
 
-- Provide a clear comprehensive description for your tool and its parameters
-- Include usage examples in your documentation
-- Ensure your tool is compatible with different Ruby versions and environments
-- Make sure your tool is in the correct directory for the library to which it belongs
+```bash
+gem install shared_tools
+```
 
-## Rails and Autoloader Compatibility
+### Optional Dependencies
 
-This gem uses Zeitwerk for autoloading, making it fully compatible with Rails and other Ruby applications that use modern autoloaders. RubyLLM tools are excluded from autoloading and loaded manually to avoid namespace conflicts.
+Depending on which tools you use, you may need additional gems:
 
+```ruby
+# For BrowserTool
+gem 'watir'
+gem 'webdrivers'
 
- Special Thanks
+# For DatabaseTool and DatabaseQueryTool
+gem 'sqlite3'  # or pg, mysql2, etc.
 
-A special shout-out to Kevin's [omniai-tools](https://github.com/your-github-url/omniai-tools) gem, which is a curated collection of tools for use with his OmniAI gem.
+# For DocTool
+gem 'pdf-reader'
+
+# Core dependencies (automatically installed)
+gem 'dentaku'          # For CalculatorTool
+gem 'openweathermap'   # For WeatherTool
+gem 'sequel'           # For DatabaseQueryTool
+gem 'nokogiri'         # For various tools
+```
+
+## Quick Start
+
+```ruby
+require 'shared_tools'
+require 'ruby_llm'
+
+# Initialize an LLM agent with SharedTools
+agent = RubyLLM::Agent.new(
+  tools: [
+    SharedTools::Tools::BrowserTool.new,
+    SharedTools::Tools::DiskTool.new,
+    SharedTools::Tools::DatabaseTool.new,
+    SharedTools::Tools::CalculatorTool.new,
+    SharedTools::Tools::WeatherTool.new,
+    SharedTools::Tools::WorkflowManagerTool.new
+  ]
+)
+
+# Use with human-in-the-loop authorization (default)
+agent.process("Visit example.com and save the page title to title.txt")
+# User will be prompted: "Allow BrowserTool to visit https://example.com? (y/n)"
+
+# Or enable auto-execution for automated workflows
+SharedTools.auto_execute(true)
+agent.process("Calculate the square root of 144 and tell me the weather in London")
+```
+
+## Tool Collections
+
+### 🌐 Browser Tools
+
+Web automation and scraping capabilities.
+
+**Actions:**
+- `visit` - Navigate to URLs
+- `page_inspect` - Get page HTML content
+- `ui_inspect` - Find elements by text
+- `selector_inspect` - Find elements by CSS selector
+- `click` - Click elements
+- `text_field_set` - Fill in forms
+- `screenshot` - Capture page screenshots
+
+**Example:**
+```ruby
+browser = SharedTools::Tools::BrowserTool.new
+
+browser.execute(action: "visit", url: "https://example.com")
+browser.execute(action: "page_inspect", full_html: false)
+```
+
+[📖 Full Browser Documentation](https://madbomber.github.io/shared_tools/tools/browser/)
+
+---
+
+### 💾 Disk Tools
+
+Secure file system operations with path traversal protection.
+
+**Actions:**
+- `file_create` - Create new files
+- `file_read` - Read file contents
+- `file_write` - Write to files
+- `file_delete` - Delete files
+- `file_move` - Move/rename files
+- `file_replace` - Find and replace text in files
+- `directory_create` - Create directories
+- `directory_list` - List directory contents
+- `directory_move` - Move directories
+- `directory_delete` - Delete directories
+
+**Example:**
+```ruby
+disk = SharedTools::Tools::DiskTool.new
+
+disk.execute(action: "file_create", path: "./report.txt")
+disk.execute(action: "file_write", path: "./report.txt", text: "Hello, World!")
+content = disk.execute(action: "file_read", path: "./report.txt")
+```
+
+[📖 Full Disk Documentation](https://madbomber.github.io/shared_tools/tools/disk/)
+
+---
+
+### 🗄️ Database Tools
+
+Execute SQL operations on databases.
+
+**Actions:**
+- Execute SQL statements (CREATE, INSERT, SELECT, UPDATE, DELETE)
+- Batch statement execution
+- Transaction-like error handling (stops on first error)
+- Support for SQLite, PostgreSQL, MySQL via drivers
+
+**Example:**
+```ruby
+require 'sqlite3'
+
+db = SQLite3::Database.new(':memory:')
+driver = SharedTools::Tools::Database::SqliteDriver.new(db: db)
+database = SharedTools::Tools::DatabaseTool.new(driver: driver)
+
+results = database.execute(
+  statements: [
+    "CREATE TABLE users (id INTEGER, name TEXT)",
+    "INSERT INTO users VALUES (1, 'Alice')",
+    "SELECT * FROM users"
+  ]
+)
+```
+
+[📖 Full Database Documentation](https://madbomber.github.io/shared_tools/tools/database/)
+
+---
+
+### 💻 Eval Tools
+
+Safe code evaluation for Ruby, Python, and shell commands.
+
+**Languages:**
+- `ruby` - Execute Ruby code
+- `python` - Execute Python code (with sandboxing)
+- `shell` - Execute shell commands
+
+**Example:**
+```ruby
+eval_tool = SharedTools::Tools::EvalTool.new
+
+# Ruby evaluation
+result = eval_tool.execute(language: "ruby", code: "puts 2 + 2")
+
+# Shell command execution (requires authorization by default)
+output = eval_tool.execute(language: "shell", code: "ls -la")
+```
+
+[📖 Full Eval Documentation](https://madbomber.github.io/shared_tools/tools/eval/)
+
+---
+
+### 📄 Doc Tools
+
+PDF document processing and text extraction.
+
+**Actions:**
+- `read_pdf` - Read PDF content from specific pages or entire documents
+- Extract text, statistics, and metadata
+- Process multi-page documents
+
+**Example:**
+```ruby
+doc = SharedTools::Tools::DocTool.new
+
+# Read first page
+content = doc.execute(action: "read_pdf", path: "./document.pdf", page: 1)
+
+# Read entire document
+full_content = doc.execute(action: "read_pdf", path: "./document.pdf")
+```
+
+[📖 Full Doc Documentation](https://madbomber.github.io/shared_tools/tools/doc/)
+
+---
+
+### 🖱️ Computer Tools
+
+System-level automation for mouse, keyboard, and screen control.
+
+**Actions:**
+- `mouse_click` - Click at coordinates
+- `mouse_move` - Move mouse cursor
+- `mouse_position` - Get current mouse position
+- `type` - Type text
+- `key` - Press keyboard keys and shortcuts
+- `hold_key` - Hold keys for duration
+- `scroll` - Scroll windows
+- `wait` - Wait for specified duration
+
+**Example:**
+```ruby
+computer = SharedTools::Tools::ComputerTool.new
+
+computer.execute(action: "mouse_click", coordinate: {x: 100, y: 200})
+computer.execute(action: "type", text: "Hello, World!")
+computer.execute(action: "key", text: "Return")
+```
+
+[📖 Full Computer Documentation](https://madbomber.github.io/shared_tools/tools/computer/)
+
+---
+
+### 🧮 Calculator Tool
+
+Safe mathematical calculations without code execution risks.
+
+**Features:**
+- Safe expression evaluation using Dentaku parser
+- Basic arithmetic: +, -, *, /, %, ^
+- Mathematical functions: sqrt, round, abs
+- Trigonometric functions: sin, cos, tan
+- Configurable precision (0-10 decimal places)
+- Comprehensive error handling
+
+**Example:**
+```ruby
+calculator = SharedTools::Tools::CalculatorTool.new
+
+calculator.execute(expression: "2 + 2")
+# => {success: true, result: 4.0, precision: 2}
+
+calculator.execute(expression: "sqrt(16) * 2", precision: 4)
+# => {success: true, result: 8.0, precision: 4}
+```
+
+---
+
+### 🌤️ Weather Tool
+
+Real-time weather data from OpenWeatherMap API.
+
+**Features:**
+- Current weather conditions for any city worldwide
+- Multiple temperature units (metric, imperial, kelvin)
+- Optional 3-day forecast data
+- Comprehensive atmospheric data (humidity, pressure, wind)
+- Requires OPENWEATHER_API_KEY environment variable
+
+**Example:**
+```ruby
+weather = SharedTools::Tools::WeatherTool.new
+
+weather.execute(city: "London,UK", units: "metric")
+# => {success: true, current: {temperature: 15.5, ...}}
+
+weather.execute(city: "New York,US", units: "imperial", include_forecast: true)
+# => Includes current weather and 3-day forecast
+```
+
+---
+
+### 🔄 Workflow Manager Tool
+
+Manage complex multi-step workflows with persistent state.
+
+**Features:**
+- Create and track stateful workflows
+- Step-by-step execution with state persistence
+- Status monitoring and progress tracking
+- Workflow completion and cleanup
+- Survives process restarts
+
+**Example:**
+```ruby
+workflow = SharedTools::Tools::WorkflowManagerTool.new
+
+# Start a workflow
+result = workflow.execute(action: "start", step_data: {project: "demo"})
+workflow_id = result[:workflow_id]
+
+# Execute steps
+workflow.execute(action: "step", workflow_id: workflow_id, step_data: {task: "compile"})
+workflow.execute(action: "step", workflow_id: workflow_id, step_data: {task: "test"})
+
+# Check status
+workflow.execute(action: "status", workflow_id: workflow_id)
+
+# Complete
+workflow.execute(action: "complete", workflow_id: workflow_id)
+```
+
+---
+
+### 📊 Composite Analysis Tool
+
+Multi-stage data analysis orchestration.
+
+**Features:**
+- Automatic data source detection (files or URLs)
+- Data structure analysis
+- Statistical insights generation
+- Visualization suggestions
+- Correlation analysis
+- Supports CSV, JSON, and text formats
+
+**Example:**
+```ruby
+analyzer = SharedTools::Tools::CompositeAnalysisTool.new
+
+analyzer.execute(
+  data_source: "./sales_data.csv",
+  analysis_type: "comprehensive",
+  options: {include_correlations: true, visualization_limit: 5}
+)
+# => Complete analysis with structure, insights, and visualizations
+```
+
+---
+
+### 🗄️ Database Query Tool
+
+Safe, read-only database query execution.
+
+**Features:**
+- SELECT-only queries for security
+- Automatic LIMIT clause enforcement
+- Query timeout protection
+- Prepared statement support
+- Connection pooling
+- Supports PostgreSQL, MySQL, SQLite, and more
+
+**Example:**
+```ruby
+db_query = SharedTools::Tools::DatabaseQueryTool.new
+
+db_query.execute(
+  query: "SELECT * FROM users WHERE active = ?",
+  params: [true],
+  limit: 50,
+  timeout: 10
+)
+# => {success: true, row_count: 50, data: [...]}
+```
+
+---
+
+### 🐳 Docker Compose Tool
+
+Execute Docker Compose commands safely.
+
+**Features:**
+- Run commands in Docker containers
+- Service specification
+- Automatic container cleanup
+- Build and run in one step
+
+**Example:**
+```ruby
+docker = SharedTools::Tools::Docker::ComposeRunTool.new
+
+docker.execute(
+  service: "app",
+  command: "rspec",
+  args: ["spec/main_spec.rb"]
+)
+```
+
+---
+
+### 🛠️ Error Handling Tool
+
+Reference implementation for robust error handling patterns.
+
+**Features:**
+- Multiple error type handling
+- Retry mechanisms with exponential backoff
+- Input/output validation
+- Resource cleanup patterns
+- Detailed error categorization
+- Support reference IDs for debugging
+
+**Example:**
+```ruby
+error_tool = SharedTools::Tools::ErrorHandlingTool.new
+
+error_tool.execute(
+  operation: "process",
+  data: {name: "test", value: 42},
+  max_retries: 3
+)
+# => Demonstrates comprehensive error handling patterns
+```
+
+---
+
+## Authorization System
+
+SharedTools includes a human-in-the-loop authorization system for safety:
+
+```ruby
+# Require user confirmation (default)
+SharedTools.auto_execute(false)
+
+# The LLM proposes an action
+disk.execute(action: "file_delete", path: "./important.txt")
+# Prompt: "Allow DiskTool to delete ./important.txt? (y/n)"
+
+# Enable auto-execution for trusted workflows
+SharedTools.auto_execute(true)
+disk.execute(action: "file_delete", path: "./temp.txt")
+# Executes immediately without prompting
+```
+
+[📖 Authorization Guide](https://madbomber.github.io/shared_tools/guides/authorization/)
+
+## Documentation
+
+Comprehensive documentation is available at **[madbomber.github.io/shared_tools](https://madbomber.github.io/shared_tools)**
+
+### Documentation Sections
+
+- **[Getting Started](https://madbomber.github.io/shared_tools/getting-started/installation/)** - Installation, quick start, basic usage
+- **[Tool Collections](https://madbomber.github.io/shared_tools/tools/)** - Detailed documentation for each tool
+- **[Guides](https://madbomber.github.io/shared_tools/guides/)** - Authorization, drivers, error handling, testing
+- **[Examples](https://madbomber.github.io/shared_tools/examples/)** - Working code examples and workflows
+- **[API Reference](https://madbomber.github.io/shared_tools/api/)** - Tool base class, facade pattern, driver interface
+- **[Development](https://madbomber.github.io/shared_tools/development/)** - Architecture, contributing, changelog
+
+## Examples
+
+The `/examples` directory contains working demonstrations:
+
+- `browser_tool_example.rb` - Web automation
+- `disk_tool_example.rb` - File operations
+- `database_tool_example.rb` - SQL operations
+- `eval_tool_example.rb` - Code evaluation
+- `doc_tool_example.rb` - PDF processing
+- `comprehensive_workflow_example.rb` - Multi-tool workflow
+
+Run examples:
+```bash
+bundle install
+ruby examples/browser_tool_example.rb
+```
+
+[📖 View All Examples](https://madbomber.github.io/shared_tools/examples/)
+
+## Development
+
+### Setup
+
+```bash
+git clone https://github.com/madbomber/shared_tools.git
+cd shared_tools
+bundle install
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+bundle exec rake test
+
+# Run specific test file
+bundle exec ruby test/shared_tools/tools/browser_tool_test.rb
+
+# Run with SimpleCov coverage report
+COVERAGE=true bundle exec rake test
+```
+
+### Building Documentation
+
+```bash
+# Install MkDocs and dependencies
+pip install mkdocs-material
+
+# Serve documentation locally
+mkdocs serve
+
+# Build static site
+mkdocs build
+```
+
+### Code Quality
+
+The project uses standard Ruby tooling:
+
+- **Testing**: Minitest (85%+ coverage)
+- **Code Loading**: Zeitwerk for autoloading
+- **Documentation**: MkDocs with Material theme
+- **Examples**: Executable Ruby scripts in `/examples`
+
+## Contributing
+
+Contributions are welcome! Here's how you can help:
+
+### Reporting Issues
+
+Found a bug or have a feature request? Please [open an issue](https://github.com/madbomber/shared_tools/issues/new) with:
+
+- Clear description of the problem
+- Steps to reproduce (for bugs)
+- Expected vs actual behavior
+- Ruby version and gem version
+- Code examples if applicable
+
+### Submitting Pull Requests
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes with tests
+4. Ensure tests pass (`bundle exec rake test`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to your branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+### Contribution Guidelines
+
+- Add tests for new features
+- Update documentation as needed
+- Follow existing code style
+- Keep commits focused and atomic
+- Write clear commit messages
+
+[📖 Contributing Guide](https://madbomber.github.io/shared_tools/development/contributing/)
+
+## Roadmap
+
+See the [Changelog](https://madbomber.github.io/shared_tools/development/changelog/) for version history and upcoming features.
+
+### Recent Additions (v0.12+)
+
+- ✅ Calculator Tool - Safe mathematical calculations with Dentaku
+- ✅ Weather Tool - Real-time weather data via OpenWeatherMap API
+- ✅ Workflow Manager Tool - Stateful multi-step workflow orchestration
+- ✅ Composite Analysis Tool - Multi-stage data analysis
+- ✅ Database Query Tool - Safe read-only database queries
+- ✅ Docker Compose Tool - Container command execution
+- ✅ Error Handling Tool - Reference implementation for robust patterns
+
+### Future Enhancements
+
+- Additional browser drivers (Selenium, Playwright)
+- More database adapters and query builders
+- Enhanced PDF processing capabilities
+- Additional document formats (Word, Excel)
+- Video and image processing tools
+- Extended data science and analytics capabilities
+
+## Requirements
+
+- Ruby 3.0 or higher
+- RubyLLM gem for LLM integration
+
+## License
+
+This gem is available as open source under the terms of the [MIT License](LICENSE.txt).
+
+## Special Thanks
+
+This gem was originally inspired by Kevin Sylvestre's [omniai-tools](https://github.com/ksylvest/omniai-tools) gem. SharedTools has since evolved to focus exclusively on RubyLLM support with enhanced features and comprehensive documentation.
+
+## Links
+
+- **Documentation**: [madbomber.github.io/shared_tools](https://madbomber.github.io/shared_tools)
+- **RubyGems**: [rubygems.org/gems/shared_tools](https://rubygems.org/gems/shared_tools)
+- **Source Code**: [github.com/madbomber/shared_tools](https://github.com/madbomber/shared_tools)
+- **Issue Tracker**: [github.com/madbomber/shared_tools/issues](https://github.com/madbomber/shared_tools/issues)
+- **RubyLLM**: [github.com/mariochavez/ruby_llm](https://github.com/mariochavez/ruby_llm)
+
+## Support
+
+- 📖 [Documentation](https://madbomber.github.io/shared_tools)
+- 💬 [GitHub Discussions](https://github.com/madbomber/shared_tools/discussions)
+- 🐛 [Issue Tracker](https://github.com/madbomber/shared_tools/issues)
+
+---
+
+<div align="center">
+  Made with ❤️ by <a href="https://github.com/madbomber">Dewayne VanHoozer</a>
+</div>

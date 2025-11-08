@@ -1,0 +1,181 @@
+# MkDocs Configuration for SharedTools Documentation
+site_name: SharedTools
+site_description: A Ruby gem providing LLM-callable tools for browser automation, file operations, code evaluation, and more
+site_author: Dewayne VanHoozer
+site_url: https://madbomber.github.io/shared_tools
+copyright: Copyright &copy; 2025 Dewayne VanHoozer
+
+# Repository information
+repo_name: madbomber/shared_tools
+repo_url: https://github.com/madbomber/shared_tools
+edit_uri: edit/main/docs/
+
+# Configuration
+theme:
+  name: material
+  logo: assets/images/shared_tools.png
+  favicon: assets/images/shared_tools.png
+
+  # Color scheme - Default to dark mode
+  palette:
+    # Palette toggle for dark mode (default)
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+
+  # Typography
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+  # Theme features
+  features:
+    # Navigation
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.path
+    - navigation.indexes
+    - navigation.top
+
+    # Table of contents
+    - toc.follow
+    - toc.integrate
+
+    # Search
+    - search.suggest
+    - search.highlight
+    - search.share
+
+    # Header
+    - header.autohide
+
+    # Content
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - content.action.edit
+    - content.action.view
+
+# Plugins
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+
+# Extensions
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      title: On this page
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: madbomber
+      repo: shared_tools
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Extra CSS
+extra_css:
+  - assets/css/custom.css
+
+# Social media and extra configuration
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/madbomber/shared_tools
+      name: SharedTools on GitHub
+    - icon: fontawesome/solid/gem
+      link: https://rubygems.org/gems/shared_tools
+      name: SharedTools on RubyGems
+
+  version:
+    provider: mike
+
+# Navigation
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - Basic Usage: getting-started/basic-usage.md
+  - Tool Collections:
+    - tools/index.md
+    - Browser Tools: tools/browser.md
+    - Disk Tools: tools/disk.md
+    - Computer Tools: tools/computer.md
+    - Database Tools: tools/database.md
+    - Eval Tools: tools/eval.md
+    - Doc Tools: tools/doc.md
+  - Guides:
+    - guides/index.md
+    - Authorization System: guides/authorization.md
+    - Working with Drivers: guides/drivers.md
+    - Error Handling: guides/error-handling.md
+    - Testing Your Tools: guides/testing.md
+  - Examples:
+    - examples/index.md
+    - Browser Automation: examples/browser.md
+    - File Operations: examples/disk.md
+    - Code Evaluation: examples/eval.md
+    - PDF Processing: examples/doc.md
+    - Database Operations: examples/database.md
+    - Multi-Tool Workflows: examples/workflows.md
+  - API Reference:
+    - api/index.md
+    - Tool Base Class: api/tool-base.md
+    - Facade Pattern: api/facade-pattern.md
+    - Driver Interface: api/driver-interface.md
+  - Development:
+    - development/index.md
+    - Architecture: development/architecture.md
+    - Contributing: development/contributing.md
+    - Testing: development/testing.md
+    - Changelog: development/changelog.md
