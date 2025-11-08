@@ -2,130 +2,138 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://madbomber.github.io/shared_tools/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/api/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/api/driver-interface/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/api/facade-pattern/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/api/tool-base/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/development/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/development/architecture/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/development/changelog/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/development/contributing/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/development/testing/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/examples/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/examples/browser/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/examples/database/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/examples/disk/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/examples/doc/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/examples/eval/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/examples/workflows/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/getting-started/basic-usage/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/getting-started/installation/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/getting-started/quickstart/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/guides/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/guides/authorization/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/guides/drivers/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/guides/error-handling/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/guides/testing/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/tools/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/tools/browser/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/shared_tools/tools/calculator/</loc>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/tools/computer/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/tools/database/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/tools/disk/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/tools/doc/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://madbomber.github.io/shared_tools/tools/eval/</loc>
-         <lastmod>2025-10-25</lastmod>
+         <lastmod>2025-11-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/shared_tools/tools/weather/</loc>
+         <lastmod>2025-11-08</lastmod>
     </url>
 </urlset>

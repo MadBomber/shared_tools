@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../assets/images/shared_tools.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
     
     
       
@@ -1603,38 +1603,182 @@
 </span></code></pre></div>
 <p><a href="database/">View DatabaseTool Documentation →</a></p>
 <hr />
+<h3 id="computertool"><a href="computer/">ComputerTool</a><a class="headerlink" href="#computertool" title="Permanent link">&para;</a></h3>
+<p>System-level automation for mouse, keyboard, and screen control.</p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>Mouse click, move, and position tracking</li>
+<li>Keyboard typing and key press simulation</li>
+<li>Scroll control</li>
+<li>Wait functionality for timing</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">computer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">ComputerTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">computer</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mouse_click&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">coordinate</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="ss">x</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="ss">y</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">})</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">computer</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;type&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">text</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><a href="computer/">View ComputerTool Documentation →</a></p>
+<hr />
+<h3 id="calculatortool">CalculatorTool<a class="headerlink" href="#calculatortool" title="Permanent link">&para;</a></h3>
+<p>Safe mathematical calculations without code execution risks.</p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>Safe expression evaluation using Dentaku</li>
+<li>Basic arithmetic and mathematical functions</li>
+<li>Trigonometric operations</li>
+<li>Configurable precision (0-10 decimal places)</li>
+<li>Comprehensive error handling</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">calculator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">CalculatorTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">calculator</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">expression</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sqrt(16) * 2&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">precision</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># =&gt; {success: true, result: 8.0, precision: 4}</span>
+</span></code></pre></div>
+<hr />
+<h3 id="weathertool">WeatherTool<a class="headerlink" href="#weathertool" title="Permanent link">&para;</a></h3>
+<p>Real-time weather data from OpenWeatherMap API.</p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>Current weather conditions worldwide</li>
+<li>Multiple temperature units (metric, imperial, kelvin)</li>
+<li>Optional 3-day forecast</li>
+<li>Atmospheric data (humidity, pressure, wind)</li>
+<li>Requires OPENWEATHER_API_KEY environment variable</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">weather</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">WeatherTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London,UK&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">include_forecast</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span><span class="p">)</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># =&gt; {success: true, current: {...}, forecast: [...]}</span>
+</span></code></pre></div>
+<hr />
+<h3 id="workflowmanagertool">WorkflowManagerTool<a class="headerlink" href="#workflowmanagertool" title="Permanent link">&para;</a></h3>
+<p>Manage complex multi-step workflows with persistent state tracking.</p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>Create and track stateful workflows</li>
+<li>Step-by-step execution with persistence</li>
+<li>Status monitoring and progress tracking</li>
+<li>Workflow completion and cleanup</li>
+<li>Survives process restarts</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">workflow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">WorkflowManagerTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">workflow</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;start&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">step_data</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="ss">project</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demo&quot;</span><span class="p">})</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">workflow_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="o">[</span><span class="ss">:workflow_id</span><span class="o">]</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">workflow</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;step&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">workflow_id</span><span class="p">:</span><span class="w"> </span><span class="n">workflow_id</span><span class="p">,</span><span class="w"> </span><span class="ss">step_data</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="ss">task</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;compile&quot;</span><span class="p">})</span>
+</span></code></pre></div>
+<hr />
+<h3 id="compositeanalysistool">CompositeAnalysisTool<a class="headerlink" href="#compositeanalysistool" title="Permanent link">&para;</a></h3>
+<p>Multi-stage data analysis orchestration for comprehensive insights.</p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>Automatic data source detection (files or URLs)</li>
+<li>Data structure analysis</li>
+<li>Statistical insights generation</li>
+<li>Visualization suggestions</li>
+<li>Correlation analysis</li>
+<li>Supports CSV, JSON, and text formats</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">analyzer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">CompositeAnalysisTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">analyzer</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./sales_data.csv&quot;</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;comprehensive&quot;</span><span class="p">,</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="ss">options</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="ss">include_correlations</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span><span class="p">}</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h3 id="databasequerytool">DatabaseQueryTool<a class="headerlink" href="#databasequerytool" title="Permanent link">&para;</a></h3>
+<p>Safe, read-only database query execution with security controls.</p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>SELECT-only queries for security</li>
+<li>Automatic LIMIT clause enforcement</li>
+<li>Query timeout protection</li>
+<li>Prepared statement support</li>
+<li>Connection pooling</li>
+<li>Supports PostgreSQL, MySQL, SQLite, and more</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">db_query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">DatabaseQueryTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">db_query</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="ss">query</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SELECT * FROM users WHERE active = ?&quot;</span><span class="p">,</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="ss">params</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="kp">true</span><span class="o">]</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="ss">limit</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h3 id="docker-composeruntool">Docker ComposeRunTool<a class="headerlink" href="#docker-composeruntool" title="Permanent link">&para;</a></h3>
+<p>Execute Docker Compose commands safely within containers.</p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>Run commands in Docker containers</li>
+<li>Service specification support</li>
+<li>Automatic container cleanup</li>
+<li>Build and run in one step</li>
+<li>Working directory support</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">docker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">Docker</span><span class="o">::</span><span class="no">ComposeRunTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">docker</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="ss">service</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;app&quot;</span><span class="p">,</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="ss">command</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rspec&quot;</span><span class="p">,</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="ss">args</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;spec/main_spec.rb&quot;</span><span class="o">]</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h3 id="errorhandlingtool">ErrorHandlingTool<a class="headerlink" href="#errorhandlingtool" title="Permanent link">&para;</a></h3>
+<p>Reference implementation demonstrating robust error handling patterns.</p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>Multiple error type handling</li>
+<li>Retry mechanisms with exponential backoff</li>
+<li>Input/output validation</li>
+<li>Resource cleanup patterns</li>
+<li>Detailed error categorization</li>
+<li>Support reference IDs for debugging</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">error_tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">ErrorHandlingTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">error_tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="ss">operation</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;process&quot;</span><span class="p">,</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nb">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;test&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">value</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">},</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="ss">max_retries</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr />
 <h2 id="tool-architecture">Tool Architecture<a class="headerlink" href="#tool-architecture" title="Permanent link">&para;</a></h2>
 <p>All tools share common architectural patterns:</p>
 <h3 id="facade-pattern">Facade Pattern<a class="headerlink" href="#facade-pattern" title="Permanent link">&para;</a></h3>
 <p>Each tool acts as a facade, providing a unified interface to complex operations:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Single tool, multiple related actions</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;action_one&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="o">...</span><span class="p">)</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;action_two&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="o">...</span><span class="p">)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Single tool, multiple related actions</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;action_one&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="o">...</span><span class="p">)</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;action_two&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="o">...</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="action-based-interface">Action-Based Interface<a class="headerlink" href="#action-based-interface" title="Permanent link">&para;</a></h3>
 <p>Tools use an action parameter to specify the operation:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;specific_action&quot;</span><span class="p">,</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="ss">param1</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value1&quot;</span><span class="p">,</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="ss">param2</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value2&quot;</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;specific_action&quot;</span><span class="p">,</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="ss">param1</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value1&quot;</span><span class="p">,</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="ss">param2</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value2&quot;</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="driver-architecture">Driver Architecture<a class="headerlink" href="#driver-architecture" title="Permanent link">&para;</a></h3>
 <p>Tools delegate to driver implementations for flexibility:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Use built-in driver</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">SomeTool</span><span class="o">.</span><span class="n">new</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Or provide custom driver</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">custom_driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">MyCustomDriver</span><span class="o">.</span><span class="n">new</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">SomeTool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">driver</span><span class="p">:</span><span class="w"> </span><span class="n">custom_driver</span><span class="p">)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Use built-in driver</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">SomeTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Or provide custom driver</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">custom_driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">MyCustomDriver</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="n">tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">SomeTool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">driver</span><span class="p">:</span><span class="w"> </span><span class="n">custom_driver</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="authorization-integration">Authorization Integration<a class="headerlink" href="#authorization-integration" title="Permanent link">&para;</a></h3>
 <p>Tools respect the global authorization setting:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Default: requires confirmation</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="no">SharedTools</span><span class="o">.</span><span class="n">execute?</span><span class="p">(</span><span class="ss">tool</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;tool_name&#39;</span><span class="p">,</span><span class="w"> </span><span class="ss">stuff</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;operation details&#39;</span><span class="p">)</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Disable for automation</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="no">SharedTools</span><span class="o">.</span><span class="n">auto_execute</span><span class="p">(</span><span class="kp">true</span><span class="p">)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Default: requires confirmation</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="no">SharedTools</span><span class="o">.</span><span class="n">execute?</span><span class="p">(</span><span class="ss">tool</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;tool_name&#39;</span><span class="p">,</span><span class="w"> </span><span class="ss">stuff</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;operation details&#39;</span><span class="p">)</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Disable for automation</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="no">SharedTools</span><span class="o">.</span><span class="n">auto_execute</span><span class="p">(</span><span class="kp">true</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="tool-comparison">Tool Comparison<a class="headerlink" href="#tool-comparison" title="Permanent link">&para;</a></h2>
 <table>
@@ -1677,43 +1821,91 @@
 <td>No</td>
 <td>Yes (sqlite3 or pg)</td>
 </tr>
+<tr>
+<td>ComputerTool</td>
+<td>System automation</td>
+<td>No</td>
+<td>Yes (platform-specific)</td>
+</tr>
+<tr>
+<td>CalculatorTool</td>
+<td>Math calculations</td>
+<td>No</td>
+<td>Yes (dentaku - included)</td>
+</tr>
+<tr>
+<td>WeatherTool</td>
+<td>Weather data</td>
+<td>No</td>
+<td>Yes (openweathermap - included)</td>
+</tr>
+<tr>
+<td>WorkflowManagerTool</td>
+<td>Workflow orchestration</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>CompositeAnalysisTool</td>
+<td>Data analysis</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>DatabaseQueryTool</td>
+<td>Read-only SQL queries</td>
+<td>No</td>
+<td>Yes (sequel - included)</td>
+</tr>
+<tr>
+<td>Docker ComposeRunTool</td>
+<td>Container commands</td>
+<td>No</td>
+<td>No (requires Docker)</td>
+</tr>
+<tr>
+<td>ErrorHandlingTool</td>
+<td>Reference/example</td>
+<td>No</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <h2 id="common-usage-patterns">Common Usage Patterns<a class="headerlink" href="#common-usage-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="pattern-1-resource-management">Pattern 1: Resource Management<a class="headerlink" href="#pattern-1-resource-management" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">BrowserTool</span><span class="o">.</span><span class="n">new</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">begin</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;visit&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://example.com&quot;</span><span class="p">)</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="c1"># Do work...</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">ensure</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="n">tool</span><span class="o">.</span><span class="n">cleanup!</span><span class="w">  </span><span class="c1"># Always clean up</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">end</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">BrowserTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">begin</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;visit&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://example.com&quot;</span><span class="p">)</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="c1"># Do work...</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">ensure</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="n">tool</span><span class="o">.</span><span class="n">cleanup!</span><span class="w">  </span><span class="c1"># Always clean up</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="k">end</span>
 </span></code></pre></div>
 <h3 id="pattern-2-error-handling">Pattern 2: Error Handling<a class="headerlink" href="#pattern-2-error-handling" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">begin</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;some_action&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">param</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">rescue</span><span class="w"> </span><span class="no">ArgumentError</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">e</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Invalid parameters: </span><span class="si">#{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">rescue</span><span class="w"> </span><span class="no">StandardError</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">e</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Operation failed: </span><span class="si">#{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="k">end</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">begin</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;some_action&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">param</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">rescue</span><span class="w"> </span><span class="no">ArgumentError</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">e</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Invalid parameters: </span><span class="si">#{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">rescue</span><span class="w"> </span><span class="no">StandardError</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">e</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Operation failed: </span><span class="si">#{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="k">end</span>
 </span></code></pre></div>
 <h3 id="pattern-3-multi-tool-workflows">Pattern 3: Multi-Tool Workflows<a class="headerlink" href="#pattern-3-multi-tool-workflows" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Combine tools for complex workflows</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">browser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">BrowserTool</span><span class="o">.</span><span class="n">new</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">DiskTool</span><span class="o">.</span><span class="n">new</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">DatabaseTool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">driver</span><span class="p">:</span><span class="w"> </span><span class="n">driver</span><span class="p">)</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># 1. Scrape data</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="n">html</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">browser</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;page_inspect&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">full_html</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span><span class="p">)</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># 2. Save raw data</span>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="n">disk</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file_write&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./raw.html&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">text</span><span class="p">:</span><span class="w"> </span><span class="n">html</span><span class="p">)</span>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># 3. Store in database</span>
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="n">database</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">statements</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;INSERT INTO pages (content) VALUES (&#39;</span><span class="si">#{</span><span class="n">html</span><span class="si">}</span><span class="s2">&#39;)&quot;</span><span class="o">]</span><span class="p">)</span>
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
-</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="n">browser</span><span class="o">.</span><span class="n">cleanup!</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Combine tools for complex workflows</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">browser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">BrowserTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">DiskTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">DatabaseTool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">driver</span><span class="p">:</span><span class="w"> </span><span class="n">driver</span><span class="p">)</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1"># 1. Scrape data</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="n">html</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">browser</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;page_inspect&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">full_html</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span><span class="p">)</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="c1"># 2. Save raw data</span>
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="n">disk</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file_write&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./raw.html&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">text</span><span class="p">:</span><span class="w"> </span><span class="n">html</span><span class="p">)</span>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="c1"># 3. Store in database</span>
+</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="n">database</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">statements</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;INSERT INTO pages (content) VALUES (&#39;</span><span class="si">#{</span><span class="n">html</span><span class="si">}</span><span class="s2">&#39;)&quot;</span><span class="o">]</span><span class="p">)</span>
+</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>
+</span><span id="__span-19-15"><a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="n">browser</span><span class="o">.</span><span class="n">cleanup!</span>
 </span></code></pre></div>
 <h2 id="tool-selection-guide">Tool Selection Guide<a class="headerlink" href="#tool-selection-guide" title="Permanent link">&para;</a></h2>
 <h3 id="choose-browsertool-when-you-need-to">Choose BrowserTool when you need to:<a class="headerlink" href="#choose-browsertool-when-you-need-to" title="Permanent link">&para;</a></h3>
@@ -1749,6 +1941,55 @@
 <li>Manage database records</li>
 <li>Perform CRUD operations</li>
 <li>Work with relational data</li>
+</ul>
+<h3 id="choose-computertool-when-you-need-to">Choose ComputerTool when you need to:<a class="headerlink" href="#choose-computertool-when-you-need-to" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Automate mouse and keyboard actions</li>
+<li>Control system-level operations</li>
+<li>Simulate user interactions</li>
+<li>Automate GUI applications</li>
+</ul>
+<h3 id="choose-calculatortool-when-you-need-to">Choose CalculatorTool when you need to:<a class="headerlink" href="#choose-calculatortool-when-you-need-to" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Perform safe mathematical calculations</li>
+<li>Evaluate mathematical expressions</li>
+<li>Avoid code execution risks</li>
+<li>Get precise numeric results</li>
+</ul>
+<h3 id="choose-weathertool-when-you-need-to">Choose WeatherTool when you need to:<a class="headerlink" href="#choose-weathertool-when-you-need-to" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Get real-time weather data</li>
+<li>Access weather forecasts</li>
+<li>Retrieve atmospheric conditions</li>
+<li>Work with weather APIs</li>
+</ul>
+<h3 id="choose-workflowmanagertool-when-you-need-to">Choose WorkflowManagerTool when you need to:<a class="headerlink" href="#choose-workflowmanagertool-when-you-need-to" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Manage multi-step processes</li>
+<li>Track workflow state across sessions</li>
+<li>Coordinate complex operations</li>
+<li>Persist workflow progress</li>
+</ul>
+<h3 id="choose-compositeanalysistool-when-you-need-to">Choose CompositeAnalysisTool when you need to:<a class="headerlink" href="#choose-compositeanalysistool-when-you-need-to" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Analyze data from multiple sources</li>
+<li>Generate statistical insights</li>
+<li>Get visualization suggestions</li>
+<li>Perform correlation analysis</li>
+</ul>
+<h3 id="choose-databasequerytool-when-you-need-to">Choose DatabaseQueryTool when you need to:<a class="headerlink" href="#choose-databasequerytool-when-you-need-to" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Execute read-only database queries</li>
+<li>Ensure query security with SELECT-only access</li>
+<li>Manage query timeouts</li>
+<li>Use parameterized queries safely</li>
+</ul>
+<h3 id="choose-docker-composeruntool-when-you-need-to">Choose Docker ComposeRunTool when you need to:<a class="headerlink" href="#choose-docker-composeruntool-when-you-need-to" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Run commands in containers</li>
+<li>Execute tests in isolated environments</li>
+<li>Work with Docker Compose services</li>
+<li>Automate containerized workflows</li>
 </ul>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
