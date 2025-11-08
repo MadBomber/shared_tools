@@ -44,13 +44,23 @@ module SharedTools
           uniqueness across all workflow instances.
         DESC
 
-        object :step_data, description: <<~DESC.strip, required: false
-          Hash containing data and parameters specific to the current workflow step.
-          For 'start' action: Initial configuration and parameters for the workflow.
-          For 'step' action: Input data, parameters, and context needed for the next step.
-          The structure depends on the specific workflow type and current step requirements.
-          Can include nested hashes, arrays, and any JSON-serializable data types.
+        object :step_data, description: <<~DESC.strip, required: false do
+          Data and parameters specific to the current workflow step. The structure is flexible
+          and depends on the workflow type and step requirements. Can contain any JSON-serializable
+          data types including nested objects and arrays.
         DESC
+          # Note: This is a flexible object - actual properties vary by workflow type
+          # We define common optional fields but workflow steps can include any data
+          string :step_name, description: "Optional name or identifier for this workflow step", required: false
+          string :step_type, description: "Optional type or category of this workflow step", required: false
+          string :description, description: "Optional description of what this step does", required: false
+          object :parameters, description: "Optional nested parameters for this step", required: false do
+            # Flexible nested parameters - structure varies by workflow
+          end
+          object :metadata, description: "Optional metadata for this workflow step", required: false do
+            # Flexible metadata - structure varies by workflow
+          end
+        end
       end
 
       def initialize(logger: nil, storage_dir: nil)
@@ -59,7 +69,7 @@ module SharedTools
         FileUtils.mkdir_p(@storage_dir) unless Dir.exist?(@storage_dir)
       end
 
-      def execute(action:, workflow_id: nil, step_data: {})
+      def execute(action:, workflow_id: nil, **step_data)
         @logger.info("WorkflowManagerTool#execute action=#{action} workflow_id=#{workflow_id}")
 
         case action

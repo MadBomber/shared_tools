@@ -178,7 +178,7 @@ class CompositeAnalysisToolTest < Minitest::Test
   def test_limits_visualization_suggestions
     result = @tool.execute(
       data_source: "test.csv",
-      options: {visualization_limit: 2}
+      visualization_limit: 2
     )
 
     assert result[:success]
@@ -233,7 +233,7 @@ class CompositeAnalysisToolTest < Minitest::Test
     result = @tool.execute(
       data_source: "test.csv",
       analysis_type: "comprehensive",
-      options: {include_correlations: false}
+      include_correlations: false
     )
 
     assert result[:success]
@@ -253,7 +253,7 @@ class CompositeAnalysisToolTest < Minitest::Test
   def test_handles_sample_size_option
     result = @tool.execute(
       data_source: "test.csv",
-      options: {sample_size: 100}
+      sample_size: 100
     )
 
     assert result[:success]
@@ -349,10 +349,8 @@ class CompositeAnalysisToolTest < Minitest::Test
     result = @tool.execute(
       data_source: "https://example.com/sales.csv",
       analysis_type: "comprehensive",
-      options: {
-        visualization_limit: 3,
+      visualization_limit: 3,
         include_correlations: true
-      }
     )
 
     assert result[:success]

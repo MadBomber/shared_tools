@@ -37,15 +37,37 @@ module SharedTools
           Examples: './sales_data.csv', 'SELECT * FROM transactions', 'https://api.company.com/data'
         DESC
 
-        object :parameters, description: <<~DESC.strip, required: false
-          Hash of analysis-specific parameters and configuration options:
-          - statistical_summary: confidence_level, include_quartiles, outlier_method
-          - correlation_analysis: method (pearson/spearman), significance_level
-          - time_series: date_column, value_column, frequency, forecast_periods
-          - clustering: n_clusters, algorithm (kmeans/hierarchical), distance_metric
-          - prediction: target_column, feature_columns, model_type, validation_split
-          Default empty hash uses standard parameters for each analysis type.
+        object :parameters, description: <<~DESC.strip, required: false do
+          Analysis-specific parameters and configuration options.
+          Different analysis types use different parameter combinations. Optional parameters
+          default to sensible values if not provided.
         DESC
+          # Statistical summary parameters
+          number :confidence_level, description: "Confidence level for statistical analysis (0.0-1.0). Default: 0.95", required: false
+          boolean :include_quartiles, description: "Include quartile calculations (Q1, Q3, IQR). Default: true", required: false
+          string :outlier_method, description: "Method for outlier detection: 'iqr' or 'zscore'. Default: 'iqr'", required: false
+
+          # Correlation analysis parameters
+          string :method, description: "Correlation method: 'pearson' or 'spearman'. Default: 'pearson'", required: false
+          number :significance_level, description: "Significance level for correlation (0.0-1.0). Default: 0.05", required: false
+
+          # Time series parameters
+          string :date_column, description: "Name of the date/time column. Default: 'date'", required: false
+          string :value_column, description: "Name of the value column for time series. Default: 'value'", required: false
+          string :frequency, description: "Time series frequency: 'daily', 'weekly', 'monthly'. Default: auto-detect", required: false
+          integer :forecast_periods, description: "Number of periods to forecast. Default: 7", required: false
+
+          # Clustering parameters
+          integer :n_clusters, description: "Number of clusters for k-means. Default: 3", required: false
+          string :algorithm, description: "Clustering algorithm: 'kmeans' or 'hierarchical'. Default: 'kmeans'", required: false
+          string :distance_metric, description: "Distance metric: 'euclidean', 'manhattan', 'cosine'. Default: 'euclidean'", required: false
+
+          # Prediction parameters
+          string :target_column, description: "Name of the target/dependent variable column. Required for prediction analysis.", required: false
+          array :feature_columns, of: :string, description: "Array of feature column names to use. Default: all numeric columns except target", required: false
+          string :model_type, description: "Prediction model: 'linear_regression', 'classification'. Default: 'linear_regression'", required: false
+          number :validation_split, description: "Fraction of data for validation (0.0-1.0). Default: 0.2", required: false
+        end
       end
 
       VALID_ANALYSIS_TYPES = [
@@ -60,7 +82,7 @@ module SharedTools
         @logger = logger || RubyLLM.logger
       end
 
-      def execute(analysis_type:, data_source:, parameters: {})
+      def execute(analysis_type:, data_source:, **parameters)
         analysis_start = Time.now
 
         begin

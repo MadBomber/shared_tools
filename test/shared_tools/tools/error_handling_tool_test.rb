@@ -19,7 +19,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_validate_operation_success
     result = @tool.execute(
       operation: "validate",
-      data: {name: "test", value: 42}
+      name: "test", value: 42
     )
 
     assert result[:success]
@@ -32,7 +32,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_process_operation_success
     result = @tool.execute(
       operation: "process",
-      data: {name: "test", value: 10}
+      name: "test", value: 10
     )
 
     assert result[:success]
@@ -82,7 +82,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_validate_invalid_value_type
     result = @tool.execute(
       operation: "validate",
-      data: {name: "test", value: "not_a_number"}
+      name: "test", value: "not_a_number"
     )
 
     refute result[:success]
@@ -92,8 +92,7 @@ class ErrorHandlingToolTest < Minitest::Test
 
   def test_process_requires_data
     result = @tool.execute(
-      operation: "process",
-      data: {}
+      operation: "process"
     )
 
     refute result[:success]
@@ -104,7 +103,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_max_retries_validation
     result = @tool.execute(
       operation: "validate",
-      data: {name: "test", value: 1},
+      name: "test", value: 1,
       max_retries: 15
     )
 
@@ -116,7 +115,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_negative_max_retries
     result = @tool.execute(
       operation: "validate",
-      data: {name: "test", value: 1},
+      name: "test", value: 1,
       max_retries: -1
     )
 
@@ -128,7 +127,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_simulated_validation_error
     result = @tool.execute(
       operation: "validate",
-      data: {name: "test", value: 1},
+      name: "test", value: 1,
       simulate_error: "validation"
     )
 
@@ -141,7 +140,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_simulated_network_error
     result = @tool.execute(
       operation: "process",
-      data: {name: "test", value: 1},
+      name: "test", value: 1,
       simulate_error: "network"
     )
 
@@ -167,7 +166,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_simulated_resource_not_found_error
     result = @tool.execute(
       operation: "validate",
-      data: {name: "test", value: 1},
+      name: "test", value: 1,
       simulate_error: "resource_not_found"
     )
 
@@ -180,7 +179,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_retryable_error_with_success_after_retries
     result = @tool.execute(
       operation: "process",
-      data: {name: "test", value: 1},
+      name: "test", value: 1,
       simulate_error: "retryable",
       max_retries: 3
     )
@@ -193,7 +192,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_retryable_error_max_retries_exceeded
     result = @tool.execute(
       operation: "process",
-      data: {name: "test", value: 1},
+      name: "test", value: 1,
       simulate_error: "retryable",
       max_retries: 1
     )
@@ -207,7 +206,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_zero_retries_disabled
     result = @tool.execute(
       operation: "process",
-      data: {name: "test", value: 1},
+      name: "test", value: 1,
       simulate_error: "retryable",
       max_retries: 0
     )
@@ -220,7 +219,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_metadata_included_in_success
     result = @tool.execute(
       operation: "validate",
-      data: {name: "test", value: 1}
+      name: "test", value: 1
     )
 
     assert result[:success]
@@ -234,7 +233,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_execution_time_tracked
     result = @tool.execute(
       operation: "process",
-      data: {name: "test", value: 1}
+      name: "test", value: 1
     )
 
     assert result[:success]
@@ -244,7 +243,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_resources_allocated_tracked
     result = @tool.execute(
       operation: "validate",
-      data: {name: "test", value: 1}
+      name: "test", value: 1
     )
 
     assert result[:success]
@@ -266,7 +265,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_support_reference_in_network_error
     result = @tool.execute(
       operation: "process",
-      data: {name: "test", value: 1},
+      name: "test", value: 1,
       simulate_error: "network"
     )
 
@@ -289,7 +288,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_validate_with_warnings
     result = @tool.execute(
       operation: "validate",
-      data: {name: "x", value: -5}
+      name: "x", value: -5
     )
 
     assert result[:success]
@@ -301,7 +300,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_validate_minimal_valid_data
     result = @tool.execute(
       operation: "validate",
-      data: {name: "ab", value: 0}
+      name: "ab", value: 0
     )
 
     assert result[:success]
@@ -312,7 +311,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_empty_simulate_error_works_normally
     result = @tool.execute(
       operation: "validate",
-      data: {name: "test", value: 1},
+      name: "test", value: 1,
       simulate_error: ""
     )
 
@@ -322,7 +321,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_nil_simulate_error_works_normally
     result = @tool.execute(
       operation: "validate",
-      data: {name: "test", value: 1},
+      name: "test", value: 1,
       simulate_error: nil
     )
 
@@ -332,7 +331,7 @@ class ErrorHandlingToolTest < Minitest::Test
   def test_process_with_decimal_value
     result = @tool.execute(
       operation: "process",
-      data: {name: "test", value: 10.5}
+      name: "test", value: 10.5
     )
 
     assert result[:success]

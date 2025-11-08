@@ -20,7 +20,7 @@ class DevopsToolkitTest < Minitest::Test
     result = @tool.execute(
       operation: "deploy",
       environment: "development",
-      options: {version: "1.0.0"}
+      version: "1.0.0"
     )
 
     assert result[:success]
@@ -36,7 +36,7 @@ class DevopsToolkitTest < Minitest::Test
     result = @tool.execute(
       operation: "deploy",
       environment: "staging",
-      options: {version: "2.0.0", branch: "main"}
+      version: "2.0.0", branch: "main"
     )
 
     assert result[:success]
@@ -49,7 +49,7 @@ class DevopsToolkitTest < Minitest::Test
     result = @tool.execute(
       operation: "deploy",
       environment: "production",
-      options: {version: "1.0.0"}
+      version: "1.0.0"
     )
 
     refute result[:success]
@@ -61,7 +61,7 @@ class DevopsToolkitTest < Minitest::Test
     result = @tool.execute(
       operation: "deploy",
       environment: "production",
-      options: {version: "1.0.0", production_confirmed: true}
+      version: "1.0.0", production_confirmed: true
     )
 
     assert result[:success]
@@ -99,7 +99,7 @@ class DevopsToolkitTest < Minitest::Test
     result = @tool.execute(
       operation: "rollback",
       environment: "development",
-      options: {target_version: "1.0.0"}
+      target_version: "1.0.0"
     )
 
     assert result[:success]
@@ -125,7 +125,7 @@ class DevopsToolkitTest < Minitest::Test
     result = @tool.execute(
       operation: "rollback",
       environment: "production",
-      options: {production_confirmed: true}
+      production_confirmed: true
     )
 
     refute result[:success]
@@ -137,7 +137,7 @@ class DevopsToolkitTest < Minitest::Test
     result = @tool.execute(
       operation: "rollback",
       environment: "production",
-      options: {production_confirmed: true, rollback_confirmed: true}
+      production_confirmed: true, rollback_confirmed: true
     )
 
     assert result[:success]
@@ -164,7 +164,7 @@ class DevopsToolkitTest < Minitest::Test
     result = @tool.execute(
       operation: "health_check",
       environment: "staging",
-      options: {services_to_check: ["web", "database"]}
+      services_to_check: ["web", "database"]
     )
 
     assert result[:success]
@@ -218,11 +218,9 @@ class DevopsToolkitTest < Minitest::Test
     result = @tool.execute(
       operation: "log_analysis",
       environment: "staging",
-      options: {
-        time_range: "last_24_hours",
+      time_range: "last_24_hours",
         log_level: "warning",
         search_patterns: ["error", "exception"]
-      }
     )
 
     assert result[:success]
@@ -260,7 +258,7 @@ class DevopsToolkitTest < Minitest::Test
     result = @tool.execute(
       operation: "metric_collection",
       environment: "staging",
-      options: {metric_types: ["cpu", "memory"]}
+      metric_types: ["cpu", "memory"]
     )
 
     assert result[:success]
@@ -307,11 +305,13 @@ class DevopsToolkitTest < Minitest::Test
 
   def test_valid_environments
     ["development", "staging", "production"].each do |env|
-      result = @tool.execute(
+      params = {
         operation: "health_check",
-        environment: env,
-        options: (env == "production" ? {production_confirmed: true} : {})
-      )
+        environment: env
+      }
+      params[:production_confirmed] = true if env == "production"
+
+      result = @tool.execute(**params)
 
       assert result[:success], "#{env} should be valid"
     end
@@ -445,7 +445,7 @@ class DevopsToolkitTest < Minitest::Test
       result = @tool.execute(
         operation: op,
         environment: "production",
-        options: {production_confirmed: true}
+        production_confirmed: true
       )
 
       # Rollback needs additional confirmation

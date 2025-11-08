@@ -34,19 +34,21 @@ module SharedTools
           Default: standard
         DESC
 
-        object :options, description: <<~DESC.strip, required: false
-          Additional analysis options:
-          - sample_size: Maximum number of rows to analyze for large datasets
-          - include_correlations: Boolean to enable correlation analysis (default: true)
-          - visualization_limit: Maximum number of visualizations to suggest (default: 5)
+        object :options, description: <<~DESC.strip, required: false do
+          Additional analysis options for customizing the analysis behavior.
+          These options allow fine-tuning the analysis process for different dataset sizes and requirements.
         DESC
+          integer :sample_size, description: "Maximum number of rows to analyze for large datasets. Helps manage performance on very large files.", required: false
+          boolean :include_correlations, description: "Enable correlation analysis. Set to false to skip correlation calculations. Default: true", required: false
+          integer :visualization_limit, description: "Maximum number of visualizations to suggest. Default: 5", required: false
+        end
       end
 
       def initialize(logger: nil)
         @logger = logger || RubyLLM.logger
       end
 
-      def execute(data_source:, analysis_type: "standard", options: {})
+      def execute(data_source:, analysis_type: "standard", **options)
         results = {}
         analysis_start = Time.now
 

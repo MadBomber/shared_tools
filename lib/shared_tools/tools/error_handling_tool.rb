@@ -62,14 +62,14 @@ module SharedTools
           This parameter demonstrates how to validate enum-like inputs.
         DESC
 
-        object :data, description: <<~DESC.strip, required: false
-          Data object to process. Should contain:
-          - name (string): Name of the data item
-          - value (number): Numeric value to process
-          - optional_field (string): Any optional field
-
-          Example: {name: "example", value: 100}
+        object :data, description: <<~DESC.strip, required: false do
+          Data object to process. Contains the data to be validated or processed.
+          Example: {name: "example", value: 100, optional_field: "extra info"}
         DESC
+          string :name, description: "Name or identifier of the data item. Should be at least 2 characters long.", required: false
+          number :value, description: "Numeric value to process. Must be a valid number. Negative values will generate a warning.", required: false
+          string :optional_field, description: "Any optional string field for additional data or context.", required: false
+        end
 
         string :simulate_error, description: <<~DESC.strip, required: false
           Simulate a specific error type for testing error handling. Options:
@@ -104,7 +104,7 @@ module SharedTools
       # @param max_retries [Integer] Maximum retry attempts
       #
       # @return [Hash] Operation result with success status
-      def execute(operation:, data: {}, simulate_error: nil, max_retries: 3)
+      def execute(operation:, simulate_error: nil, max_retries: 3, **data)
         @operation_start_time = Time.now
         @logger.info("ErrorHandlingTool#execute operation=#{operation} simulate_error=#{simulate_error}")
 

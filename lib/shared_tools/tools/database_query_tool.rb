@@ -39,7 +39,7 @@ module SharedTools
 
           Use placeholders (?) for parameterized queries to prevent SQL injection:
           - Good: "SELECT * FROM users WHERE id = ?"
-          - Bad: "SELECT * FROM users WHERE id = #{user_id}"
+          - Bad: "SELECT * FROM users WHERE id = \#{user_id}"
 
           Examples:
           - 'SELECT * FROM users WHERE active = true'
@@ -69,7 +69,7 @@ module SharedTools
           consuming excessive resources. Minimum: 1, Maximum: 300, Default: 30 seconds.
         DESC
 
-        array :params, description: <<~DESC.strip, required: false
+        array :params, of: :string, description: <<~DESC.strip, required: false
           Parameters to bind to the query placeholders (?). Use parameterized queries to prevent
           SQL injection vulnerabilities. The number of parameters must match the number of
           placeholders in the query. Parameters are automatically escaped and quoted based on
@@ -265,7 +265,9 @@ module SharedTools
           when :mysql
             db.execute("SET SESSION max_execution_time = #{timeout * 1000}")  # milliseconds
           when :sqlite
-            db.timeout = timeout * 1000  # milliseconds
+            # SQLite timeout is set at connection time via busy_timeout pragma
+            # The timeout parameter controls how long SQLite waits for locks
+            db.execute("PRAGMA busy_timeout = #{timeout * 1000}")  # milliseconds
           end
         rescue => e
           @logger.warn("Could not set query timeout: #{e.message}")

@@ -46,15 +46,37 @@ module SharedTools
           Default: staging
         DESC
 
-        object :options, description: <<~DESC.strip, required: false
-          Hash of operation-specific options and parameters:
-          - For deploy: version, branch, rollback_on_failure, notification_channels
-          - For rollback: target_version, confirmation_required
-          - For health_check: services_to_check, timeout_seconds
-          - For log_analysis: time_range, log_level, search_patterns
-          - For metric_collection: metric_types, time_window, output_format
-          Production operations require 'production_confirmed: true' for safety.
+        object :options, description: <<~DESC.strip, required: false do
+          Operation-specific options and parameters. Different operations use different option combinations.
+          Production operations always require 'production_confirmed: true' for safety.
         DESC
+          # Production safety
+          boolean :production_confirmed, description: "Explicit confirmation for production operations. Must be true for production environment. Default: false", required: false
+
+          # Deploy operation options
+          string :version, description: "Version identifier to deploy. Default: 'latest'", required: false
+          string :branch, description: "Git branch to deploy from. Default: 'main'", required: false
+          boolean :rollback_on_failure, description: "Automatically rollback if deployment fails. Default: true", required: false
+          array :notification_channels, of: :string, description: "Array of notification channels for deployment status. Default: []", required: false
+
+          # Rollback operation options
+          string :target_version, description: "Specific version to rollback to. Default: 'previous'", required: false
+          boolean :rollback_confirmed, description: "Extra confirmation for production rollback. Default: false", required: false
+
+          # Health check options
+          array :services_to_check, of: :string, description: "Array of service names to check. Default: ['web', 'api', 'database', 'cache']", required: false
+          integer :timeout_seconds, description: "Timeout for health check operations. Default: 30", required: false
+
+          # Log analysis options
+          string :time_range, description: "Time range for log analysis: 'last_hour', 'last_day', 'last_week'. Default: 'last_hour'", required: false
+          string :log_level, description: "Minimum log level: 'debug', 'info', 'warning', 'error'. Default: 'error'", required: false
+          array :search_patterns, of: :string, description: "Array of regex patterns to search for in logs. Default: []", required: false
+
+          # Metric collection options
+          array :metric_types, of: :string, description: "Array of metric types: 'cpu', 'memory', 'disk', 'network'. Default: all", required: false
+          string :time_window, description: "Time window for metrics: 'last_5_minutes', 'last_hour', 'last_day'. Default: 'last_5_minutes'", required: false
+          string :output_format, description: "Format for metric output: 'summary', 'detailed', 'json'. Default: 'summary'", required: false
+        end
       end
 
       def initialize(logger: nil)
@@ -62,7 +84,7 @@ module SharedTools
         @operation_log = []
       end
 
-      def execute(operation:, environment: "staging", options: {})
+      def execute(operation:, environment: "staging", **options)
         operation_id = SecureRandom.uuid
         @logger.info("DevOpsToolkit#execute operation=#{operation} environment=#{environment} operation_id=#{operation_id}")
 

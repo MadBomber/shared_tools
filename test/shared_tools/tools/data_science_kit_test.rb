@@ -32,7 +32,7 @@ class DataScienceKitTest < Minitest::Test
     result = @tool.execute(
       analysis_type: "statistical_summary",
       data_source: "test.csv",
-      parameters: {include_quartiles: true}
+      include_quartiles: true
     )
 
     assert result[:success]
@@ -46,7 +46,7 @@ class DataScienceKitTest < Minitest::Test
     result = @tool.execute(
       analysis_type: "statistical_summary",
       data_source: "test.csv",
-      parameters: {outlier_method: "iqr", include_quartiles: true}
+      outlier_method: "iqr", include_quartiles: true
     )
 
     assert result[:success]
@@ -83,7 +83,7 @@ class DataScienceKitTest < Minitest::Test
     result = @tool.execute(
       analysis_type: "correlation_analysis",
       data_source: "test.csv",
-      parameters: {method: "pearson"}
+      method: "pearson"
     )
 
     assert result[:success]
@@ -106,7 +106,7 @@ class DataScienceKitTest < Minitest::Test
     result = @tool.execute(
       analysis_type: "correlation_analysis",
       data_source: "test.csv",
-      parameters: {significance_level: 0.05}
+      significance_level: 0.05
     )
 
     assert result[:success]
@@ -144,7 +144,7 @@ class DataScienceKitTest < Minitest::Test
     result = @tool.execute(
       analysis_type: "time_series",
       data_source: "test.csv",
-      parameters: {forecast_periods: 5}
+      forecast_periods: 5
     )
 
     assert result[:success]
@@ -184,7 +184,7 @@ class DataScienceKitTest < Minitest::Test
     result = @tool.execute(
       analysis_type: "clustering",
       data_source: "test.csv",
-      parameters: {algorithm: "kmeans", n_clusters: 3}
+      algorithm: "kmeans", n_clusters: 3
     )
 
     assert result[:success]
@@ -224,7 +224,7 @@ class DataScienceKitTest < Minitest::Test
     result = @tool.execute(
       analysis_type: "prediction",
       data_source: "test_data.csv",
-      parameters: {target_column: "value"}
+      target_column: "value"
     )
 
     assert result[:success]
@@ -247,7 +247,7 @@ class DataScienceKitTest < Minitest::Test
     result = @tool.execute(
       analysis_type: "prediction",
       data_source: "test.csv",
-      parameters: {target_column: "score"}
+      target_column: "score"
     )
 
     assert result[:success]
@@ -262,7 +262,7 @@ class DataScienceKitTest < Minitest::Test
     result = @tool.execute(
       analysis_type: "prediction",
       data_source: "test.csv",
-      parameters: {target_column: "score"}
+      target_column: "score"
     )
 
     assert result[:success]
@@ -276,10 +276,8 @@ class DataScienceKitTest < Minitest::Test
     result = @tool.execute(
       analysis_type: "prediction",
       data_source: "test.csv",
-      parameters: {
-        target_column: "score",
+      target_column: "score",
         validation_split: 0.3
-      }
     )
 
     assert result[:success]
@@ -334,7 +332,7 @@ class DataScienceKitTest < Minitest::Test
     result = @tool.execute(
       analysis_type: "time_series",
       data_source: "test.csv",
-      parameters: {date_column: "nonexistent_date"}
+      date_column: "nonexistent_date"
     )
 
     refute result[:success]
@@ -461,7 +459,7 @@ class DataScienceKitTest < Minitest::Test
       result = @tool.execute(
         analysis_type: "prediction",
         data_source: "test.csv",
-        parameters: {target_column: target}
+        target_column: target
       )
 
       assert result[:success], "Should predict for #{target}"
