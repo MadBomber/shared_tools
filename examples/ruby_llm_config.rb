@@ -39,7 +39,7 @@ end
 # Helper to create an Ollama chat
 def ollama_chat(model: nil)
   model_to_use = model || RubyLLM.config.default_model
-  RubyLLM.chat(model: model_to_use, provider: :ollama, assume_model_exists: true)
+  @chat = RubyLLM.chat(model: model_to_use, provider: :ollama, assume_model_exists: true)
 end
 
 def title(a_string, bc: '=')
@@ -80,7 +80,7 @@ puts <<~USAGE
   Auto-execute: enabled (for demo purposes only)
   #{'=' * 80}
 
-  Usage: chat = ollama_chat(model: 'model-name') # or use default model
-         chat.with_tool(Tool).ask('Your question')
+  Usage: @chat = ollama_chat(model: 'model-name') # or use default model
+         @chat.with_tool(Tool).ask('Your question')
 
 USAGE

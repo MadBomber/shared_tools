@@ -129,16 +129,19 @@ module SharedTools
         data = api.current(city)
         @logger.debug("Current weather data received for #{city}")
 
+        conditions = data.weather_conditions
+        wind = conditions.wind || {}
+
         {
-          temperature:    data['main']['temp'],
-          feels_like:     data['main']['feels_like'],
-          description:    data['weather'][0]['description'],
-          humidity:       data['main']['humidity'],
-          pressure:       data['main']['pressure'],
-          wind_speed:     data['wind']['speed'],
-          wind_direction: data['wind']['deg'],
-          cloudiness:     data['clouds']['all'],
-          visibility:     data['visibility']
+          temperature:    conditions.temperature,
+          feels_like:     conditions.temperature,  # API doesn't provide feels_like separately
+          description:    conditions.description,
+          humidity:       conditions.humidity,
+          pressure:       conditions.pressure,
+          wind_speed:     wind[:speed] || wind['speed'] || 0,
+          wind_direction: wind[:direction] || wind['direction'] || 0,
+          cloudiness:     conditions.clouds,
+          visibility:     0  # Not provided by this gem
         }
       end
 
@@ -157,8 +160,8 @@ module SharedTools
         # Group forecasts by date and extract daily summaries
         forecasts_by_date = {}
 
-        data['list'].each do |forecast|
-          date = Time.at(forecast['dt']).strftime('%Y-%m-%d')
+        data.forecast.each do |forecast|
+          date = forecast.time.strftime('%Y-%m-%d')
 
           forecasts_by_date[date] ||= {
             date:         date,
@@ -168,10 +171,11 @@ module SharedTools
             wind_speeds:  []
           }
 
-          forecasts_by_date[date][:temperatures] << forecast['main']['temp']
-          forecasts_by_date[date][:conditions] << forecast['weather'][0]['description']
-          forecasts_by_date[date][:humidity] << forecast['main']['humidity']
-          forecasts_by_date[date][:wind_speeds] << forecast['wind']['speed']
+          wind = forecast.wind || {}
+          forecasts_by_date[date][:temperatures] << forecast.temperature
+          forecasts_by_date[date][:conditions] << forecast.description
+          forecasts_by_date[date][:humidity] << forecast.humidity
+          forecasts_by_date[date][:wind_speeds] << (wind[:speed] || wind['speed'] || 0)
         end
 
         # Calculate daily summaries

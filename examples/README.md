@@ -288,6 +288,267 @@ gem install sqlite3
 
 ---
 
+### 8. Calculator Tool Example (`calculator_tool_example.rb`)
+
+Demonstrates safe mathematical calculations including:
+- Basic arithmetic operations (+, -, *, /)
+- Complex expressions with parentheses
+- Square root and exponentiation
+- Percentage calculations
+- Precision control for decimal results
+- Rounding operations
+- Multi-step calculations with conversational context
+
+**Requirements:**
+```bash
+gem install dentaku
+```
+
+**Additional Requirements:**
+- None
+
+**Run it:**
+```bash
+./calculator_tool_example.rb
+```
+
+**Key Features:**
+- Uses Dentaku for safe math evaluation (no code injection)
+- Supports mathematical functions (sqrt, round, pow, etc.)
+- Configurable decimal precision
+- Natural language to mathematical expressions
+- Maintains conversational context across calculations
+
+---
+
+### 9. Weather Tool Example (`weather_tool_example.rb`)
+
+Demonstrates weather data retrieval including:
+- Current weather conditions for cities worldwide
+- Temperature, humidity, wind, and atmospheric data
+- Multiple unit systems (metric, imperial, kelvin)
+- 3-day weather forecasts
+- Multi-city comparisons
+- Real-time API integration
+
+**Requirements:**
+```bash
+gem install openweathermap
+```
+
+**Additional Requirements:**
+- OpenWeatherMap API key (free at https://openweathermap.org/api)
+- Set `OPENWEATHER_API_KEY` environment variable
+- Active internet connection
+
+**Run it:**
+```bash
+export OPENWEATHER_API_KEY="your-key-here"
+./weather_tool_example.rb
+```
+
+**Key Features:**
+- Real-time weather data from OpenWeatherMap API
+- Supports metric, imperial, and kelvin units
+- Includes current conditions and forecasts
+- Natural language weather queries
+- Conversational context maintenance
+
+---
+
+### 10. Workflow Manager Tool Example (`workflow_manager_tool_example.rb`)
+
+Demonstrates stateful workflow management including:
+- Creating and initializing workflows
+- Adding sequential workflow steps
+- Checking workflow status and progress
+- Managing workflow metadata
+- Completing workflows with summaries
+- Persistent state across process restarts
+- Multiple concurrent workflows
+
+**Requirements:**
+- None (uses standard Ruby libraries)
+
+**Additional Requirements:**
+- None (uses temporary storage)
+
+**Run it:**
+```bash
+./workflow_manager_tool_example.rb
+```
+
+**Key Features:**
+- Stateful workflow management with persistence
+- Unique workflow IDs for tracking
+- Step-by-step execution with metadata
+- Status monitoring and progress tracking
+- Automatic state persistence to disk
+- Workflow completion summaries
+- Perfect for coordinating complex multi-step processes
+
+---
+
+### 11. Composite Analysis Tool Example (`composite_analysis_tool_example.rb`)
+
+Demonstrates comprehensive data analysis including:
+- Multi-stage data analysis orchestration
+- Data structure analysis
+- Statistical insights generation
+- Visualization recommendations
+- Correlation analysis
+- Support for CSV, JSON, and web data sources
+- Three analysis levels (quick, standard, comprehensive)
+
+**Requirements:**
+- None (uses standard Ruby libraries with simulated data)
+
+**Additional Requirements:**
+- None (examples use simulated data)
+
+**Run it:**
+```bash
+./composite_analysis_tool_example.rb
+```
+
+**Key Features:**
+- Automatically detects data format (CSV, JSON, text)
+- Three analysis modes: quick, standard, comprehensive
+- Generates structure, insights, and visualization suggestions
+- Supports both file paths and web URLs
+- Comprehensive correlation analysis
+- Perfect for exploratory data analysis
+
+---
+
+### 12. Data Science Kit Example (`data_science_kit_example.rb`)
+
+Demonstrates advanced data science operations including:
+- Statistical summary with distributions and outliers
+- Correlation analysis (Pearson and Spearman)
+- Time series analysis with forecasting
+- K-means and hierarchical clustering
+- Predictive modeling and regression
+- Custom parameters for fine-tuned analysis
+
+**Requirements:**
+- None (uses standard Ruby libraries with simulated data)
+
+**Additional Requirements:**
+- None (examples use simulated data)
+
+**Run it:**
+```bash
+./data_science_kit_example.rb
+```
+
+**Key Features:**
+- Five analysis types: statistical_summary, correlation_analysis, time_series, clustering, prediction
+- Supports multiple ML algorithms and methods
+- Automatic data loading and preprocessing
+- Detailed results with visualization recommendations
+- Custom parameter support for advanced users
+- Conversational context across analysis steps
+
+---
+
+### 13. Database Query Tool Example (`database_query_tool_example.rb`)
+
+Demonstrates safe, read-only database queries including:
+- SELECT-only queries (no data modification)
+- Parameterized queries for SQL injection prevention
+- Automatic LIMIT enforcement
+- Query timeout protection
+- Join operations and aggregations
+- Connection pooling with automatic cleanup
+
+**Requirements:**
+```bash
+gem install sequel sqlite3
+```
+
+**Additional Requirements:**
+- None (uses in-memory database for examples)
+
+**Run it:**
+```bash
+./database_query_tool_example.rb
+```
+
+**Key Features:**
+- Read-only security (SELECT statements only)
+- Parameterized query support prevents SQL injection
+- Automatic connection management
+- Query timeout protection
+- Works with any Sequel-supported database
+- Perfect for AI-assisted data analysis and reporting
+
+---
+
+### 14. DevOps Toolkit Example (`devops_toolkit_example.rb`)
+
+Demonstrates DevOps operations including:
+- Application deployments across environments
+- Rollback capabilities for failed deployments
+- Health checks and system monitoring
+- Log analysis and error detection
+- Metrics collection and reporting
+- Production safety mechanisms with confirmations
+
+**Requirements:**
+- None (uses standard Ruby libraries)
+
+**Additional Requirements:**
+- None (examples simulate DevOps operations)
+
+**Run it:**
+```bash
+./devops_toolkit_example.rb
+```
+
+**Key Features:**
+- Environment-specific restrictions (dev, staging, production)
+- Production operations require explicit confirmation
+- All operations logged with unique operation IDs
+- Supports deployments, rollbacks, health checks, logs, and metrics
+- Built-in safety mechanisms prevent accidents
+- Audit trail for compliance requirements
+
+---
+
+### 15. Error Handling Tool Example (`error_handling_tool_example.rb`)
+
+Demonstrates comprehensive error handling patterns including:
+- Input validation with helpful suggestions
+- Network retry with exponential backoff
+- Authorization checks and errors
+- Resource cleanup in ensure blocks
+- Detailed error categorization
+- Operation metadata tracking
+- Configurable retry mechanisms
+
+**Requirements:**
+- None (uses standard Ruby libraries)
+
+**Additional Requirements:**
+- None
+
+**Run it:**
+```bash
+./error_handling_tool_example.rb
+```
+
+**Key Features:**
+- Reference implementation for robust tool development
+- Demonstrates all major error types and handling patterns
+- Retry mechanism with exponential backoff
+- Proper resource cleanup
+- Unique reference IDs for error tracking
+- Detailed error messages with suggestions
+- Perfect reference for building production-ready tools
+
+---
+
 ## General Usage Patterns
 
 ### Tool Initialization

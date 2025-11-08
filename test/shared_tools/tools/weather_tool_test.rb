@@ -7,82 +7,53 @@ class WeatherToolTest < Minitest::Test
     @tool = SharedTools::Tools::WeatherTool.new
     @has_api_key = ENV['OPENWEATHER_API_KEY'] && !ENV['OPENWEATHER_API_KEY'].empty?
 
-    # Mock OpenWeatherMap API responses
-    @mock_current_weather = {
-      'main' => {
-        'temp' => 15.5,
-        'feels_like' => 14.2,
-        'humidity' => 72,
-        'pressure' => 1013
-      },
-      'weather' => [
-        {'description' => 'partly cloudy'}
-      ],
-      'wind' => {
-        'speed' => 3.5,
-        'deg' => 180
-      },
-      'clouds' => {
-        'all' => 40
-      },
-      'visibility' => 10000
-    }
+    # Mock OpenWeatherMap API responses - now using objects instead of hashes
+    # Create a mock WeatherConditions object
+    @mock_weather_conditions = Struct.new(
+      :temperature, :temp_min, :temp_max, :pressure, :humidity,
+      :description, :wind, :clouds, :time, :main, :icon, :emoji, :rain, :snow
+    ).new(
+      15.5, 14.0, 17.0, 1013, 72,
+      'partly cloudy', {speed: 3.5, direction: 180}, 40, Time.now,
+      'Clouds', 'icon_url', 'emoji', nil, nil
+    )
 
-    @mock_forecast = {
-      'list' => [
-        # Day 1 - 3 entries
-        {
-          'dt' => Time.now.to_i,
-          'main' => {'temp' => 16.0, 'humidity' => 70},
-          'weather' => [{'description' => 'clear sky'}],
-          'wind' => {'speed' => 3.0}
-        },
-        {
-          'dt' => Time.now.to_i + 10800,
-          'main' => {'temp' => 18.5, 'humidity' => 65},
-          'weather' => [{'description' => 'clear sky'}],
-          'wind' => {'speed' => 3.2}
-        },
-        {
-          'dt' => Time.now.to_i + 21600,
-          'main' => {'temp' => 14.0, 'humidity' => 75},
-          'weather' => [{'description' => 'few clouds'}],
-          'wind' => {'speed' => 2.8}
-        },
-        # Day 2 - 3 entries
-        {
-          'dt' => (Time.now + 86400).to_i,
-          'main' => {'temp' => 17.5, 'humidity' => 68},
-          'weather' => [{'description' => 'scattered clouds'}],
-          'wind' => {'speed' => 4.0}
-        },
-        {
-          'dt' => (Time.now + 86400).to_i + 10800,
-          'main' => {'temp' => 20.0, 'humidity' => 60},
-          'weather' => [{'description' => 'scattered clouds'}],
-          'wind' => {'speed' => 4.5}
-        },
-        {
-          'dt' => (Time.now + 86400).to_i + 21600,
-          'main' => {'temp' => 15.5, 'humidity' => 72},
-          'weather' => [{'description' => 'scattered clouds'}],
-          'wind' => {'speed' => 3.8}
-        },
-        # Day 3 - 2 entries
-        {
-          'dt' => (Time.now + 172800).to_i,
-          'main' => {'temp' => 16.5, 'humidity' => 70},
-          'weather' => [{'description' => 'light rain'}],
-          'wind' => {'speed' => 5.0}
-        },
-        {
-          'dt' => (Time.now + 172800).to_i + 10800,
-          'main' => {'temp' => 19.0, 'humidity' => 65},
-          'weather' => [{'description' => 'light rain'}],
-          'wind' => {'speed' => 5.5}
-        }
-      ]
-    }
+    # Create a mock CurrentWeather object
+    @mock_current_weather = Struct.new(:weather_conditions).new(@mock_weather_conditions)
+
+    # Create mock forecast conditions
+    forecast_conditions = [
+      # Day 1 - 3 entries
+      Struct.new(:time, :temperature, :temp_min, :temp_max, :humidity, :description, :wind, :pressure, :clouds, :main, :icon, :emoji, :rain, :snow).new(
+        Time.now, 16.0, 15.0, 17.0, 70, 'clear sky', {speed: 3.0}, 1013, 20, 'Clear', 'icon', 'emoji', nil, nil
+      ),
+      Struct.new(:time, :temperature, :temp_min, :temp_max, :humidity, :description, :wind, :pressure, :clouds, :main, :icon, :emoji, :rain, :snow).new(
+        Time.now + 10800, 18.5, 17.5, 19.5, 65, 'clear sky', {speed: 3.2}, 1013, 20, 'Clear', 'icon', 'emoji', nil, nil
+      ),
+      Struct.new(:time, :temperature, :temp_min, :temp_max, :humidity, :description, :wind, :pressure, :clouds, :main, :icon, :emoji, :rain, :snow).new(
+        Time.now + 21600, 14.0, 13.0, 15.0, 75, 'few clouds', {speed: 2.8}, 1013, 30, 'Clouds', 'icon', 'emoji', nil, nil
+      ),
+      # Day 2 - 3 entries
+      Struct.new(:time, :temperature, :temp_min, :temp_max, :humidity, :description, :wind, :pressure, :clouds, :main, :icon, :emoji, :rain, :snow).new(
+        Time.now + 86400, 17.5, 16.5, 18.5, 68, 'scattered clouds', {speed: 4.0}, 1013, 40, 'Clouds', 'icon', 'emoji', nil, nil
+      ),
+      Struct.new(:time, :temperature, :temp_min, :temp_max, :humidity, :description, :wind, :pressure, :clouds, :main, :icon, :emoji, :rain, :snow).new(
+        Time.now + 86400 + 10800, 20.0, 19.0, 21.0, 60, 'scattered clouds', {speed: 4.5}, 1013, 40, 'Clouds', 'icon', 'emoji', nil, nil
+      ),
+      Struct.new(:time, :temperature, :temp_min, :temp_max, :humidity, :description, :wind, :pressure, :clouds, :main, :icon, :emoji, :rain, :snow).new(
+        Time.now + 86400 + 21600, 15.5, 14.5, 16.5, 72, 'scattered clouds', {speed: 3.8}, 1013, 40, 'Clouds', 'icon', 'emoji', nil, nil
+      ),
+      # Day 3 - 2 entries
+      Struct.new(:time, :temperature, :temp_min, :temp_max, :humidity, :description, :wind, :pressure, :clouds, :main, :icon, :emoji, :rain, :snow).new(
+        Time.now + 172800, 16.5, 15.5, 17.5, 70, 'light rain', {speed: 5.0}, 1013, 60, 'Rain', 'icon', 'emoji', 2.0, nil
+      ),
+      Struct.new(:time, :temperature, :temp_min, :temp_max, :humidity, :description, :wind, :pressure, :clouds, :main, :icon, :emoji, :rain, :snow).new(
+        Time.now + 172800 + 10800, 19.0, 18.0, 20.0, 65, 'light rain', {speed: 5.5}, 1013, 60, 'Rain', 'icon', 'emoji', 2.5, nil
+      )
+    ]
+
+    # Create a mock Forecast object
+    @mock_forecast = Struct.new(:forecast, :city).new(forecast_conditions, nil)
   end
 
   def test_tool_name
