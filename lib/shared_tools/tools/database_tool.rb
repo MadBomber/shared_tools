@@ -62,13 +62,16 @@ module SharedTools
       end
 
 
-      # @param driver [SharedTools::Tools::Database::BaseDriver] required database driver (SqliteDriver, PostgresDriver, etc.)
+      # @param driver [SharedTools::Tools::Database::BaseDriver] database driver (SqliteDriver, PostgresDriver, etc.)
+      #   Required for execute, but optional for instantiation to support RubyLLM tool discovery
       # @param logger [Logger] optional logger
-      def initialize(driver:, logger: nil)
-        raise ArgumentError, "driver is required for DatabaseTool" if driver.nil?
+      def initialize(driver: nil, logger: nil)
         @driver = driver
         @logger = logger || RubyLLM.logger
       end
+
+      # Set driver after instantiation (useful when tool is discovered by RubyLLM)
+      attr_writer :driver
 
       # @example
       #   tool = SharedTools::Tools::Database::BaseTool.new
@@ -78,6 +81,8 @@ module SharedTools
       #
       # @return [Array<Hash>]
       def execute(statements:)
+        raise ArgumentError, "driver is required for DatabaseTool#execute. Set via initialize(driver:) or tool.driver=" if @driver.nil?
+
         [].tap do |executions|
           statements.map do |statement|
             execution = perform(statement:).merge(statement:)

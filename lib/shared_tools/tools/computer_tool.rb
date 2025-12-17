@@ -139,12 +139,15 @@ module SharedTools
       end
 
 
-      # @param driver [Computer::BaseDriver] optional, will attempt to create platform-specific driver if not provided
+      # @param driver [Computer::BaseDriver] optional, will attempt to create platform-specific driver when execute is called
       # @param logger [Logger] optional logger
       def initialize(driver: nil, logger: nil)
         @logger = logger || RubyLLM.logger
-        @driver = driver || default_driver
+        @driver = driver  # Defer default_driver to execute time to support RubyLLM tool discovery
       end
+
+      # Set driver after instantiation (useful when tool is discovered by RubyLLM)
+      attr_writer :driver
 
       # @param action [String]
       # @param coordinate [Hash<{ width: Integer, height: Integer }>] the (x,y) coordinate
@@ -162,6 +165,9 @@ module SharedTools
         scroll_direction: nil,
         scroll_amount: nil
       )
+        # Lazily resolve driver at execute time
+        @driver ||= default_driver
+
         @logger.info({
           action:,
           coordinate:,
