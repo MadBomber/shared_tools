@@ -3,6 +3,18 @@
 ## Unreleased
 
 ## Released
+### [0.3.1] 2025-12-17
+
+- added ClipboardTool for cross-platform clipboard read/write operations
+- added CronTool for cron expression parsing and scheduling
+- added CurrentDateTimeTool for date/time retrieval with timezone support
+- added DnsTool for DNS lookups and resolution
+- added SystemInfoTool for system information retrieval
+- updated gem dependencies and Zeitwerk configuration
+- improved BrowserTool, ComputerTool, and DatabaseTool implementations
+- updated GitHub Pages deployment workflow
+- fixed a problem with eager loading when used with the `aia` gem
+
 ### [0.3.0] 2025-11-08
 - changed focus of shared_tools to only support the ruby_llm and ruby_llm-mcp ecosystem
 
