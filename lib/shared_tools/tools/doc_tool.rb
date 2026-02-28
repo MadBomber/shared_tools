@@ -9,11 +9,13 @@ module SharedTools
       def self.name = 'doc_tool'
 
       module Action
-        PDF_READ = "pdf_read"
+        PDF_READ  = "pdf_read"
+        TEXT_READ = "text_read"
       end
 
       ACTIONS = [
         Action::PDF_READ,
+        Action::TEXT_READ,
       ].freeze
 
       description <<~TEXT
@@ -29,6 +31,9 @@ module SharedTools
           - Multiple pages: "1, 3, 5"
           - Range notation: "1-10" or "1, 3-5, 10"
 
+        2. `#{Action::TEXT_READ}` - Read a plain text file (markdown, txt, source code, etc.)
+          Required: "action": "text_read", "doc_path": "[path to file]"
+
         ## Examples:
 
         Read single page from PDF
@@ -42,17 +47,25 @@ module SharedTools
 
         Read specific pages with range
           {"action": "#{Action::PDF_READ}", "doc_path": "./manual.pdf", "page_numbers": "1, 5-8, 15, 20-25"}
+
+        Read a markdown file
+          {"action": "#{Action::TEXT_READ}", "doc_path": "./README.md"}
+
+        Read a text file
+          {"action": "#{Action::TEXT_READ}", "doc_path": "./notes.txt"}
       TEXT
 
       params do
         string :action, description: <<~TEXT.strip
           The document action to perform. Options:
           * `#{Action::PDF_READ}`: Read pages from a PDF document
+          * `#{Action::TEXT_READ}`: Read a plain text file (markdown, txt, source code, etc.)
         TEXT
 
         string :doc_path, description: <<~TEXT.strip, required: false
           Path to the document file. Required for the following actions:
           * `#{Action::PDF_READ}`
+          * `#{Action::TEXT_READ}`
         TEXT
 
         string :page_numbers, description: <<~TEXT.strip, required: false
@@ -81,6 +94,9 @@ module SharedTools
           require_param!(:doc_path, doc_path)
           require_param!(:page_numbers, page_numbers)
           pdf_reader_tool.execute(doc_path: doc_path, page_numbers: page_numbers)
+        when Action::TEXT_READ
+          require_param!(:doc_path, doc_path)
+          text_reader_tool.execute(doc_path: doc_path)
         else
           { error: "Unsupported action: #{action}. Supported actions are: #{ACTIONS.join(', ')}" }
         end
@@ -103,6 +119,11 @@ module SharedTools
       # @return [Doc::PdfReaderTool]
       def pdf_reader_tool
         @pdf_reader_tool ||= Doc::PdfReaderTool.new(logger: @logger)
+      end
+
+      # @return [Doc::TextReaderTool]
+      def text_reader_tool
+        @text_reader_tool ||= Doc::TextReaderTool.new(logger: @logger)
       end
     end
   end

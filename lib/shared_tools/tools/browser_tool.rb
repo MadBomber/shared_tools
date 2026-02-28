@@ -155,6 +155,12 @@ module SharedTools
       # Set driver after instantiation (useful when tool is discovered by RubyLLM)
       attr_writer :driver
 
+      # Reports whether this tool can function.
+      # Returns true when a driver was injected or the watir gem is loaded.
+      def available?
+        !!@driver || defined?(Watir)
+      end
+
       def cleanup!
         @driver.close
       end
