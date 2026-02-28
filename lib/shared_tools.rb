@@ -76,7 +76,7 @@ module SharedTools
 
       sleep 0.2 if defined?(AIA) # Allows CLI spinner to recycle
       print "\nIs it okay to proceed? (y/N"
-      STDIN.getch == "y"
+      $stdin.getc == "y"
     end
   end
 end

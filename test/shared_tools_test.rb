@@ -34,7 +34,7 @@ class SharedToolsTest < Minitest::Test
   # .execute? tests - auto_execute disabled (manual interaction required)
   def test_returns_true_when_user_inputs_y
     SharedTools.instance_variable_set(:@auto_execute, nil)
-    STDIN.stub :getch, 'y' do
+    with_stdin_input('y') do
       result = SharedTools.execute?(tool: 'TestTool', stuff: 'test operation')
       assert_equal true, result
     end
@@ -42,7 +42,7 @@ class SharedToolsTest < Minitest::Test
 
   def test_returns_false_when_user_inputs_n
     SharedTools.instance_variable_set(:@auto_execute, nil)
-    STDIN.stub :getch, 'n' do
+    with_stdin_input('n') do
       result = SharedTools.execute?(tool: 'TestTool', stuff: 'test operation')
       assert_equal false, result
     end
@@ -50,7 +50,7 @@ class SharedToolsTest < Minitest::Test
 
   def test_returns_false_when_user_inputs_capital_n
     SharedTools.instance_variable_set(:@auto_execute, nil)
-    STDIN.stub :getch, 'N' do
+    with_stdin_input('N') do
       result = SharedTools.execute?(tool: 'TestTool', stuff: 'test operation')
       assert_equal false, result
     end
@@ -58,7 +58,7 @@ class SharedToolsTest < Minitest::Test
 
   def test_returns_false_when_user_inputs_random_characters
     SharedTools.instance_variable_set(:@auto_execute, nil)
-    STDIN.stub :getch, 'x' do
+    with_stdin_input('x') do
       result = SharedTools.execute?(tool: 'TestTool', stuff: 'test operation')
       assert_equal false, result
     end
@@ -66,7 +66,7 @@ class SharedToolsTest < Minitest::Test
 
   def test_handles_empty_stuff_parameter
     SharedTools.instance_variable_set(:@auto_execute, nil)
-    STDIN.stub :getch, 'y' do
+    with_stdin_input('y') do
       result = SharedTools.execute?(tool: 'TestTool', stuff: '')
       assert_equal true, result
     end
@@ -80,9 +80,19 @@ class SharedToolsTest < Minitest::Test
 
   def test_treats_nil_auto_execute_as_requiring_user_interaction
     SharedTools.instance_variable_set(:@auto_execute, nil)
-    STDIN.stub :getch, 'y' do
+    with_stdin_input('y') do
       result = SharedTools.execute?(tool: 'TestTool', stuff: 'test operation')
       assert_equal true, result
     end
+  end
+
+  private
+
+  def with_stdin_input(input)
+    original_stdin = $stdin
+    $stdin = StringIO.new(input)
+    yield
+  ensure
+    $stdin = original_stdin
   end
 end

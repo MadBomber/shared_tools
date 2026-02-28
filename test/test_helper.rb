@@ -13,6 +13,7 @@ end
 
 require "minitest/autorun"
 require "minitest/pride"
+require "stringio"
 require "ruby_llm"
 require "shared_tools"
 
