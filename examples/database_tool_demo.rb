@@ -1,25 +1,29 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Example: Using DatabaseTool with LLM Integration
+# Demo: Using DatabaseTool with LLM Integration
 #
-# This example demonstrates how an LLM can execute SQL operations
+# This demo demonstrates how an LLM can execute SQL operations
 # through natural language prompts using the DatabaseTool.
 #
-# Note: This example requires the 'sqlite3' gem:
+# Requires:
+#   require_relative 'common'
+#   require 'shared_tools/database'
+#
+# Note: This demo requires the 'sqlite3' gem:
 #   gem install sqlite3
 
-require_relative 'ruby_llm_config'
+require_relative 'common'
 
 begin
   require 'sqlite3'
-  require 'shared_tools/tools/database'
+  require 'shared_tools/database'
 rescue LoadError => e
   title "ERROR: Missing required dependencies for DatabaseTool"
 
   puts <<~ERROR_MSG
 
-    This example requires the 'sqlite3' gem:
+    This demo requires the 'sqlite3' gem:
       gem install sqlite3
 
     Or add to your Gemfile:
@@ -32,7 +36,8 @@ rescue LoadError => e
   exit 1
 end
 
-title "DatabaseTool Example - LLM-Powered SQL Operations"
+
+title "DatabaseTool Demo - LLM-Powered SQL Operations"
 
 # Create a SQLite3 database driver
 class SimpleSqliteDriver < SharedTools::Tools::Database::BaseDriver
@@ -88,20 +93,20 @@ tools = [
   SharedTools::Tools::DatabaseTool.new(driver: driver)
 ]
 
-# Create a chat instance using ollama_chat helper
-@chat = ollama_chat()
+# Create a chat instance using new_chat helper
+@chat = new_chat()
 
 # Add tools to the chat
 tools.each { |tool| @chat = @chat.with_tool(tool) }
 
 begin
   # Example 1: Create a table
-  title "Example 1: Create a Database Table", bc: '-'
+  title "Example 1: Create a Database Table", char: '-'
   prompt = "Create a table called 'users' with columns: id (primary key), name (text), email (text), and age (integer)."
   test_with_prompt prompt
 
   # Example 2: Insert data
-  title "Example 2: Insert Records", bc: '-'
+  title "Example 2: Insert Records", char: '-'
   prompt = <<~PROMPT
     Insert three users into the users table:
     - Alice Smith, alice@example.com, age 30
@@ -111,22 +116,22 @@ begin
   test_with_prompt prompt
 
   # Example 3: Query data
-  title "Example 3: Retrieve All Users", bc: '-'
+  title "Example 3: Retrieve All Users", char: '-'
   prompt = "Show me all the users in the database."
   test_with_prompt prompt
 
   # Example 4: Filtered query
-  title "Example 4: Filtered Query", bc: '-'
+  title "Example 4: Filtered Query", char: '-'
   prompt = "Find all users who are older than 25 and show their names and ages, ordered by age."
   test_with_prompt prompt
 
   # Example 5: Update data
-  title "Example 5: Update Records", bc: '-'
+  title "Example 5: Update Records", char: '-'
   prompt = "Update Alice Smith's age to 31."
   test_with_prompt prompt
 
   # Example 6: Create related table
-  title "Example 6: Create Related Table", bc: '-'
+  title "Example 6: Create Related Table", char: '-'
   prompt = <<~PROMPT
     Create a posts table with:
     - id (primary key)
@@ -137,7 +142,7 @@ begin
   test_with_prompt prompt
 
   # Example 7: Insert related data
-  title "Example 7: Insert Related Data", bc: '-'
+  title "Example 7: Insert Related Data", char: '-'
   prompt = <<~PROMPT
     Add some posts to the posts table:
     - User 1: "Hello World", "My first post"
@@ -147,17 +152,17 @@ begin
   test_with_prompt prompt
 
   # Example 8: Join query
-  title "Example 8: Join Query", bc: '-'
+  title "Example 8: Join Query", char: '-'
   prompt = "Show me all posts with the author's name."
   test_with_prompt prompt
 
   # Example 9: Aggregate query
-  title "Example 9: Aggregate Calculations", bc: '-'
+  title "Example 9: Aggregate Calculations", char: '-'
   prompt = "How many users are in the database and what's their average age?"
   test_with_prompt prompt
 
   # Example 10: Conversational database interaction
-  title "Example 10: Conversational Database Operations", bc: '-'
+  title "Example 10: Conversational Database Operations", char: '-'
 
   prompt = "Count how many posts each user has written."
   test_with_prompt prompt
@@ -177,7 +182,7 @@ ensure
   puts "\nDatabase connection closed."
 end
 
-title "Example completed!"
+title "Demo completed!"
 
 puts <<~TAKEAWAYS
 

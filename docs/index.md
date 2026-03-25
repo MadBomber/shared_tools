@@ -1,5 +1,7 @@
 # SharedTools
 
+![SharedTools](assets/images/shared_tools.png)
+
 A comprehensive Ruby gem providing LLM-callable tools for browser automation, file operations, code evaluation, database operations, and document processing.
 
 ## Overview

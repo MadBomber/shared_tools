@@ -1,14 +1,19 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Example: Using EvalTool with LLM Integration
+# Demo: Using EvalTool with LLM Integration
 #
-# This example demonstrates how an LLM can use the EvalTool to evaluate
+# This demo demonstrates how an LLM can use the EvalTool to evaluate
 # Ruby, Python, and shell commands through natural language prompts.
+#
+# Requires:
+#   require_relative 'common'
+#   require 'shared_tools/eval_tool'
 
-require_relative 'ruby_llm_config'
+require_relative 'common'
 
-title "EvalTool Example - LLM-Powered Code Evaluation"
+
+title "EvalTool Demo - LLM-Powered Code Evaluation"
 
 # Register the EvalTool with RubyLLM
 tools = [
@@ -17,50 +22,50 @@ tools = [
   SharedTools::Tools::Eval::ShellEvalTool.new
 ]
 
-# Create a chat instance using ollama_chat helper
-@chat = ollama_chat()
+# Create a chat instance using new_chat helper
+@chat = new_chat()
 
 # Add tools to the chat
 tools.each { |tool| @chat = @chat.with_tool(tool) }
 
 # Example 1: Simple arithmetic via Ruby
-title "Example 1: Simple Math Calculation", bc: '-'
+title "Example 1: Simple Math Calculation", char: '-'
 prompt = "What is 15 multiplied by 23? Use Ruby to calculate this."
 test_with_prompt prompt
 
 
 # Example 2: Python for mathematical operations
-title "Example 2: Scientific Calculation with Python", bc: '-'
+title "Example 2: Scientific Calculation with Python", char: '-'
 prompt = "Calculate the square root of 144 plus pi. Use Python with the math library."
 test_with_prompt prompt
 
 
 # Example 3: Shell command for system information
-title "Example 3: System Information via Shell", bc: '-'
+title "Example 3: System Information via Shell", char: '-'
 prompt = "What is the current date and time? Use a shell command to find out."
 test_with_prompt prompt
 
 
 # Example 4: Ruby code with data processing
-title "Example 4: Data Processing with Ruby", bc: '-'
+title "Example 4: Data Processing with Ruby", char: '-'
 prompt = "Create an array of numbers from 1 to 10, then calculate their sum and average using Ruby."
 test_with_prompt prompt
 
 
 # Example 5: Python for text manipulation
-title "Example 5: Text Processing with Python", bc: '-'
+title "Example 5: Text Processing with Python", char: '-'
 prompt = "Reverse the string 'Hello World' and convert it to uppercase using Python."
 test_with_prompt prompt
 
 
 # Example 6: Shell command with pipes
-title "Example 6: Shell Command with Pipes", bc: '-'
+title "Example 6: Shell Command with Pipes", char: '-'
 prompt = "List all Ruby files in the current directory and count them. Use shell commands."
 test_with_prompt prompt
 
 
 # Example 7: Multi-step calculation
-title "Example 7: Multi-Step Calculation", bc: '-'
+title "Example 7: Multi-Step Calculation", char: '-'
 prompt = <<~PROMPT
   I need to calculate compound interest.
   If I invest $1000 at 5% annual interest for 3 years,
@@ -72,7 +77,7 @@ test_with_prompt prompt
 
 
 # Example 8: Conversation with context
-title "Example 8: Conversational Context", bc: '-'
+title "Example 8: Conversational Context", char: '-'
 
 prompt = "Calculate 100 divided by 4 using Ruby."
 test_with_prompt prompt
@@ -80,7 +85,7 @@ test_with_prompt prompt
 prompt = "Now multiply that result by 3."
 test_with_prompt prompt
 
-title "Example completed!"
+title "Demo completed!"
 
 puts <<~TAKEAWAYS
 
