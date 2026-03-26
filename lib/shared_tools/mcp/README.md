@@ -14,7 +14,7 @@ no local binary, nothing to install.
 
 | File | Client name | Requires | Provides |
 |------|-------------|----------|----------|
-| `tavily_mcp_server.rb` | `"tavily"` | `TAVILY_API_KEY` | AI-optimized web search, news, research |
+| `tavily_client.rb` | `"tavily"` | `TAVILY_API_KEY` | AI-optimized web search, news, research |
 
 ### npx Auto-download — `:stdio` transport via `npx -y`
 
@@ -23,10 +23,10 @@ The npm package is downloaded automatically on first use. The only prerequisite 
 
 | File | Client name | Requires | Provides |
 |------|-------------|----------|----------|
-| `memory_mcp_server.rb` | `"memory"` | Node.js | Persistent knowledge graph across conversations |
-| `sequential_thinking_mcp_server.rb` | `"sequential-thinking"` | Node.js | Structured chain-of-thought reasoning |
-| `chart_mcp_server.rb` | `"chart"` | Node.js | Chart and visualisation generation (AntV) |
-| `brave_search_mcp_server.rb` | `"brave-search"` | Node.js + `BRAVE_API_KEY` | Web and news search |
+| `memory_client.rb` | `"memory"` | Node.js | Persistent knowledge graph across conversations |
+| `sequential_thinking_client.rb` | `"sequential-thinking"` | Node.js | Structured chain-of-thought reasoning |
+| `chart_client.rb` | `"chart"` | Node.js | Chart and visualisation generation (AntV) |
+| `brave_search_client.rb` | `"brave-search"` | Node.js + `BRAVE_API_KEY` | Web and news search |
 
 ---
 
@@ -35,7 +35,7 @@ The npm package is downloaded automatically on first use. The only prerequisite 
 Require the client file to register it, then attach its tools to a chat:
 
 ```ruby
-require 'shared_tools/mcp/tavily_mcp_server'
+require 'shared_tools/mcp/tavily_client'
 
 client = RubyLLM::MCP.clients["tavily"]
 chat   = RubyLLM.chat.with_tools(*client.tools)
@@ -45,8 +45,8 @@ chat.ask("Search for the latest Ruby 3.4 release notes")
 Multiple clients can be combined:
 
 ```ruby
-require 'shared_tools/mcp/memory_mcp_server'
-require 'shared_tools/mcp/sequential_thinking_mcp_server'
+require 'shared_tools/mcp/memory_client'
+require 'shared_tools/mcp/sequential_thinking_client'
 
 tools = %w[memory sequential-thinking].flat_map { |n| RubyLLM::MCP.clients[n].tools }
 chat  = RubyLLM.chat.with_tools(*tools)
@@ -58,9 +58,9 @@ chat  = RubyLLM.chat.with_tools(*tools)
 
 | Variable | Used by | Where to get it |
 |----------|---------|-----------------|
-| `TAVILY_API_KEY` | `tavily_mcp_server.rb` | https://tavily.com (free tier) |
-| `BRAVE_API_KEY` | `brave_search_mcp_server.rb` | https://brave.com/search/api/ (free tier) |
-| `MEMORY_FILE_PATH` | `memory_mcp_server.rb` | Optional — path to `.jsonl` persistence file |
+| `TAVILY_API_KEY` | `tavily_client.rb` | https://tavily.com (free tier) |
+| `BRAVE_API_KEY` | `brave_search_client.rb` | https://brave.com/search/api/ (free tier) |
+| `MEMORY_FILE_PATH` | `memory_client.rb` | Optional — path to `.jsonl` persistence file |
 
 ---
 

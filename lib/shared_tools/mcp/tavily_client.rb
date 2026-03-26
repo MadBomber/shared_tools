@@ -1,4 +1,4 @@
-# shared_tools/mcp/tavily_mcp_server.rb
+# shared_tools/mcp/tavily_client.rb
 #
 # Tavily MCP Server Client — Remote HTTP (no local installation required)
 #
@@ -15,13 +15,15 @@
 #   Get a free key at: https://tavily.com
 #
 # Usage:
-#   require 'shared_tools/mcp/tavily_mcp_server'
+#   require 'shared_tools/mcp/tavily_client'
 #   client = RubyLLM::MCP.clients["tavily"]
 #   chat = RubyLLM.chat.with_tools(*client.tools)
 #
 # Compatible with ruby_llm-mcp >= 0.7.0
 
 require "ruby_llm/mcp"
+
+return if ENV.fetch("TAVILY_API_KEY", "").empty?
 
 RubyLLM::MCP.add_client(
   name: "tavily",

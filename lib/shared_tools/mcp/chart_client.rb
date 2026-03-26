@@ -1,4 +1,4 @@
-# shared_tools/mcp/chart_mcp_server.rb
+# shared_tools/mcp/chart_client.rb
 #
 # AntV Chart MCP Server — npx auto-download (no pre-installation required)
 #
@@ -13,7 +13,7 @@
 # No API key required.
 #
 # Usage:
-#   require 'shared_tools/mcp/chart_mcp_server'
+#   require 'shared_tools/mcp/chart_client'
 #   client = RubyLLM::MCP.clients["chart"]
 #   chat = RubyLLM.chat.with_tools(*client.tools)
 #

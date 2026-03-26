@@ -85,7 +85,7 @@ title "Remote HTTP Clients (API key only)", char: '-'
 # ---------------------------------------------------------------------------
 
 puts "Tavily web search:"
-tavily_loaded = load_client('shared_tools/mcp/tavily_mcp_server', 'tavily') { ENV['TAVILY_API_KEY'] && !ENV['TAVILY_API_KEY'].empty? }
+tavily_loaded = load_client('shared_tools/mcp/tavily_client', 'tavily') { ENV['TAVILY_API_KEY'] && !ENV['TAVILY_API_KEY'].empty? }
 puts "  Skipped — set TAVILY_API_KEY to enable" unless tavily_loaded
 
 # ---------------------------------------------------------------------------
@@ -97,16 +97,16 @@ unless npx_available?
   puts "Install Node.js from https://nodejs.org to enable these clients."
 else
   puts "Memory (persistent knowledge graph):"
-  memory_loaded = load_client('shared_tools/mcp/memory_mcp_server', 'memory')
+  memory_loaded = load_client('shared_tools/mcp/memory_client', 'memory')
 
   puts "\nSequential Thinking (chain-of-thought reasoning):"
-  thinking_loaded = load_client('shared_tools/mcp/sequential_thinking_mcp_server', 'sequential-thinking')
+  thinking_loaded = load_client('shared_tools/mcp/sequential_thinking_client', 'sequential-thinking')
 
   puts "\nChart generation (AntV):"
-  chart_loaded = load_client('shared_tools/mcp/chart_mcp_server', 'chart')
+  chart_loaded = load_client('shared_tools/mcp/chart_client', 'chart')
 
   puts "\nBrave Search (web + news):"
-  brave_loaded = load_client('shared_tools/mcp/brave_search_mcp_server', 'brave-search') { ENV['BRAVE_API_KEY'] && !ENV['BRAVE_API_KEY'].empty? }
+  brave_loaded = load_client('shared_tools/mcp/brave_search_client', 'brave-search') { ENV['BRAVE_API_KEY'] && !ENV['BRAVE_API_KEY'].empty? }
   puts "  Skipped — set BRAVE_API_KEY to enable" unless brave_loaded
 end
 

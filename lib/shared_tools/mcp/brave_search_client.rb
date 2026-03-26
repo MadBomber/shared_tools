@@ -1,4 +1,4 @@
-# shared_tools/mcp/brave_search_mcp_server.rb
+# shared_tools/mcp/brave_search_client.rb
 #
 # Brave Search MCP Server — npx auto-download (no pre-installation required)
 #
@@ -14,13 +14,15 @@
 #   export BRAVE_API_KEY=your_api_key_here
 #
 # Usage:
-#   require 'shared_tools/mcp/brave_search_mcp_server'
+#   require 'shared_tools/mcp/brave_search_client'
 #   client = RubyLLM::MCP.clients["brave-search"]
 #   chat = RubyLLM.chat.with_tools(*client.tools)
 #
 # Compatible with ruby_llm-mcp >= 0.7.0
 
 require "ruby_llm/mcp"
+
+return if ENV.fetch("BRAVE_API_KEY", "").empty?
 
 RubyLLM::MCP.add_client(
   name: "brave-search",

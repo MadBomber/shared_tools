@@ -1,4 +1,4 @@
-# shared_tools/mcp/memory_mcp_server.rb
+# shared_tools/mcp/memory_client.rb
 #
 # MCP Memory Server — npx auto-download (no pre-installation required)
 #
@@ -14,7 +14,7 @@
 #   export MEMORY_FILE_PATH=/path/to/memory.jsonl   # default: memory.jsonl in cwd
 #
 # Usage:
-#   require 'shared_tools/mcp/memory_mcp_server'
+#   require 'shared_tools/mcp/memory_client'
 #   client = RubyLLM::MCP.clients["memory"]
 #   chat = RubyLLM.chat.with_tools(*client.tools)
 #
