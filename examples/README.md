@@ -260,18 +260,149 @@ bundle exec ruby -I examples examples/notification_tool_demo.rb
 
 ### `mcp_client_demo.rb`
 
-Model Context Protocol (MCP) client integration: connecting to MCP servers (Tavily, GitHub, iMCP), using MCP tools in LLM conversations, multi-client orchestration, and accessing MCP resources.
+Model Context Protocol (MCP) client overview: loading multiple clients, using MCP tools in LLM conversations, and multi-client orchestration.
 
-**Requires:**
-- `ruby_llm-mcp` gem
-- `TAVILY_API_KEY` for web search
-- `GITHUB_PERSONAL_ACCESS_TOKEN` for GitHub operations
-- `brew install github-mcp-server` and `brew install --cask loopwork/tap/iMCP` (macOS)
+**Requires:** `ruby_llm-mcp` gem
+
+```bash
+bundle exec ruby -I examples examples/mcp_client_demo.rb
+```
+
+---
+
+## MCP Client Demos (`mcp/` subdirectory)
+
+Individual demos for each MCP client. Run from the project root with both `examples` and `examples/mcp` on the load path:
+
+```bash
+bundle exec ruby -I lib -I examples examples/mcp/tavily_demo.rb
+```
+
+All MCP demos share a `examples/mcp/common.rb` helper and use the same `title`/`ask`/`new_chat` helpers as the main demos.
+
+---
+
+### `mcp/tavily_demo.rb`
+
+AI-optimized web search, news, research, and URL extraction via the Tavily API. Uses the remote HTTP transport — no local binary required.
+
+**Requires:** `TAVILY_API_KEY` (free tier at https://tavily.com)
 
 ```bash
 export TAVILY_API_KEY="your-key"
+bundle exec ruby -I lib -I examples examples/mcp/tavily_demo.rb
+```
+
+---
+
+### `mcp/github_demo.rb`
+
+GitHub repository exploration: listing repos, reading issues and PRs, code search, contributor analysis, and release history.
+
+**Requires:**
+- `GITHUB_PERSONAL_ACCESS_TOKEN`
+- Homebrew (auto-installs `github-mcp-server`)
+
+```bash
 export GITHUB_PERSONAL_ACCESS_TOKEN="your-token"
-bundle exec ruby -I examples examples/mcp_client_demo.rb
+bundle exec ruby -I lib -I examples examples/mcp/github_demo.rb
+```
+
+---
+
+### `mcp/notion_demo.rb`
+
+Full Notion workspace access: search pages and databases, read content, explore recent activity, and retrieve page summaries.
+
+**Requires:**
+- `NOTION_TOKEN` (create at https://www.notion.so/profile/integrations)
+- Homebrew (auto-installs `notion-mcp-server`)
+- Pages and databases must be shared with the integration
+
+```bash
+export NOTION_TOKEN="ntn_..."
+bundle exec ruby -I lib -I examples examples/mcp/notion_demo.rb
+```
+
+---
+
+### `mcp/slack_demo.rb`
+
+Slack workspace browsing: channel overview, recent message summaries, thread deep-dives, and team activity analysis.
+
+**Requires:**
+- `SLACK_MCP_XOXP_TOKEN` (user OAuth, recommended) **or** `SLACK_MCP_XOXB_TOKEN` (bot token)
+- Homebrew (auto-installs `slack-mcp-server`)
+
+```bash
+export SLACK_MCP_XOXP_TOKEN="xoxp-..."
+bundle exec ruby -I lib -I examples examples/mcp/slack_demo.rb
+```
+
+---
+
+### `mcp/hugging_face_demo.rb`
+
+Browse the Hugging Face Hub: trending models, Ruby/Rails model search, small model discovery, dataset exploration, and model card retrieval.
+
+**Requires:**
+- `HF_TOKEN` (create at https://huggingface.co/settings/tokens)
+- Homebrew (auto-installs `hf-mcp-server`)
+
+```bash
+export HF_TOKEN="hf_..."
+bundle exec ruby -I lib -I examples examples/mcp/hugging_face_demo.rb
+```
+
+---
+
+### `mcp/memory_demo.rb`
+
+Persistent knowledge graph across conversations using the `@modelcontextprotocol/server-memory` npm package. Store and retrieve facts, entities, and relations.
+
+**Requires:** Node.js / npx (package auto-downloaded on first use)
+
+```bash
+bundle exec ruby -I lib -I examples examples/mcp/memory_demo.rb
+```
+
+---
+
+### `mcp/sequential_thinking_demo.rb`
+
+Structured chain-of-thought reasoning using the `@modelcontextprotocol/server-sequential-thinking` npm package.
+
+**Requires:** Node.js / npx (package auto-downloaded on first use)
+
+```bash
+bundle exec ruby -I lib -I examples examples/mcp/sequential_thinking_demo.rb
+```
+
+---
+
+### `mcp/chart_demo.rb`
+
+Chart and visualisation generation using the `@antv/mcp-server-chart` npm package.
+
+**Requires:** Node.js / npx (package auto-downloaded on first use)
+
+```bash
+bundle exec ruby -I lib -I examples examples/mcp/chart_demo.rb
+```
+
+---
+
+### `mcp/brave_search_demo.rb`
+
+Web and news search via the Brave Search API using the `@modelcontextprotocol/server-brave-search` npm package.
+
+**Requires:**
+- `BRAVE_API_KEY` (free tier at https://brave.com/search/api/)
+- Node.js / npx (package auto-downloaded on first use)
+
+```bash
+export BRAVE_API_KEY="your-key"
+bundle exec ruby -I lib -I examples examples/mcp/brave_search_demo.rb
 ```
 
 ---
@@ -364,8 +495,14 @@ Debug logging (`RUBY_LLM_DEBUG=true`) is set in each demo's header so tool calls
 | `ANTHROPIC_API_KEY` | All demos (if using Anthropic) |
 | `OLLAMA_HOST` | All demos (if using Ollama; default: `http://localhost:11434`) |
 | `OPENWEATHER_API_KEY` | `weather_tool_demo.rb` |
-| `TAVILY_API_KEY` | `mcp_client_demo.rb` |
-| `GITHUB_PERSONAL_ACCESS_TOKEN` | `mcp_client_demo.rb` |
+| `TAVILY_API_KEY` | `mcp/tavily_demo.rb` |
+| `GITHUB_PERSONAL_ACCESS_TOKEN` | `mcp/github_demo.rb` |
+| `NOTION_TOKEN` | `mcp/notion_demo.rb` |
+| `SLACK_MCP_XOXP_TOKEN` | `mcp/slack_demo.rb` (user OAuth, recommended) |
+| `SLACK_MCP_XOXB_TOKEN` | `mcp/slack_demo.rb` (bot token alternative) |
+| `HF_TOKEN` | `mcp/hugging_face_demo.rb` |
+| `BRAVE_API_KEY` | `mcp/brave_search_demo.rb` |
+| `MEMORY_FILE_PATH` | `mcp/memory_demo.rb` (optional — path to `.jsonl` persistence file) |
 
 ---
 

@@ -102,6 +102,22 @@ brew install python3
 apt-get install python3
 ```
 
+## MCP Clients
+
+SharedTools bundles optional MCP (Model Context Protocol) clients. Each is opt-in via an extra require:
+
+```ruby
+gem 'ruby_llm-mcp', '>= 0.7.0'   # Add to Gemfile
+```
+
+| Transport | What's needed |
+|-----------|---------------|
+| Remote HTTP (Tavily) | Only an API key — no binaries |
+| Brew-installed (GitHub, Notion, Slack, Hugging Face) | Homebrew — binaries are auto-installed on first use |
+| npx (Memory, Sequential Thinking, Chart, Brave Search) | Node.js / npx — packages are auto-downloaded on first use |
+
+See [MCP Clients README](https://github.com/madbomber/shared_tools/blob/main/lib/shared_tools/mcp/README.md) for full configuration details.
+
 ## Complete Setup Example
 
 For a full-featured installation with all optional dependencies:

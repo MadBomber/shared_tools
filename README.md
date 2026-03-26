@@ -410,6 +410,49 @@ error_tool.execute(
 
 ---
 
+## MCP Clients
+
+SharedTools bundles [Model Context Protocol](https://modelcontextprotocol.io) clients that connect AI agents to external services. Each client is opt-in — require only the ones you need.
+
+### Remote HTTP (API key only)
+
+| Client | Env var | Provides |
+|--------|---------|----------|
+| `require 'shared_tools/mcp/tavily_client'` | `TAVILY_API_KEY` | Web search, news, research, URL extraction |
+
+### Brew-installed (auto-installs via Homebrew)
+
+| Client | Env var | Provides |
+|--------|---------|----------|
+| `require 'shared_tools/mcp/github_client'` | `GITHUB_PERSONAL_ACCESS_TOKEN` | Repos, issues, PRs, code search |
+| `require 'shared_tools/mcp/notion_client'` | `NOTION_TOKEN` | Pages, databases, search, content CRUD |
+| `require 'shared_tools/mcp/slack_client'` | `SLACK_MCP_XOXP_TOKEN` | Channels, messages, threads, user info |
+| `require 'shared_tools/mcp/hugging_face_client'` | `HF_TOKEN` | Models, datasets, Spaces, model cards |
+
+### npx Auto-download (Node.js required)
+
+| Client | Provides |
+|--------|----------|
+| `require 'shared_tools/mcp/memory_client'` | Persistent knowledge graph |
+| `require 'shared_tools/mcp/sequential_thinking_client'` | Chain-of-thought reasoning |
+| `require 'shared_tools/mcp/chart_client'` | Chart and visualisation generation |
+| `require 'shared_tools/mcp/brave_search_client'` | Web and news search (`BRAVE_API_KEY`) |
+
+```ruby
+# Load all available clients at once (skips any whose env vars are missing)
+require 'shared_tools/mcp'
+
+# Or load a specific client
+require 'shared_tools/mcp/notion_client'
+client = RubyLLM::MCP.clients["notion"]
+chat   = RubyLLM.chat.with_tools(*client.tools)
+chat.ask("Find my project planning pages and summarise what's in them")
+```
+
+See [MCP Clients README](lib/shared_tools/mcp/README.md) for full configuration details.
+
+---
+
 ## Authorization System
 
 SharedTools includes a human-in-the-loop authorization system for safety:
@@ -470,7 +513,16 @@ bundle exec ruby -I examples examples/doc_tool_demo.rb
 | `doc_tool_demo.rb` | Text, PDF, Word, spreadsheets |
 | `error_handling_tool_demo.rb` | Error handling patterns |
 | `eval_tool_demo.rb` | Code evaluation |
-| `mcp_client_demo.rb` | MCP client integration |
+| `mcp_client_demo.rb` | MCP client overview |
+| `mcp/tavily_demo.rb` | Tavily web search (HTTP) |
+| `mcp/github_demo.rb` | GitHub repos, issues, PRs |
+| `mcp/notion_demo.rb` | Notion pages and databases |
+| `mcp/slack_demo.rb` | Slack channels and messages |
+| `mcp/hugging_face_demo.rb` | Hugging Face models and datasets |
+| `mcp/memory_demo.rb` | Persistent knowledge graph |
+| `mcp/sequential_thinking_demo.rb` | Chain-of-thought reasoning |
+| `mcp/chart_demo.rb` | Chart generation |
+| `mcp/brave_search_demo.rb` | Brave web search |
 | `notification_tool_demo.rb` | Desktop notifications, alerts, TTS |
 | `system_info_tool_demo.rb` | System info |
 | `weather_tool_demo.rb` | Weather + local forecast |
