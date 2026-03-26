@@ -30,12 +30,20 @@ require_relative 'browser/selector_generator/base_selectors'
 require_relative 'browser/selector_generator/contextual_selectors'
 require_relative 'browser/selector_generator'
 
-# Try to load watir for browser automation
+# Try to load Ferrum (preferred) for browser automation via Chrome DevTools Protocol
+begin
+  require 'ferrum'
+  require_relative 'browser/ferrum_driver'
+rescue LoadError
+  # Ferrum gem not installed
+end
+
+# Fall back to Watir if available
 begin
   require 'watir'
   require_relative 'browser/watir_driver'
 rescue LoadError
-  # Watir gem not installed, BrowserTools will require manual driver
+  # Watir gem not installed
 end
 
 # Load tools (order matters - utils loaded first)

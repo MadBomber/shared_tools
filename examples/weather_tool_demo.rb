@@ -7,6 +7,9 @@
 # and make recommendations — a travel planning assistant that retrieves
 # live data for multiple cities.
 #
+# Also demonstrates combining the DnsTool (for IP geolocation) with the
+# WeatherTool to auto-detect the user's location and fetch a local forecast.
+#
 # Requires: OPENWEATHER_API_KEY environment variable
 #   export OPENWEATHER_API_KEY=your_key_here
 #   (free tier key at https://openweathermap.org/api)
@@ -14,8 +17,12 @@
 # Run:
 #   OPENWEATHER_API_KEY=xxx bundle exec ruby -I examples examples/weather_tool_demo.rb
 
+ENV['RUBY_LLM_DEBUG'] = 'true'
+
 require_relative 'common'
 require 'shared_tools/weather_tool'
+require 'shared_tools/tools/dns_tool'
+require 'shared_tools/tools/current_date_time_tool'
 
 
 title "WeatherTool Demo"
@@ -65,6 +72,28 @@ ask <<~PROMPT
   - Singapore, SG
 
   What is the temperature difference between the coldest and warmest city?
+PROMPT
+
+title "My Local Forecast", char: '-'
+@chat = new_chat.with_tools(
+  SharedTools::Tools::DnsTool.new,
+  SharedTools::Tools::WeatherTool.new,
+  SharedTools::Tools::CurrentDateTimeTool.new
+)
+ask <<~PROMPT
+  I want to know the weather where I currently am.
+
+  Use these tools in order:
+  1. current_date_time_tool (format: 'date') — get today's actual date and day of week
+  2. dns_tool (action: 'external_ip') — get my public IP address
+  3. dns_tool (action: 'ip_location') — geolocate that IP to find my city and country
+  4. weather_tool — fetch current weather and a 3-day forecast for that city, imperial units
+
+  In your response, use the real date and day of week from the tool (not your training data)
+  when labelling today, tomorrow, and the following days.
+
+  Tell me: where am I, what are the current conditions, and what should I expect
+  over the next three days?
 PROMPT
 
 title "Done", char: '-'

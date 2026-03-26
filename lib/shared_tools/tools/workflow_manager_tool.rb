@@ -34,6 +34,7 @@ module SharedTools
           - 'step': Execute the next step in an existing workflow using provided step data
           - 'status': Check the current status and progress of an existing workflow
           - 'complete': Mark a workflow as finished and clean up associated resources
+          - 'list': List all existing workflows with their current status and summary information
           Each action requires different combinations of the other parameters.
         DESC
 
@@ -84,6 +85,8 @@ module SharedTools
         when "complete"
           return {success: false, error: "workflow_id required for 'complete' action"} unless workflow_id
           complete_workflow(workflow_id)
+        when "list"
+          list_workflows
         else
           {success: false, error: "Unknown action: #{action}"}
         end
@@ -276,6 +279,35 @@ module SharedTools
             total_steps_so_far: workflow_state[:steps].length
           },
           timestamp: Time.now.iso8601
+        }
+      end
+
+      # List all workflows in the storage directory
+      def list_workflows
+        pattern = File.join(@storage_dir, "workflow_*.json")
+        files = Dir.glob(pattern)
+
+        workflows = files.filter_map do |file|
+          state = JSON.parse(File.read(file), symbolize_names: true)
+          {
+            workflow_id:  state[:id],
+            status:       state[:status],
+            step_count:   state[:steps]&.length || 0,
+            created_at:   state[:created_at],
+            updated_at:   state[:updated_at],
+            completed_at: state[:completed_at]
+          }
+        rescue => e
+          @logger.warn("Skipping unreadable workflow file #{file}: #{e.message}")
+          nil
+        end
+
+        workflows.sort_by! { |w| w[:created_at] || "" }
+
+        {
+          success:        true,
+          total:          workflows.size,
+          workflows:      workflows
         }
       end
 

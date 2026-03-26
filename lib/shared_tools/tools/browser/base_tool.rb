@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "watir"
-
 module SharedTools
   module Tools
     module Browser
@@ -9,7 +7,7 @@ module SharedTools
       #   class SeleniumTool < BaseTool
       #     # ...
       #   end
-      class BaseTool 
+      class BaseTool
         # @param logger [Logger]
         # @param driver [BaseDriver]
         def initialize(driver:, logger: Logger.new(IO::NULL))
@@ -20,15 +18,16 @@ module SharedTools
 
       protected
 
-        def wait_for_element
+        def wait_for_element(timeout: 10)
           return yield if defined?(RSpec) # Skip waiting in tests
 
-          Watir::Wait.until(timeout: 10) do
+          deadline = Time.now + timeout
+          loop do
             element = yield
-            element if element && element_visible?(element)
+            return element if element && element_visible?(element)
+            break if Time.now >= deadline
+            sleep 0.2
           end
-        rescue Watir::Wait::TimeoutError
-          log_element_timeout
           nil
         end
 
@@ -39,10 +38,7 @@ module SharedTools
         end
 
         def log_element_timeout
-          return unless @browser.respond_to?(:elements)
-
-          visible_elements = @browser.elements.select(&:visible?).map(&:text).compact.first(10)
-          @logger.error("Element not found after 10s. Sample visible elements: #{visible_elements}")
+          @logger.error("Element not found after timeout.")
         end
       end
     end

@@ -8,6 +8,8 @@
 # Run:
 #   bundle exec ruby -I examples examples/cron_tool_demo.rb
 
+ENV['RUBY_LLM_DEBUG'] = 'true'
+
 require_relative 'common'
 require 'shared_tools/tools/cron_tool'
 

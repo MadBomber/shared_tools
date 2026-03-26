@@ -44,9 +44,10 @@ Gem::Specification.new do |spec|
 
   # Optional tool dependencies - install as needed
   spec.add_development_dependency "pdf-reader"        # For Doc/PDF tools
+  spec.add_development_dependency "docx"             # For Doc/DOCX tools
+  spec.add_development_dependency "roo"              # For Doc/spreadsheet tools (xlsx, xls, ods, csv)
   spec.add_development_dependency "sqlite3"           # For Database examples
-  spec.add_development_dependency "watir"             # For Browser tools
-  spec.add_development_dependency "webdrivers"        # For Browser tools (driver management)
+  spec.add_development_dependency "ferrum"            # For Browser tools (Chrome DevTools Protocol, no chromedriver needed)
   spec.add_development_dependency "macos"             # For Computer tools (macOS only)
 
   # For SharedTools development

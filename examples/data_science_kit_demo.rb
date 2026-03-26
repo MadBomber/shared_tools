@@ -9,6 +9,8 @@
 # Run:
 #   bundle exec ruby -I examples examples/data_science_kit_demo.rb
 
+ENV['RUBY_LLM_DEBUG'] = 'true'
+
 require_relative 'common'
 require 'shared_tools/data_science_kit'
 
@@ -19,47 +21,140 @@ title "DataScienceKit Demo"
 
 title "Descriptive Statistics", char: '-'
 ask <<~PROMPT
-  Analyse this monthly revenue dataset (in thousands USD) for a SaaS company:
-  Jan: 42, Feb: 45, Mar: 51, Apr: 48, May: 55, Jun: 62,
-  Jul: 58, Aug: 67, Sep: 71, Oct: 74, Nov: 69, Dec: 83
+  Use the data_science_kit tool with analysis_type "statistical_summary" and pass
+  this monthly revenue data (in thousands USD) as the data parameter (pipe-delimited):
 
-  Calculate: mean, median, standard deviation, min, max, and the
-  coefficient of variation. Identify any outliers.
+  Month | Revenue
+  Jan   | 42
+  Feb   | 45
+  Mar   | 51
+  Apr   | 48
+  May   | 55
+  Jun   | 62
+  Jul   | 58
+  Aug   | 67
+  Sep   | 71
+  Oct   | 74
+  Nov   | 69
+  Dec   | 83
+
+  Report: mean, median, standard deviation, min, max, coefficient of variation,
+  and any outliers.
 PROMPT
 
 title "Trend Analysis", char: '-'
+@chat = new_chat.with_tool(SharedTools::Tools::DataScienceKit.new)
 ask <<~PROMPT
-  Using the same 12-month revenue series from the previous question,
-  identify the trend direction, calculate month-over-month growth rates,
-  and predict revenue for January of the following year using linear regression.
+  Use the data_science_kit tool with analysis_type "time_series" and pass
+  this data as the data parameter (pipe-delimited):
+
+  Month | Revenue
+  Jan   | 42
+  Feb   | 45
+  Mar   | 51
+  Apr   | 48
+  May   | 55
+  Jun   | 62
+  Jul   | 58
+  Aug   | 67
+  Sep   | 71
+  Oct   | 74
+  Nov   | 69
+  Dec   | 83
+
+  Identify trend direction, month-over-month growth rates, and predict
+  revenue for January of the following year.
 PROMPT
 
 title "Correlation Analysis", char: '-'
+@chat = new_chat.with_tool(SharedTools::Tools::DataScienceKit.new)
 ask <<~PROMPT
-  Examine the correlation between marketing spend and revenue:
-  Marketing spend (USD thousands): 8, 9, 11, 10, 12, 15, 13, 17, 18, 19, 16, 22
-  Revenue       (USD thousands):  42, 45, 51, 48, 55, 62, 58, 67, 71, 74, 69, 83
+  Use the data_science_kit tool with analysis_type "correlation_analysis" and
+  pass this data as the data parameter (pipe-delimited):
 
-  Calculate the correlation coefficient and explain whether marketing
-  spend is a strong predictor of revenue.
+  Month | Marketing | Revenue
+  Jan   | 8         | 42
+  Feb   | 9         | 45
+  Mar   | 11        | 51
+  Apr   | 10        | 48
+  May   | 12        | 55
+  Jun   | 15        | 62
+  Jul   | 13        | 58
+  Aug   | 17        | 67
+  Sep   | 18        | 71
+  Oct   | 19        | 74
+  Nov   | 16        | 69
+  Dec   | 22        | 83
+
+  Calculate the correlation coefficient and explain whether marketing spend
+  is a strong predictor of revenue.
 PROMPT
 
 title "Segmentation", char: '-'
+@chat = new_chat.with_tool(SharedTools::Tools::DataScienceKit.new)
 ask <<~PROMPT
-  Group these 12 months into quarters and calculate:
-  - Total and average revenue per quarter
-  - Which quarter showed the strongest growth
-  - Quarter-over-quarter growth rate
+  Use the data_science_kit tool with analysis_type "clustering" and pass
+  this data as the data parameter (pipe-delimited):
+
+  Month   | Quarter | Revenue
+  Jan     | Q1      | 42
+  Feb     | Q1      | 45
+  Mar     | Q1      | 51
+  Apr     | Q2      | 48
+  May     | Q2      | 55
+  Jun     | Q2      | 62
+  Jul     | Q3      | 58
+  Aug     | Q3      | 67
+  Sep     | Q3      | 71
+  Oct     | Q4      | 74
+  Nov     | Q4      | 69
+  Dec     | Q4      | 83
+
+  Group the months into their quarters and calculate total and average revenue
+  per quarter, identify which quarter had the strongest growth, and compute
+  quarter-over-quarter growth rates.
 PROMPT
 
 title "Anomaly Detection", char: '-'
+@chat = new_chat.with_tool(SharedTools::Tools::DataScienceKit.new)
 ask <<~PROMPT
-  Look at this daily user signup data for April (30 days):
-  120,135,128,141,118,95,102,156,163,147,138,142,129,88,91,
-  172,168,154,161,149,143,137,85,94,178,182,169,175,163,158
+  Use the data_science_kit tool with analysis_type "statistical_summary" and pass
+  this daily signup data for April as the data parameter (pipe-delimited):
 
-  Identify any anomalous days (potential bot traffic or outages) using
-  statistical methods, and explain what thresholds you used.
+  Day | Signups
+  1   | 120
+  2   | 135
+  3   | 128
+  4   | 141
+  5   | 118
+  6   | 95
+  7   | 102
+  8   | 156
+  9   | 163
+  10  | 147
+  11  | 138
+  12  | 142
+  13  | 129
+  14  | 88
+  15  | 91
+  16  | 172
+  17  | 168
+  18  | 154
+  19  | 161
+  20  | 149
+  21  | 143
+  22  | 137
+  23  | 85
+  24  | 94
+  25  | 178
+  26  | 182
+  27  | 169
+  28  | 175
+  29  | 163
+  30  | 158
+
+  Identify anomalous days (potential bot traffic or outages) using statistical
+  methods, and explain the thresholds used.
 PROMPT
 
 title "Done", char: '-'

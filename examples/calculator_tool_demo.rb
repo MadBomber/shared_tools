@@ -10,6 +10,8 @@
 #   require_relative 'common'
 #   require 'shared_tools/calculator_tool'
 
+ENV['RUBY_LLM_DEBUG'] = 'true'
+
 require_relative 'common'
 
 begin

@@ -9,6 +9,8 @@
 # Run:
 #   bundle exec ruby -I examples examples/comprehensive_workflow_demo.rb
 
+ENV['RUBY_LLM_DEBUG'] = 'true'
+
 require_relative 'common'
 require 'shared_tools/database_tool'
 require 'shared_tools/disk_tool'

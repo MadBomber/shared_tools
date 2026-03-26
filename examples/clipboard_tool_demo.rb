@@ -8,6 +8,8 @@
 # Run:
 #   bundle exec ruby -I examples examples/clipboard_tool_demo.rb
 
+ENV['RUBY_LLM_DEBUG'] = 'true'
+
 require_relative 'common'
 require 'shared_tools/tools/clipboard_tool'
 
@@ -23,6 +25,8 @@ ask "Read the current clipboard contents and tell me what is there."
 ask "Now write a multi-line note to the clipboard with this exact content: 'Line 1: Ruby is great\nLine 2: SharedTools makes it easier\nLine 3: ClipboardTool bridges the gap'."
 
 ask "Read the clipboard again and confirm all three lines are present."
+
+@chat = new_chat.with_tool(SharedTools::Tools::ClipboardTool.new)
 
 ask "How many characters are currently stored in the clipboard?"
 

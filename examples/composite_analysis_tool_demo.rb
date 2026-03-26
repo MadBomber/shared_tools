@@ -10,6 +10,8 @@
 # Run:
 #   bundle exec ruby -I examples examples/composite_analysis_tool_demo.rb
 
+ENV['RUBY_LLM_DEBUG'] = 'true'
+
 require_relative 'common'
 require 'shared_tools/composite_analysis_tool'
 
@@ -20,55 +22,62 @@ title "CompositeAnalysisTool Demo"
 
 title "Sales Data Analysis", char: '-'
 ask <<~PROMPT
-  Analyse the following quarterly sales data for three product lines:
+  Use the composite_analysis tool with the following inline data to analyse
+  quarterly sales for three product lines. Pass this table as the data parameter:
 
   Quarter | Widget A | Widget B | Widget C
-  Q1 2025 |   12,400 |    8,200 |   3,100
-  Q2 2025 |   14,100 |    7,900 |   4,800
-  Q3 2025 |   13,800 |    9,400 |   6,200
-  Q4 2025 |   16,500 |   10,100 |   7,900
+  Q1 2025 | 12400    | 8200     | 3100
+  Q2 2025 | 14100    | 7900     | 4800
+  Q3 2025 | 13800    | 9400     | 6200
+  Q4 2025 | 16500    | 10100    | 7900
 
-  Identify growth trends for each product, which product has the strongest
-  momentum, and any patterns that suggest strategic action.
+  Use analysis_type "comprehensive". Then identify growth trends for each product,
+  which has the strongest momentum, and any patterns that suggest strategic action.
 PROMPT
 
 title "Text Pattern Analysis", char: '-'
 ask <<~PROMPT
-  Analyse the following customer support ticket subjects for common patterns,
-  themes, and urgency signals:
+  Use the composite_analysis tool with the following inline data to analyse
+  customer support ticket subjects. Pass this as the data parameter (one per line):
 
-  - "Login button not working on mobile"
-  - "Can't export data to CSV"
-  - "Payment failed three times"
-  - "Dashboard loads slowly"
-  - "Billing overcharge — urgent"
-  - "Login issues since yesterday's update"
-  - "How do I export my data?"
-  - "App crashes when uploading large files"
-  - "Wrong amount charged to my card"
-  - "Performance degraded after update"
+  Login button not working on mobile
+  Can't export data to CSV
+  Payment failed three times
+  Dashboard loads slowly
+  Billing overcharge urgent
+  Login issues since yesterday's update
+  How do I export my data
+  App crashes when uploading large files
+  Wrong amount charged to my card
+  Performance degraded after update
 
-  What are the top 3 issue categories? Which need immediate attention?
+  Use analysis_type "standard". Then identify the top 3 issue categories and
+  which need immediate attention.
 PROMPT
 
 title "Cross-Source Synthesis", char: '-'
 ask <<~PROMPT
-  Given these two datasets about the same product launch:
+  Use the composite_analysis tool twice — once for each dataset below.
 
-  Dataset A — User Acquisition (week 1-4):
-  Week 1: 230 signups, 18% conversion
-  Week 2: 410 signups, 22% conversion
-  Week 3: 380 signups, 19% conversion
-  Week 4: 520 signups, 25% conversion
+  First call — pass this as the data parameter for user acquisition:
 
-  Dataset B — Support Tickets (week 1-4):
-  Week 1: 12 tickets, avg resolution 4h
-  Week 2: 28 tickets, avg resolution 6h
-  Week 3: 22 tickets, avg resolution 5h
-  Week 4: 41 tickets, avg resolution 8h
+  Week | Signups | Conversion
+  1    | 230     | 18
+  2    | 410     | 22
+  3    | 380     | 19
+  4    | 520     | 25
 
-  Synthesise both datasets. As acquisition grows, is support keeping pace?
-  What is the ticket-per-user ratio trend and what does it indicate?
+  Second call — pass this as the data parameter for support tickets:
+
+  Week | Tickets | ResolutionHours
+  1    | 12      | 4
+  2    | 28      | 6
+  3    | 22      | 5
+  4    | 41      | 8
+
+  Use analysis_type "comprehensive" for both. Then synthesise the results:
+  as acquisition grows, is support keeping pace? What does the ticket-per-user
+  ratio trend indicate?
 PROMPT
 
 title "Done", char: '-'

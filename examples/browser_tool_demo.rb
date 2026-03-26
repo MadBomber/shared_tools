@@ -4,68 +4,87 @@
 # Demo: BrowserTool
 #
 # Shows how an LLM automates web browser interactions through natural language
-# using the BrowserTool (requires Watir + Chrome).
+# using the BrowserTool (requires Ferrum + Chrome; no chromedriver binary needed).
 #
 # Run:
 #   bundle exec ruby -I examples examples/browser_tool_demo.rb
 
 require_relative 'common'
 require 'shared_tools/browser_tool'
+require 'ferrum'
 
-
-unless defined?(Watir)
-  puts "ERROR: Watir gem not loaded. Install with: gem install watir webdrivers"
+unless defined?(Ferrum)
+  puts "ERROR: Ferrum gem not loaded. Install with: gem install ferrum"
   exit 1
 end
 
 title "BrowserTool Demo — LLM-Powered Web Automation"
-puts "NOTE: Requires Watir with Chrome driver and Chrome browser installed."
+puts "NOTE: Requires Chrome/Chromium browser installed. No chromedriver needed — uses Ferrum (CDP)."
 puts
 
-@chat = @chat.with_tools(
-  SharedTools::Tools::Browser::VisitTool.new,
-  SharedTools::Tools::Browser::InspectTool.new,
-  SharedTools::Tools::Browser::ClickTool.new,
-  SharedTools::Tools::Browser::TextFieldAreaSetTool.new,
-  SharedTools::Tools::Browser::PageScreenshotTool.new
-)
+begin
+  # All tools must share one driver so navigation in VisitTool is visible to
+  # InspectTool, ClickTool, etc. — each pointing at the same browser session.
+  driver = SharedTools::Tools::Browser::FerrumDriver.new
+rescue => e
+  puts "ERROR: Could not initialise Ferrum browser: #{e.message}"
+  puts "Make sure Chrome/Chromium is installed."
+  exit 1
+end
+
+# Rebuild the chat with browser tools, resetting context between examples to
+# prevent tool-response HTML from accumulating and overflowing the context window.
+def browser_chat(driver)
+  new_chat.with_tools(
+    SharedTools::Tools::Browser::VisitTool.new(driver: driver),
+    SharedTools::Tools::Browser::InspectTool.new(driver: driver),
+    SharedTools::Tools::Browser::ClickTool.new(driver: driver),
+    SharedTools::Tools::Browser::TextFieldAreaSetTool.new(driver: driver),
+    SharedTools::Tools::Browser::PageScreenshotTool.new(driver: driver)
+  )
+end
 
 begin
-  title "Example 1: Navigate to Website", char: '-'
-  ask "Visit the example.com website using a headless Chrome browser."
-
-  title "Example 2: Inspect Page Content", char: '-'
-  ask "What's the main heading on this page?"
-
-  title "Example 3: Search Workflow", char: '-'
+  title "Example 1: Navigate and Read Title", char: '-'
+  @chat = browser_chat(driver)
   ask <<~PROMPT
-    Go to duckduckgo.com and search for "Ruby programming language".
-    Tell me what the first result is.
+    Use browser_visit to go to https://example.com.
+    Then use browser_inspect with text_content "Example Domain" to read the page.
+    What is the page title and main heading?
   PROMPT
 
-  title "Example 4: Capture Screenshot", char: '-'
-  ask "Take a screenshot of the current page and save it as 'search_results.png'."
-
-  title "Example 5: Multi-Step Navigation", char: '-'
+  title "Example 2: Find a Specific Link", char: '-'
+  @chat = browser_chat(driver)
   ask <<~PROMPT
-    1. Go to example.org
-    2. Find and click on the "More information..." link
-    3. Tell me what page you end up on
+    Use browser_visit to go to https://example.com.
+    Then use browser_inspect with text_content "Learn more" to find the link on the page.
+    What does the link say and what URL does it point to?
   PROMPT
 
-  title "Example 6: Form Interaction", char: '-'
+  title "Example 3: Click a Link and Read the Result", char: '-'
+  @chat = browser_chat(driver)
   ask <<~PROMPT
-    Go to httpbin.org/forms/post and fill out the form:
-    - Customer name: John Doe
-    - Telephone: 555-1234
-    - Comments: Testing browser automation
-    Then submit the form.
+    Use browser_visit to go to https://example.com.
+    Then use browser_click with selector "a" to click the only link on the page.
+    Then use browser_inspect with text_content "IANA" to read the resulting page.
+    What page did the click take you to?
   PROMPT
 
-  title "Example 7: Conversational Browsing", char: '-'
-  ask "Navigate to github.com"
-  ask "Click on the 'Explore' link in the navigation."
-  ask "What's the page title now?"
+  title "Example 4: Compare Two Pages", char: '-'
+  @chat = browser_chat(driver)
+  ask <<~PROMPT
+    Use browser_visit to go to https://example.org.
+    Then use browser_inspect with text_content "Example" to read the page.
+    How does the content compare to example.com?
+  PROMPT
+
+  title "Example 5: Capture Screenshot", char: '-'
+  @chat = browser_chat(driver)
+  ask <<~PROMPT
+    Use browser_visit to go to https://example.com.
+    Then use browser_page_screenshot with path "example_com.png" to save a screenshot.
+    What file path was it saved to?
+  PROMPT
 
 rescue => e
   puts "Error during browser automation: #{e.message}"

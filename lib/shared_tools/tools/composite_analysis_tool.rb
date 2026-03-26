@@ -18,12 +18,22 @@ module SharedTools
       DESCRIPTION
 
       params do
-        string :data_source, description: <<~DESC.strip, required: true
+        string :data_source, description: <<~DESC.strip, required: false
           Primary data source to analyze. Can be either a local file path or a web URL.
           For files: Use relative or absolute paths to CSV, JSON, XML, or text files.
           For URLs: Use complete HTTP/HTTPS URLs to accessible data endpoints or web pages.
           The tool automatically detects the source type and uses appropriate fetching methods.
           Examples: './data/sales.csv', '/home/user/data.json', 'https://api.example.com/data'
+          Either data_source or data must be provided.
+        DESC
+
+        string :data, description: <<~DESC.strip, required: false
+          Inline data to analyze, provided directly as a string. Accepts:
+          - Pipe-delimited markdown tables (header row with | separators)
+          - CSV text (comma-separated rows, first row treated as headers)
+          - JSON text (object or array)
+          - Plain text (one item per line)
+          Either data or data_source must be provided.
         DESC
 
         string :analysis_type, description: <<~DESC.strip, required: false
@@ -48,16 +58,23 @@ module SharedTools
         @logger = logger || RubyLLM.logger
       end
 
-      def execute(data_source:, analysis_type: "standard", **options)
+      def execute(data_source: nil, data: nil, analysis_type: "standard", **options)
+        if data_source.nil? && data.nil?
+          return { success: false, error: "Either data_source or data must be provided." }
+        end
+
         results = {}
         analysis_start = Time.now
 
         begin
-          @logger.info("CompositeAnalysisTool#execute data_source=#{data_source} analysis_type=#{analysis_type}")
+          @logger.info("CompositeAnalysisTool#execute data_source=#{data_source.inspect} analysis_type=#{analysis_type}")
 
           # Step 1: Fetch data using appropriate method
           @logger.debug("Fetching data from source...")
-          if data_source.start_with?('http://', 'https://')
+          if data
+            results[:data] = parse_inline_data(data)
+            results[:source_type] = 'inline'
+          elsif data_source.start_with?('http://', 'https://')
             results[:data] = fetch_web_data(data_source)
             results[:source_type] = 'web'
           else
@@ -115,6 +132,45 @@ module SharedTools
       end
 
       private
+
+      # Parse inline data string into a Ruby structure.
+      # Handles pipe-delimited markdown tables, CSV, JSON, and plain text.
+      def parse_inline_data(raw)
+        raw = raw.strip
+
+        # JSON
+        if raw.start_with?('{', '[')
+          begin
+            return JSON.parse(raw)
+          rescue JSON::ParserError
+            # fall through
+          end
+        end
+
+        lines = raw.lines.map(&:strip).reject(&:empty?)
+
+        # Pipe-delimited markdown table: "Col A | Col B | Col C"
+        if lines.first&.include?('|')
+          headers = lines.first.split('|').map(&:strip).reject(&:empty?)
+          data_lines = lines.drop(1).reject { |l| l.match?(/^\|?[-:\s|]+$/) }
+          return data_lines.map do |line|
+            values = line.split('|').map(&:strip).reject(&:empty?)
+            headers.zip(values).to_h
+          end
+        end
+
+        # CSV (comma-separated)
+        if lines.first&.include?(',')
+          headers = lines.first.split(',').map(&:strip)
+          return lines.drop(1).map do |line|
+            values = line.split(',').map(&:strip)
+            headers.zip(values).to_h
+          end
+        end
+
+        # Plain text — return as array of lines
+        lines
+      end
 
       # Fetch data from web URL
       def fetch_web_data(url)
