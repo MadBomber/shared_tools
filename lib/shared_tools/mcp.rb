@@ -34,12 +34,18 @@
 require_relative "mcp/streamable_http_patch"
 
 threads = Dir[File.join(__dir__, "mcp", "*_client.rb")].map do |path|
+  # Derive the canonical client name from the filename:
+  # "brave_search_client.rb" → "brave-search", "hugging_face_client.rb" → "hugging-face"
+  client_name = File.basename(path, "_client.rb").tr("_", "-")
+
   Thread.new do
     require path
+    SharedTools.record_mcp_result(client_name)
   rescue Exception => e
     # LoadError (missing env var / package) is a ScriptError, not a StandardError,
-    # so bare `rescue => e` does not catch it. We silence all load failures here
-    # so that missing-key clients are simply skipped when requiring mcp.rb as a whole.
+    # so bare `rescue => e` does not catch it. We record the failure and warn so
+    # that missing-key clients are simply skipped when requiring mcp.rb as a whole.
+    SharedTools.record_mcp_result(client_name, error: e)
     warn "SharedTools::MCP — skipping #{File.basename(path)}: #{e.message}"
   end
 end

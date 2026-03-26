@@ -6,7 +6,72 @@
 # Loaded automatically by lib/shared_tools.rb.
 
 module SharedTools
+  MCP_LOG_MUTEX = Mutex.new
+  @mcp_load_log = {}
+
   class << self
+
+    # ---------------------------------------------------------------------------
+    # MCP load tracking
+    # ---------------------------------------------------------------------------
+
+    # Record the outcome of loading a single MCP client.
+    # Called by mcp.rb from within each loader thread.
+    #
+    #   SharedTools.record_mcp_result("tavily")              # success
+    #   SharedTools.record_mcp_result("notion", error: e)    # failure
+    def record_mcp_result(name, error: nil)
+      MCP_LOG_MUTEX.synchronize do
+        @mcp_load_log[name] = error ? { status: :failed, reason: error.message } : { status: :ok }
+      end
+    end
+
+    # Returns an array of client names that loaded successfully.
+    #
+    #   SharedTools.mcp_loaded  #=> ["github", "memory", "chart"]
+    def mcp_loaded
+      MCP_LOG_MUTEX.synchronize { @mcp_load_log.select { |_, v| v[:status] == :ok }.keys }
+    end
+
+    # Returns a hash of client names that failed to load, mapped to their error messages.
+    #
+    #   SharedTools.mcp_failed  #=> {"tavily" => "Missing envars: TAVILY_API_KEY", ...}
+    def mcp_failed
+      MCP_LOG_MUTEX.synchronize do
+        @mcp_load_log.select { |_, v| v[:status] == :failed }.transform_values { |v| v[:reason] }
+      end
+    end
+
+    # Prints a summary table of MCP client load results and returns the full log hash.
+    #
+    #   SharedTools.mcp_status
+    #   # MCP Client Status
+    #   # ✓ github
+    #   # ✓ memory
+    #   # ✗ tavily   — Missing envars: TAVILY_API_KEY
+    def mcp_status
+      log = MCP_LOG_MUTEX.synchronize { @mcp_load_log.dup }
+
+      if log.empty?
+        puts "No MCP clients have been loaded yet. Try: require 'shared_tools/mcp'"
+        return log
+      end
+
+      puts "MCP Client Status"
+      puts "-" * 40
+      log.sort.each do |name, entry|
+        if entry[:status] == :ok
+          puts "  \u2713 #{name}"
+        else
+          puts "  \u2717 #{name}  \u2014 #{entry[:reason]}"
+        end
+      end
+      puts "-" * 40
+      puts "  #{log.count { |_, v| v[:status] == :ok }} loaded, " \
+           "#{log.count { |_, v| v[:status] == :failed }} skipped"
+
+      log
+    end
 
     # Returns true if all named environment variables are set and non-empty.
     # Warns for each missing variable and returns false if any are absent.

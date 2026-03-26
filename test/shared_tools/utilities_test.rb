@@ -37,6 +37,82 @@ class UtilitiesTest < Minitest::Test
   end
 
   # -------------------------------------------------------------------------
+  # MCP load tracking
+  # -------------------------------------------------------------------------
+
+  def setup
+    # Reset the load log before every test
+    SharedTools::MCP_LOG_MUTEX.synchronize { SharedTools.instance_variable_set(:@mcp_load_log, {}) }
+  end
+
+  def test_mcp_loaded_returns_empty_array_when_nothing_recorded
+    assert_equal [], SharedTools.mcp_loaded
+  end
+
+  def test_mcp_failed_returns_empty_hash_when_nothing_recorded
+    assert_equal({}, SharedTools.mcp_failed)
+  end
+
+  def test_record_mcp_result_records_success
+    SharedTools.record_mcp_result("tavily")
+    assert_includes SharedTools.mcp_loaded, "tavily"
+    assert_empty SharedTools.mcp_failed
+  end
+
+  def test_record_mcp_result_records_failure_with_reason
+    err = LoadError.new("Missing envars: TAVILY_API_KEY")
+    SharedTools.record_mcp_result("tavily", error: err)
+
+    assert_empty SharedTools.mcp_loaded
+    assert_equal "Missing envars: TAVILY_API_KEY", SharedTools.mcp_failed["tavily"]
+  end
+
+  def test_mcp_loaded_returns_only_successful_clients
+    SharedTools.record_mcp_result("github")
+    SharedTools.record_mcp_result("tavily", error: LoadError.new("missing key"))
+    SharedTools.record_mcp_result("memory")
+
+    assert_equal %w[github memory].sort, SharedTools.mcp_loaded.sort
+  end
+
+  def test_mcp_failed_returns_only_failed_clients
+    SharedTools.record_mcp_result("github")
+    SharedTools.record_mcp_result("tavily", error: LoadError.new("missing key"))
+    SharedTools.record_mcp_result("notion", error: LoadError.new("missing token"))
+
+    assert_equal %w[tavily notion].sort, SharedTools.mcp_failed.keys.sort
+    assert_equal "missing key",   SharedTools.mcp_failed["tavily"]
+    assert_equal "missing token", SharedTools.mcp_failed["notion"]
+  end
+
+  def test_mcp_status_outputs_summary_and_returns_log
+    SharedTools.record_mcp_result("github")
+    SharedTools.record_mcp_result("tavily", error: LoadError.new("Missing envars: TAVILY_API_KEY"))
+
+    out, _ = capture_io { SharedTools.mcp_status }
+
+    assert_match "github",         out
+    assert_match "tavily",         out
+    assert_match "TAVILY_API_KEY", out
+    assert_match "1 loaded",       out
+    assert_match "1 skipped",      out
+  end
+
+  def test_mcp_status_returns_empty_message_when_nothing_loaded
+    out, _ = capture_io { SharedTools.mcp_status }
+    assert_match "No MCP clients", out
+  end
+
+  def test_record_mcp_result_is_thread_safe
+    threads = 20.times.map do |i|
+      Thread.new { SharedTools.record_mcp_result("client-#{i}") }
+    end
+    threads.each(&:join)
+
+    assert_equal 20, SharedTools.mcp_loaded.size
+  end
+
+  # -------------------------------------------------------------------------
   # verify_envars
   # -------------------------------------------------------------------------
 
