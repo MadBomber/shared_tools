@@ -1706,9 +1706,9 @@
 
 
 <h1 id="weathertool">WeatherTool<a class="headerlink" href="#weathertool" title="Permanent link">&para;</a></h1>
-<p>Real-time weather data retrieval from the OpenWeatherMap API.</p>
+<p>Real-time weather data retrieval from the OpenWeatherMap API, including current conditions, forecasts, and location-aware lookups.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>The WeatherTool provides access to current weather conditions and forecasts for any city worldwide through the OpenWeatherMap API. It supports multiple unit systems and can optionally include extended forecast data.</p>
+<p>WeatherTool provides access to current weather conditions and forecasts for any city worldwide through the OpenWeatherMap API. It supports multiple unit systems and optional extended forecast data. Pair it with <strong>DnsTool</strong> and <strong>CurrentDateTimeTool</strong> for fully automatic local forecasts that detect your location from your IP address.</p>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Current Weather</strong>: Real-time temperature, conditions, and atmospheric data</li>
@@ -1716,7 +1716,7 @@
 <li><strong>Multiple Units</strong>: Metric (Celsius), Imperial (Fahrenheit), or Kelvin</li>
 <li><strong>Comprehensive Data</strong>: Temperature, feels-like, humidity, pressure, wind, cloudiness, visibility</li>
 <li><strong>Global Coverage</strong>: Weather data for cities worldwide</li>
-<li><strong>Forecast Analysis</strong>: Aggregated daily min/max/average values</li>
+<li><strong>Local Forecast</strong>: Combine with DnsTool to auto-detect your location</li>
 </ul>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>The WeatherTool requires the <code>openweathermap</code> gem, which is included in SharedTools dependencies:</p>
@@ -1731,432 +1731,188 @@
 </ol>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENWEATHER_API_KEY</span><span class="o">=</span><span class="s2">&quot;your_api_key_here&quot;</span>
 </span></code></pre></div>
-<p>Or in Ruby:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;OPENWEATHER_API_KEY&#39;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;your_api_key_here&#39;</span>
-</span></code></pre></div>
 <h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
 <h3 id="current-weather">Current Weather<a class="headerlink" href="#current-weather" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools&#39;</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">weather</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">WeatherTool</span><span class="o">.</span><span class="n">new</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Get current weather for a city</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London&quot;</span><span class="p">)</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Temperature: </span><span class="si">#{</span><span class="n">result</span><span class="o">[</span><span class="ss">:current</span><span class="o">][</span><span class="ss">:temperature</span><span class="o">]</span><span class="si">}</span><span class="s2">°C&quot;</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Conditions: </span><span class="si">#{</span><span class="n">result</span><span class="o">[</span><span class="ss">:current</span><span class="o">][</span><span class="ss">:description</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
-</span></code></pre></div>
-<h3 id="with-country-code">With Country Code<a class="headerlink" href="#with-country-code" title="Permanent link">&para;</a></h3>
-<p>For cities with common names, include the country code:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># London, UK</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London,UK&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">)</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Paris, France</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Paris,FR&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">)</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Portland, Oregon, USA</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Portland,US&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;imperial&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-<h2 id="unit-systems">Unit Systems<a class="headerlink" href="#unit-systems" title="Permanent link">&para;</a></h2>
-<h3 id="metric-default">Metric (Default)<a class="headerlink" href="#metric-default" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tokyo,JP&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">)</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Temperature in Celsius</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Wind speed in m/s</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Pressure in hPa</span>
-</span></code></pre></div>
-<h3 id="imperial">Imperial<a class="headerlink" href="#imperial" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;New York,US&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;imperial&quot;</span><span class="p">)</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Temperature in Fahrenheit</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Wind speed in mph</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Pressure in hPa</span>
-</span></code></pre></div>
-<h3 id="kelvin">Kelvin<a class="headerlink" href="#kelvin" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Moscow,RU&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;kelvin&quot;</span><span class="p">)</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Temperature in Kelvin (scientific standard)</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Wind speed in m/s</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Pressure in hPa</span>
-</span></code></pre></div>
-<h2 id="forecast-data">Forecast Data<a class="headerlink" href="#forecast-data" title="Permanent link">&para;</a></h2>
-<h3 id="including-forecasts">Including Forecasts<a class="headerlink" href="#including-forecasts" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London,UK&quot;</span><span class="p">,</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">,</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="ss">include_forecast</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">)</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Access forecast data</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="n">result</span><span class="o">[</span><span class="ss">:forecast</span><span class="o">].</span><span class="n">each</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">day</span><span class="o">|</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:date</span><span class="o">]</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:temp_min</span><span class="o">]</span><span class="si">}</span><span class="s2">°C - </span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:temp_max</span><span class="o">]</span><span class="si">}</span><span class="s2">°C&quot;</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Conditions: </span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:conditions</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">end</span>
-</span></code></pre></div>
-<h3 id="forecast-data-structure">Forecast Data Structure<a class="headerlink" href="#forecast-data-structure" title="Permanent link">&para;</a></h3>
-<p>Each forecast day includes:
-- <code>date</code>: Date string (YYYY-MM-DD)
-- <code>temp_min</code>: Minimum temperature for the day
-- <code>temp_max</code>: Maximum temperature for the day
-- <code>temp_avg</code>: Average temperature
-- <code>conditions</code>: Most common weather condition
-- <code>avg_humidity</code>: Average humidity percentage
-- <code>avg_wind_speed</code>: Average wind speed</p>
-<h2 id="response-format">Response Format<a class="headerlink" href="#response-format" title="Permanent link">&para;</a></h2>
-<h3 id="successful-response-current-weather-only">Successful Response (Current Weather Only)<a class="headerlink" href="#successful-response-current-weather-only" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="ss">success</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London,UK&quot;</span><span class="p">,</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="ss">current</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="ss">temperature</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="ss">feels_like</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="ss">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;partly cloudy&quot;</span><span class="p">,</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="ss">humidity</span><span class="p">:</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="ss">pressure</span><span class="p">:</span><span class="w"> </span><span class="mi">1013</span><span class="p">,</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="ss">wind_speed</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="ss">wind_direction</span><span class="p">:</span><span class="w"> </span><span class="mi">180</span><span class="p">,</span>
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="ss">cloudiness</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="ss">visibility</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span>
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">  </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">,</span>
-</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">  </span><span class="ss">timestamp</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-01-15T10:30:00Z&quot;</span>
-</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="p">}</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools&#39;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">weather</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">WeatherTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London,UK&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">)</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Temperature: </span><span class="si">#{</span><span class="n">result</span><span class="o">[</span><span class="ss">:current</span><span class="o">][</span><span class="ss">:temperature</span><span class="o">]</span><span class="si">}</span><span class="s2">°C&quot;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Conditions: </span><span class="si">#{</span><span class="n">result</span><span class="o">[</span><span class="ss">:current</span><span class="o">][</span><span class="ss">:description</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></code></pre></div>
 <h3 id="with-forecast">With Forecast<a class="headerlink" href="#with-forecast" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="ss">success</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London,UK&quot;</span><span class="p">,</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="ss">current</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">},</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="ss">forecast</span><span class="p">:</span><span class="w"> </span><span class="o">[</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">      </span><span class="ss">date</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-01-15&quot;</span><span class="p">,</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">      </span><span class="ss">temp_min</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">      </span><span class="ss">temp_max</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="o">.</span><span class="mi">8</span><span class="p">,</span>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">      </span><span class="ss">temp_avg</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="o">.</span><span class="mi">6</span><span class="p">,</span>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">      </span><span class="ss">conditions</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;partly cloudy&quot;</span><span class="p">,</span>
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">      </span><span class="ss">avg_humidity</span><span class="p">:</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">      </span><span class="ss">avg_wind_speed</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="o">.</span><span class="mi">8</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span><span class="c1"># ... 2 more days</span>
-</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">  </span><span class="o">]</span><span class="p">,</span>
-</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">  </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">,</span>
-</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">  </span><span class="ss">timestamp</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-01-15T10:30:00Z&quot;</span>
-</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="p">}</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tokyo,JP&quot;</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="ss">include_forecast</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">result</span><span class="o">[</span><span class="ss">:forecast</span><span class="o">].</span><span class="n">each</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">day</span><span class="o">|</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:date</span><span class="o">]</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:temp_min</span><span class="o">]</span><span class="si">}</span><span class="s2">°C - </span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:temp_max</span><span class="o">]</span><span class="si">}</span><span class="s2">°C&quot;</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">end</span>
 </span></code></pre></div>
-<h3 id="error-response">Error Response<a class="headerlink" href="#error-response" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="ss">success</span><span class="p">:</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;City not found or API error message&quot;</span><span class="p">,</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;InvalidCity&quot;</span><span class="p">,</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="ss">suggestion</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Verify city name and API key configuration&quot;</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="p">}</span>
-</span></code></pre></div>
-<h2 id="current-weather-fields">Current Weather Fields<a class="headerlink" href="#current-weather-fields" title="Permanent link">&para;</a></h2>
-<h3 id="temperature-data">Temperature Data<a class="headerlink" href="#temperature-data" title="Permanent link">&para;</a></h3>
+<h2 id="unit-systems">Unit Systems<a class="headerlink" href="#unit-systems" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Field</th>
-<th>Description</th>
-<th>Units</th>
+<th>Unit</th>
+<th>Temperature</th>
+<th>Wind Speed</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>temperature</code></td>
-<td>Current temperature</td>
-<td>°C / °F / K</td>
+<td><code>"metric"</code></td>
+<td>Celsius</td>
+<td>m/s</td>
 </tr>
 <tr>
-<td><code>feels_like</code></td>
-<td>Perceived temperature</td>
-<td>°C / °F / K</td>
+<td><code>"imperial"</code></td>
+<td>Fahrenheit</td>
+<td>mph</td>
+</tr>
+<tr>
+<td><code>"kelvin"</code></td>
+<td>Kelvin</td>
+<td>m/s</td>
 </tr>
 </tbody>
 </table>
-<h3 id="atmospheric-data">Atmospheric Data<a class="headerlink" href="#atmospheric-data" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Description</th>
-<th>Units</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>humidity</code></td>
-<td>Relative humidity</td>
-<td>%</td>
-</tr>
-<tr>
-<td><code>pressure</code></td>
-<td>Atmospheric pressure</td>
-<td>hPa</td>
-</tr>
-<tr>
-<td><code>visibility</code></td>
-<td>Visibility distance</td>
-<td>meters</td>
-</tr>
-<tr>
-<td><code>cloudiness</code></td>
-<td>Cloud coverage</td>
-<td>%</td>
-</tr>
-</tbody>
-</table>
-<h3 id="wind-data">Wind Data<a class="headerlink" href="#wind-data" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Description</th>
-<th>Units</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>wind_speed</code></td>
-<td>Wind speed</td>
-<td>m/s or mph</td>
-</tr>
-<tr>
-<td><code>wind_direction</code></td>
-<td>Wind direction</td>
-<td>degrees</td>
-</tr>
-</tbody>
-</table>
-<h3 id="weather-description">Weather Description<a class="headerlink" href="#weather-description" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>description</code></td>
-<td>Human-readable weather description (e.g., "partly cloudy", "light rain")</td>
-</tr>
-</tbody>
-</table>
-<h2 id="advanced-examples">Advanced Examples<a class="headerlink" href="#advanced-examples" title="Permanent link">&para;</a></h2>
-<h3 id="multiple-cities">Multiple Cities<a class="headerlink" href="#multiple-cities" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">cities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;London,UK&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Paris,FR&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Berlin,DE&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Rome,IT&quot;</span><span class="o">]</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">cities</span><span class="o">.</span><span class="n">each</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">city</span><span class="o">|</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="n">city</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">)</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">result</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="o">[</span><span class="ss">:current</span><span class="o">][</span><span class="ss">:temperature</span><span class="o">]</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="n">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="o">[</span><span class="ss">:current</span><span class="o">][</span><span class="ss">:description</span><span class="o">]</span>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">city</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">temp</span><span class="si">}</span><span class="s2">°C - </span><span class="si">#{</span><span class="n">desc</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span><span class="k">else</span>
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">    </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">city</span><span class="si">}</span><span class="s2">: Error - </span><span class="si">#{</span><span class="n">result</span><span class="o">[</span><span class="ss">:error</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="k">end</span>
+<h2 id="response-format">Response Format<a class="headerlink" href="#response-format" title="Permanent link">&para;</a></h2>
+<h3 id="current-weather_1">Current Weather<a class="headerlink" href="#current-weather_1" title="Permanent link">&para;</a></h3>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="ss">success</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London,UK&quot;</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="ss">current</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="ss">temperature</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="ss">feels_like</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="ss">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;partly cloudy&quot;</span><span class="p">,</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="ss">humidity</span><span class="p">:</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="ss">pressure</span><span class="p">:</span><span class="w"> </span><span class="mi">1013</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="ss">wind_speed</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="ss">wind_direction</span><span class="p">:</span><span class="w"> </span><span class="mi">180</span><span class="p">,</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="ss">cloudiness</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="ss">visibility</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">,</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span><span class="ss">timestamp</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-03-25T10:30:00Z&quot;</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="weather-comparison">Weather Comparison<a class="headerlink" href="#weather-comparison" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">compare_weather</span><span class="p">(</span><span class="n">city1</span><span class="p">,</span><span class="w"> </span><span class="n">city2</span><span class="p">)</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="n">weather</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">WeatherTool</span><span class="o">.</span><span class="n">new</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="n">result1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="n">city1</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">)</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span><span class="n">result2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="n">city2</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">)</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">result1</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">result2</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span><span class="n">temp1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result1</span><span class="o">[</span><span class="ss">:current</span><span class="o">][</span><span class="ss">:temperature</span><span class="o">]</span>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span><span class="n">temp2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result2</span><span class="o">[</span><span class="ss">:current</span><span class="o">][</span><span class="ss">:temperature</span><span class="o">]</span>
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
-</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">    </span><span class="n">diff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">temp1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">temp2</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span><span class="n">warmer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diff</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">city1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">city2</span>
-</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
-</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">    </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">warmer</span><span class="si">}</span><span class="s2"> is </span><span class="si">#{</span><span class="n">diff</span><span class="o">.</span><span class="n">abs</span><span class="si">}</span><span class="s2">°C warmer&quot;</span>
-</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="k">end</span>
-</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
-</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="n">compare_weather</span><span class="p">(</span><span class="s2">&quot;Miami,US&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Seattle,US&quot;</span><span class="p">)</span>
+<h3 id="with-forecast_1">With Forecast<a class="headerlink" href="#with-forecast_1" title="Permanent link">&para;</a></h3>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="ss">success</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London,UK&quot;</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="ss">current</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="ss">forecast</span><span class="p">:</span><span class="w"> </span><span class="o">[</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">      </span><span class="ss">date</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-03-25&quot;</span><span class="p">,</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">      </span><span class="ss">temp_min</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">      </span><span class="ss">temp_max</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="o">.</span><span class="mi">8</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">      </span><span class="ss">temp_avg</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="o">.</span><span class="mi">6</span><span class="p">,</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">      </span><span class="ss">conditions</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;partly cloudy&quot;</span><span class="p">,</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="ss">avg_humidity</span><span class="p">:</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="ss">avg_wind_speed</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="o">.</span><span class="mi">8</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="c1"># ... 2 more days</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="o">]</span><span class="p">,</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">,</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span><span class="ss">timestamp</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-03-25T10:30:00Z&quot;</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="detailed-forecast-analysis">Detailed Forecast Analysis<a class="headerlink" href="#detailed-forecast-analysis" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;San Francisco,US&quot;</span><span class="p">,</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;imperial&quot;</span><span class="p">,</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="ss">include_forecast</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="p">)</span>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="k">if</span><span class="w"> </span><span class="n">result</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">result</span><span class="o">[</span><span class="ss">:forecast</span><span class="o">]</span>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;3-Day Forecast for </span><span class="si">#{</span><span class="n">result</span><span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="si">}</span><span class="s2">:&quot;</span>
-</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;-&quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">50</span>
-</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
-</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">  </span><span class="n">result</span><span class="o">[</span><span class="ss">:forecast</span><span class="o">].</span><span class="n">each</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">day</span><span class="o">|</span>
-</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">    </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:date</span><span class="o">]</span><span class="si">}</span><span class="s2">:&quot;</span>
-</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">    </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;  Temperature: </span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:temp_min</span><span class="o">]</span><span class="si">}</span><span class="s2">°F - </span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:temp_max</span><span class="o">]</span><span class="si">}</span><span class="s2">°F&quot;</span>
-</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">    </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;  Conditions: </span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:conditions</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">    </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;  Humidity: </span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:avg_humidity</span><span class="o">]</span><span class="si">}</span><span class="s2">%&quot;</span>
-</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">    </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;  Wind: </span><span class="si">#{</span><span class="n">day</span><span class="o">[</span><span class="ss">:avg_wind_speed</span><span class="o">]</span><span class="si">}</span><span class="s2"> mph&quot;</span>
-</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="k">end</span>
+<h2 id="local-forecast-auto-detect-location">Local Forecast (Auto-Detect Location)<a class="headerlink" href="#local-forecast-auto-detect-location" title="Permanent link">&para;</a></h2>
+<p>Combine <strong>WeatherTool</strong>, <strong>DnsTool</strong>, and <strong>CurrentDateTimeTool</strong> to automatically detect your location from your IP address and fetch an accurate local forecast — including the correct day of week from the clock, not the LLM's training data.</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;ruby_llm&#39;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools/tools/dns_tool&#39;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools/tools/weather_tool&#39;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools/tools/current_date_time_tool&#39;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">chat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">RubyLLM</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">with_tools</span><span class="p">(</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">DnsTool</span><span class="o">.</span><span class="n">new</span><span class="p">,</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">WeatherTool</span><span class="o">.</span><span class="n">new</span><span class="p">,</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">CurrentDateTimeTool</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">)</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">chat</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="o">&lt;&lt;~</span><span class="dl">PROMPT</span><span class="p">)</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="sh">  I want to know the weather where I currently am.</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="sh">  Use these tools in order:</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="sh">  1. current_date_time_tool (format: &#39;date&#39;) — get today&#39;s actual date and day of week</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="sh">  2. dns_tool (action: &#39;external_ip&#39;) — get my public IP address</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="sh">  3. dns_tool (action: &#39;ip_location&#39;) — geolocate that IP to find my city and country</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="sh">  4. weather_tool — fetch current weather and a 3-day forecast for that city (imperial units)</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="sh">  Use the real date and day of week from the tool when labelling today and</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="sh">  the following days. Tell me: where am I, what are the current conditions,</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="sh">  and what should I expect over the next three days?</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="dl">PROMPT</span>
 </span></code></pre></div>
 <h2 id="integration-with-llm-agents">Integration with LLM Agents<a class="headerlink" href="#integration-with-llm-agents" title="Permanent link">&para;</a></h2>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;ruby_llm&#39;</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">agent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">RubyLLM</span><span class="o">::</span><span class="no">Agent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="ss">tools</span><span class="p">:</span><span class="w"> </span><span class="o">[</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">WeatherTool</span><span class="o">.</span><span class="n">new</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="o">]</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="p">)</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Let the LLM fetch weather data</span>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">agent</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;What&#39;s the weather like in Tokyo right now?&quot;</span><span class="p">)</span>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">agent</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;Give me a 3-day forecast for London&quot;</span><span class="p">)</span>
-</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">agent</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;Is it warmer in Miami or Seattle today?&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<h3 id="custom-logger">Custom Logger<a class="headerlink" href="#custom-logger" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;logger&#39;</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">custom_logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Logger</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vg">$stdout</span><span class="p">)</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="n">custom_logger</span><span class="o">.</span><span class="n">level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Logger</span><span class="o">::</span><span class="no">DEBUG</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="n">weather</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">WeatherTool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">logger</span><span class="p">:</span><span class="w"> </span><span class="n">custom_logger</span><span class="p">)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;ruby_llm&#39;</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">agent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">RubyLLM</span><span class="o">::</span><span class="no">Agent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="ss">tools</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">WeatherTool</span><span class="o">.</span><span class="n">new</span><span class="o">]</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">)</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">agent</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;What&#39;s the weather like in Tokyo right now?&quot;</span><span class="p">)</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="n">agent</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;Give me a 3-day forecast for London in metric units.&quot;</span><span class="p">)</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="n">agent</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="s2">&quot;I&#39;m planning a trip. Fetch weather for Paris, Barcelona, and Amsterdam and recommend the best destination for outdoor sightseeing.&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
-<h3 id="api-key-not-configured">API Key Not Configured<a class="headerlink" href="#api-key-not-configured" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London&quot;</span><span class="p">)</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># Without OPENWEATHER_API_KEY set:</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># {</span>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1">#   success: false,</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1">#   error: &quot;OpenWeather API key not configured&quot;,</span>
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1">#   ...</span>
-</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># }</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;InvalidCity12345&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">unless</span><span class="w"> </span><span class="n">result</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Error: </span><span class="si">#{</span><span class="n">result</span><span class="o">[</span><span class="ss">:error</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Suggestion: </span><span class="si">#{</span><span class="n">result</span><span class="o">[</span><span class="ss">:suggestion</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">end</span>
 </span></code></pre></div>
-<h3 id="city-not-found">City Not Found<a class="headerlink" href="#city-not-found" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;InvalidCityName12345&quot;</span><span class="p">)</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># {</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1">#   success: false,</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1">#   error: &quot;City not found&quot;,</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1">#   city: &quot;InvalidCityName12345&quot;,</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1">#   suggestion: &quot;Verify city name and API key configuration&quot;</span>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># }</span>
-</span></code></pre></div>
-<h3 id="api-request-failure">API Request Failure<a class="headerlink" href="#api-request-failure" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Network error, rate limit, or API issue</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London&quot;</span><span class="p">)</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1"># {</span>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1">#   success: false,</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1">#   error: &quot;API request failed: [error details]&quot;,</span>
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1">#   ...</span>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># }</span>
-</span></code></pre></div>
+<p>Common errors:</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"API key not configured"</code></td>
+<td><code>OPENWEATHER_API_KEY</code> not set</td>
+<td>Export the env var</td>
+</tr>
+<tr>
+<td><code>"City not found"</code></td>
+<td>Typo or ambiguous city name</td>
+<td>Add country code: <code>"Portland,US"</code></td>
+</tr>
+<tr>
+<td><code>"API request failed"</code></td>
+<td>Network or rate limit</td>
+<td>Check connectivity; wait and retry</td>
+</tr>
+</tbody>
+</table>
 <h2 id="rate-limits">Rate Limits<a class="headerlink" href="#rate-limits" title="Permanent link">&para;</a></h2>
-<p>OpenWeatherMap free tier has rate limits:</p>
 <ul>
 <li><strong>Free Plan</strong>: 60 calls/minute, 1,000,000 calls/month</li>
-<li><strong>Startup Plan</strong>: Higher limits available</li>
-</ul>
-<p>Monitor your usage at <a href="https://openweathermap.org/price">https://openweathermap.org/price</a></p>
-<h2 id="performance-considerations">Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>API Latency</strong>: Network request time varies (typically 100-500ms)</li>
-<li><strong>Forecast Data</strong>: Including forecasts requires an additional API call</li>
-<li><strong>Caching</strong>: Consider caching results for frequently requested cities</li>
-<li><strong>Batch Requests</strong>: Space out multiple requests to respect rate limits</li>
+<li>Monitor usage at <a href="https://openweathermap.org/price">https://openweathermap.org/price</a></li>
 </ul>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<h3 id="use-country-codes">Use Country Codes<a class="headerlink" href="#use-country-codes" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Good - specific</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Portland,US&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1"># Oregon, USA</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Portland,AU&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1"># Victoria, Australia</span>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># Less reliable</span>
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Portland&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1"># Which Portland?</span>
-</span></code></pre></div>
-<h3 id="handle-errors-gracefully">Handle Errors Gracefully<a class="headerlink" href="#handle-errors-gracefully" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="n">user_input</span><span class="p">)</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="k">if</span><span class="w"> </span><span class="n">result</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="c1"># Use weather data</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">  </span><span class="n">process_weather</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="k">else</span>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span><span class="c1"># Show user-friendly error</span>
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Unable to fetch weather: </span><span class="si">#{</span><span class="n">result</span><span class="o">[</span><span class="ss">:error</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">  </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Suggestion: </span><span class="si">#{</span><span class="n">result</span><span class="o">[</span><span class="ss">:suggestion</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="k">end</span>
-</span></code></pre></div>
-<h3 id="cache-results">Cache Results<a class="headerlink" href="#cache-results" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">WeatherCache</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span>
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span><span class="vi">@weather</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">WeatherTool</span><span class="o">.</span><span class="n">new</span>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">    </span><span class="vi">@cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">    </span><span class="vi">@cache_duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">60</span><span class="w">  </span><span class="c1"># 10 minutes</span>
-</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
-</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">get_weather</span><span class="p">(</span><span class="n">city</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">)</span>
-</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">    </span><span class="n">cache_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">city</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">units</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">    </span><span class="n">cached</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@cache</span><span class="o">[</span><span class="n">cache_key</span><span class="o">]</span>
-</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>
-</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">cached</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">cached</span><span class="o">[</span><span class="ss">:time</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="vi">@cache_duration</span>
-</span><span id="__span-22-13"><a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">cached</span><span class="o">[</span><span class="ss">:data</span><span class="o">]</span>
-</span><span id="__span-22-14"><a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="w">    </span><span class="k">end</span>
-</span><span id="__span-22-15"><a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>
-</span><span id="__span-22-16"><a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="w">    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="n">city</span><span class="p">,</span><span class="w"> </span><span class="ss">units</span><span class="p">:</span><span class="w"> </span><span class="n">units</span><span class="p">)</span>
-</span><span id="__span-22-17"><a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a><span class="w">    </span><span class="vi">@cache</span><span class="o">[</span><span class="n">cache_key</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="ss">time</span><span class="p">:</span><span class="w"> </span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="p">}</span>
-</span><span id="__span-22-18"><a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a><span class="w">    </span><span class="n">result</span>
-</span><span id="__span-22-19"><a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-22-20"><a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a><span class="k">end</span>
-</span></code></pre></div>
-<h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
 <ul>
-<li>✅ API key stored in environment variable (not in code)</li>
-<li>✅ No arbitrary code execution</li>
-<li>✅ Input validation on city parameter</li>
-<li>✅ Safe HTTP requests via openweathermap gem</li>
-<li>⚠️ Protect API key (don't commit to version control)</li>
-<li>⚠️ Monitor API usage to prevent unexpected charges</li>
-</ul>
-<h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Free Tier</strong>: Limited to 60 calls/minute</li>
-<li><strong>Forecast Period</strong>: Only 3-day forecast provided</li>
-<li><strong>Historical Data</strong>: Not available (current and future only)</li>
-<li><strong>City Resolution</strong>: Some obscure locations may not be found</li>
-<li><strong>Update Frequency</strong>: Weather data updates vary by location</li>
-</ul>
-<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="api-key-issues">API Key Issues<a class="headerlink" href="#api-key-issues" title="Permanent link">&para;</a></h3>
-<p><strong>Problem</strong>: "API key not configured" error</p>
-<p><strong>Solution</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Set environment variable</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENWEATHER_API_KEY</span><span class="o">=</span><span class="s2">&quot;your_key_here&quot;</span>
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Or in Ruby before using the tool</span>
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>ENV<span class="o">[</span><span class="s1">&#39;OPENWEATHER_API_KEY&#39;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;your_key_here&#39;</span>
-</span></code></pre></div></p>
-<h3 id="city-not-found_1">City Not Found<a class="headerlink" href="#city-not-found_1" title="Permanent link">&para;</a></h3>
-<p><strong>Problem</strong>: Valid city returns "not found" error</p>
-<p><strong>Solution</strong>: Try adding country code or checking spelling
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Instead of</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Muenchen&quot;</span><span class="p">)</span>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Try</span>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Munich,DE&quot;</span><span class="p">)</span>
-</span></code></pre></div></p>
-<h3 id="rate-limit-errors">Rate Limit Errors<a class="headerlink" href="#rate-limit-errors" title="Permanent link">&para;</a></h3>
-<p><strong>Problem</strong>: "Rate limit exceeded" error</p>
-<p><strong>Solution</strong>: Space out requests or upgrade API plan
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">cities</span><span class="o">.</span><span class="n">each</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">city</span><span class="o">|</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">weather</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span><span class="w"> </span><span class="n">city</span><span class="p">)</span>
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span><span class="nb">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">  </span><span class="c1"># Wait between requests</span>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="k">end</span>
-</span></code></pre></div></p>
-<h2 id="related-tools">Related Tools<a class="headerlink" href="#related-tools" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../">CompositeAnalysisTool</a> - Can incorporate weather data in analysis</li>
-<li><a href="../">WorkflowManagerTool</a> - For multi-step workflows involving weather data</li>
+<li>Always include a country code: <code>"London,UK"</code> not just <code>"London"</code></li>
+<li>Including forecast data requires a second API call — omit <code>include_forecast</code> when not needed</li>
+<li>For the most accurate day-of-week labelling, pair with <strong>CurrentDateTimeTool</strong> rather than relying on the LLM's training data</li>
 </ul>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://openweathermap.org/api">OpenWeatherMap API Documentation</a></li>
-<li><a href="https://github.com/lucaswinningham/openweathermap">OpenWeatherMap Ruby Gem</a></li>
 <li><a href="https://openweathermap.org/price">API Pricing</a></li>
+</ul>
+<h2 id="related-tools">Related Tools<a class="headerlink" href="#related-tools" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../dns_tool/">DnsTool</a> - IP geolocation for automatic location detection</li>
+<li><a href="../">CurrentDateTimeTool</a> - Real date and day of week for accurate forecast labels</li>
 </ul>
 
 

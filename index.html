@@ -568,6 +568,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Available Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data &amp; Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network &amp; System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-devops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow &amp; DevOps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1876,16 +1926,20 @@
 
 <h1 id="sharedtools">SharedTools<a class="headerlink" href="#sharedtools" title="Permanent link">&para;</a></h1>
 <p><img alt="SharedTools" src="assets/images/shared_tools.png" /></p>
-<p>A comprehensive Ruby gem providing LLM-callable tools for browser automation, file operations, code evaluation, database operations, and document processing.</p>
+<p>A comprehensive Ruby gem providing LLM-callable tools for browser automation, file operations, code evaluation, database operations, document processing, network queries, data science, workflow management, and more.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>SharedTools provides a collection of reusable tools designed to work seamlessly with the <a href="https://github.com/madbomber/ruby_llm">RubyLLM</a> framework. Each tool extends <code>RubyLLM::Tool</code> and provides a clean, consistent interface for common operations that LLM agents need to perform.</p>
+<p>SharedTools provides a collection of reusable tools designed to work seamlessly with the <a href="https://github.com/mariochavez/ruby_llm">RubyLLM</a> framework. Each tool extends <code>RubyLLM::Tool</code> and provides a clean, consistent interface for common operations that LLM agents need to perform.</p>
 <h3 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Browser Automation</strong>: Control web browsers with Watir for visiting pages, clicking elements, filling forms, and taking screenshots</li>
 <li><strong>File System Operations</strong>: Secure file and directory operations with path traversal protection</li>
 <li><strong>Code Evaluation</strong>: Execute Ruby, Python, and shell commands with authorization controls</li>
-<li><strong>Database Operations</strong>: Execute SQL queries against SQLite and PostgreSQL databases</li>
-<li><strong>Document Processing</strong>: Read and extract content from PDF documents</li>
+<li><strong>Database Operations</strong>: Execute SQL queries against SQLite, PostgreSQL, and other databases</li>
+<li><strong>Document Processing</strong>: Read plain text, PDF, Word (.docx), and spreadsheet files (CSV, XLSX, ODS)</li>
+<li><strong>Network &amp; DNS</strong>: DNS lookups, WHOIS queries, IP geolocation, and external IP detection</li>
+<li><strong>Data Science</strong>: Statistical analysis, correlation, time series, clustering, and prediction</li>
+<li><strong>Workflow Management</strong>: Persistent multi-step workflow orchestration with state tracking</li>
+<li><strong>System Utilities</strong>: Date/time, system info, clipboard, cron scheduling, and more</li>
 <li><strong>Authorization System</strong>: Human-in-the-loop confirmation for potentially dangerous operations</li>
 <li><strong>Driver Architecture</strong>: Pluggable driver system for extensibility</li>
 </ul>
@@ -1924,18 +1978,11 @@
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">html</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">browser</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;page_inspect&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">full_html</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span><span class="p">)</span>
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Save to file</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="n">disk</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file_create&quot;</span><span class="p">,</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="ss">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./scraped_data.html&quot;</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="p">)</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="n">disk</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file_write&quot;</span><span class="p">,</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span><span class="ss">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./scraped_data.html&quot;</span><span class="p">,</span>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="ss">text</span><span class="p">:</span><span class="w"> </span><span class="n">html</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="p">)</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Clean up</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="n">browser</span><span class="o">.</span><span class="n">cleanup!</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="n">disk</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file_create&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./scraped_data.html&quot;</span><span class="p">)</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="n">disk</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file_write&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">path</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./scraped_data.html&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">text</span><span class="p">:</span><span class="w"> </span><span class="n">html</span><span class="p">)</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Clean up</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="n">browser</span><span class="o">.</span><span class="n">cleanup!</span>
 </span></code></pre></div>
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1944,12 +1991,36 @@
 <li><a href="getting-started/basic-usage/">Basic Usage</a> - Learn fundamental patterns</li>
 </ul>
 <h2 id="available-tools">Available Tools<a class="headerlink" href="#available-tools" title="Permanent link">&para;</a></h2>
+<h3 id="core-tools">Core Tools<a class="headerlink" href="#core-tools" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong><a href="tools/browser/">BrowserTool</a></strong> - Web browser automation with Watir</li>
 <li><strong><a href="tools/disk/">DiskTool</a></strong> - File and directory operations</li>
 <li><strong><a href="tools/eval/">EvalTool</a></strong> - Code execution (Ruby, Python, Shell)</li>
-<li><strong><a href="tools/doc/">DocTool</a></strong> - PDF document processing</li>
-<li><strong><a href="tools/database/">DatabaseTool</a></strong> - SQL database operations</li>
+<li><strong><a href="tools/doc/">DocTool</a></strong> - Document reading: plain text, PDF, Word, and spreadsheets</li>
+<li><strong><a href="tools/database/">DatabaseTool</a></strong> - SQL database operations (read/write)</li>
+<li><strong><a href="tools/database/">DatabaseQueryTool</a></strong> - Safe read-only SQL queries</li>
+<li><strong><a href="tools/computer/">ComputerTool</a></strong> - Mouse, keyboard, and screen automation</li>
+</ul>
+<h3 id="data-analysis">Data &amp; Analysis<a class="headerlink" href="#data-analysis" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><a href="tools/calculator/">CalculatorTool</a></strong> - Safe mathematical expression evaluation</li>
+<li><strong><a href="tools/data_science_kit/">DataScienceKit</a></strong> - Statistical analysis, correlation, clustering, prediction</li>
+<li><strong><a href="tools/">CompositeAnalysisTool</a></strong> - Multi-stage data analysis orchestration</li>
+</ul>
+<h3 id="network-system">Network &amp; System<a class="headerlink" href="#network-system" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><a href="tools/dns_tool/">DnsTool</a></strong> - DNS lookups, WHOIS, IP geolocation, external IP detection</li>
+<li><strong><a href="tools/weather/">WeatherTool</a></strong> - Real-time weather data via OpenWeatherMap</li>
+<li><strong><a href="tools/">SystemInfoTool</a></strong> - System hardware and OS information</li>
+<li><strong><a href="tools/">CurrentDateTimeTool</a></strong> - Current date, time, and day of week</li>
+<li><strong><a href="tools/">ClipboardTool</a></strong> - Read and write system clipboard</li>
+<li><strong><a href="tools/">CronTool</a></strong> - Cron expression scheduling utilities</li>
+</ul>
+<h3 id="workflow-devops">Workflow &amp; DevOps<a class="headerlink" href="#workflow-devops" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><a href="tools/">WorkflowManagerTool</a></strong> - Persistent multi-step workflow orchestration</li>
+<li><strong><a href="tools/">Docker ComposeRunTool</a></strong> - Docker container command execution</li>
+<li><strong><a href="tools/">ErrorHandlingTool</a></strong> - Reference implementation for error handling patterns</li>
 </ul>
 <h2 id="guides">Guides<a class="headerlink" href="#guides" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1960,12 +2031,12 @@
 <ul>
 <li>Ruby &gt;= 3.3.0</li>
 <li>RubyLLM gem</li>
-<li>Optional: watir (for browser automation), sqlite3 or pg (for databases), pdf-reader (for PDFs)</li>
+<li>Optional: watir (browser), sqlite3/pg (databases), pdf-reader (PDFs), docx (Word), roo (spreadsheets)</li>
 </ul>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
 <p>MIT License - see <a href="https://github.com/madbomber/shared_tools/blob/main/LICENSE">LICENSE</a> for details.</p>
 <h2 id="credits">Credits<a class="headerlink" href="#credits" title="Permanent link">&para;</a></h2>
-<p>Originally inspired by Kevin Sylvestre's <a href="https://github.com/ksylvest/omniai-tools">omniai-tools</a> gem. SharedTools has evolved to focus exclusively on RubyLLM support with enhanced features and an extended tool collection.</p>
+<p>Originally inspired by Kevin Sylvestre's <a href="https://github.com/ksylvest/omniai-tools">omniai-tools</a> gem. SharedTools has evolved to focus exclusively on RubyLLM support with an extended tool collection.</p>
 
 
 
