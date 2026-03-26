@@ -1822,6 +1822,20 @@
 <h3 id="eval_tool_demorb"><a href="https://github.com/madbomber/shared_tools/blob/main/examples/eval_tool_demo.rb">eval_tool_demo.rb</a><a class="headerlink" href="#eval_tool_demorb" title="Permanent link">&para;</a></h3>
 <p>Code evaluation in Ruby, Python, and shell — with authorization controls.</p>
 <hr />
+<h3 id="notification_tool_demorb"><a href="https://github.com/madbomber/shared_tools/blob/main/examples/notification_tool_demo.rb">notification_tool_demo.rb</a><a class="headerlink" href="#notification_tool_demorb" title="Permanent link">&para;</a></h3>
+<p>Cross-platform desktop notifications, modal dialogs, and text-to-speech across five sections:</p>
+<ul>
+<li><strong>Notify</strong> — banner notifications with title, subtitle, and sound</li>
+<li><strong>Speak</strong> — TTS with and without a rate override</li>
+<li><strong>Alert</strong> — single-button checkpoint and a Yes/No dialog that reports which button was clicked</li>
+<li><strong>Combined workflow</strong> — chains all three actions in one LLM prompt</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> This demo triggers real OS interactions. The <code>alert</code> action <strong>blocks</strong> until you click a button; <code>speak</code> will use your system TTS engine.</p>
+</blockquote>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>bundle<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ruby<span class="w"> </span>-I<span class="w"> </span>examples<span class="w"> </span>examples/notification_tool_demo.rb
+</span></code></pre></div>
+<hr />
 <h3 id="mcp_client_demorb"><a href="https://github.com/madbomber/shared_tools/blob/main/examples/mcp_client_demo.rb">mcp_client_demo.rb</a><a class="headerlink" href="#mcp_client_demorb" title="Permanent link">&para;</a></h3>
 <p>MCP (Model Context Protocol) client integration example.</p>
 <hr />
@@ -1846,8 +1860,8 @@
 <li><code>new_chat</code> — creates a fresh chat session (used to reset context between demo sections)</li>
 <li><code>@chat</code> — the default chat session with <code>ENV['RUBY_LLM_DEBUG'] = 'true'</code> enabled</li>
 </ul>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run any demo with the examples directory in the load path</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">bundle</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span><span class="n">ruby</span><span class="w"> </span><span class="o">-</span><span class="n">I</span><span class="w"> </span><span class="n">examples</span><span class="w"> </span><span class="n">examples</span><span class="o">/</span><span class="n">some_tool_demo</span><span class="o">.</span><span class="n">rb</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Run any demo with the examples directory in the load path</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">bundle</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span><span class="n">ruby</span><span class="w"> </span><span class="o">-</span><span class="n">I</span><span class="w"> </span><span class="n">examples</span><span class="w"> </span><span class="n">examples</span><span class="o">/</span><span class="n">some_tool_demo</span><span class="o">.</span><span class="n">rb</span>
 </span></code></pre></div>
 <hr />
 <h2 id="demo-categories">Demo Categories<a class="headerlink" href="#demo-categories" title="Permanent link">&para;</a></h2>
@@ -1874,7 +1888,7 @@
 </tr>
 <tr>
 <td>System &amp; Utilities</td>
-<td>computer_tool_demo, system_info_tool_demo, clipboard_tool_demo, current_date_time_tool_demo, cron_tool_demo</td>
+<td>computer_tool_demo, system_info_tool_demo, clipboard_tool_demo, current_date_time_tool_demo, cron_tool_demo, notification_tool_demo</td>
 </tr>
 <tr>
 <td>External APIs</td>
