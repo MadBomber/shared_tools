@@ -20,9 +20,11 @@
 #
 # Compatible with ruby_llm-mcp >= 0.7.0
 
-require "ruby_llm/mcp"
+require_relative "../utilities"
 
-return if ENV.fetch("BRAVE_API_KEY", "").empty?
+SharedTools.verify_envars("BRAVE_API_KEY")
+
+require "ruby_llm/mcp"
 
 RubyLLM::MCP.add_client(
   name: "brave-search",

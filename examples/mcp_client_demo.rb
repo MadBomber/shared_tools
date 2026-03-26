@@ -64,6 +64,7 @@ def load_client(require_path, client_name, &check)
   return false unless check.nil? || check.call
   require require_path
   client = RubyLLM::MCP.clients[client_name]
+  return false if client.nil?
   puts "  Loaded '#{client_name}' — #{client.tools.count} tools: #{client.tools.map(&:name).join(', ')}"
   true
 rescue => e

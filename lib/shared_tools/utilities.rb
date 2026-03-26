@@ -16,11 +16,13 @@ module SharedTools
     def verify_envars(*names)
       missing = names.select { |n| ENV.fetch(n, "").empty? }
       missing.each { |n| warn "SharedTools — #{n} is not set" }
-      missing.empty?
+      unless missing.empty?
+        raise LoadError, "Missing envars: #{missing.join(', ')}"
+      end
     end
 
     # High-level package installer. Detects the current platform and calls the
-    # appropriate *_install method. Returns true if all packages are available.
+    # appropriate *_install method. Raises LoadError if any package cannot be installed.
     #
     #   SharedTools.package_install("github-mcp-server")
     #   SharedTools.package_install("curl", "jq")
@@ -36,103 +38,89 @@ module SharedTools
         elsif system("which brew > /dev/null 2>&1")
           brew_install(*packages)
         else
-          warn "SharedTools — no supported package manager found (apt-get, dnf, brew)"
-          false
+          raise LoadError, "No supported package manager found (apt-get, dnf, brew)"
         end
       else
-        warn "SharedTools — unsupported platform: #{RUBY_PLATFORM}"
-        false
+        raise LoadError, "Unsupported platform: #{RUBY_PLATFORM}"
       end
     end
 
     # Ensures each named binary is available in PATH, installing via brew if missing.
-    # Returns true if all binaries are present (or successfully installed).
-    # Returns false if brew itself is missing or any install fails.
+    # Raises LoadError if brew is not installed or any package install fails.
     #
     #   SharedTools.brew_install("github-mcp-server")
     #   SharedTools.brew_install("gh", "jq")
     def brew_install(*packages)
-      unless system("which brew > /dev/null 2>&1")
-        warn "SharedTools — Homebrew is not installed (https://brew.sh)"
-        return false
-      end
+      raise LoadError, "Homebrew is not installed (https://brew.sh)" unless system("which brew > /dev/null 2>&1")
 
-      packages.all? do |pkg|
-        next true if !`brew list --versions #{pkg} 2>/dev/null`.strip.empty?
+      packages.each do |pkg|
+        next unless `brew list --versions #{pkg} 2>/dev/null`.strip.empty?
 
         warn "SharedTools — #{pkg} not found, installing via brew..."
-        system("brew install --quiet #{pkg} > /dev/null 2>&1")
+        raise LoadError, "#{pkg} could not be installed" unless system("brew install --quiet #{pkg} > /dev/null 2>&1")
       end
     end
 
     # Ensures each named binary is available in PATH, installing via apt-get if missing.
-    # Returns true if all binaries are present (or successfully installed).
-    # Returns false if apt-get itself is missing or any install fails.
+    # Raises LoadError if any package install fails.
     #
     #   SharedTools.apt_install("curl")
     #   SharedTools.apt_install("curl", "jq")
     def apt_install(*packages)
-      packages.all? do |pkg|
+      packages.each do |pkg|
         # SMELL: what if package is a library?
-        next true if system("which #{pkg} > /dev/null 2>&1")
+        next if system("which #{pkg} > /dev/null 2>&1")
 
         warn "SharedTools — #{pkg} not found, installing via apt-get..."
-        system("sudo apt-get install -y -q #{pkg} > /dev/null 2>&1")
+        raise LoadError, "#{pkg} could not be installed" unless system("sudo apt-get install -y -q #{pkg} > /dev/null 2>&1")
       end
     end
 
     # Ensures each named binary is available in PATH, installing via dnf if missing.
-    # Returns true if all binaries are present (or successfully installed).
-    # Returns false if dnf itself is missing or any install fails.
+    # Raises LoadError if any package install fails.
     #
     #   SharedTools.dnf_install("curl")
     #   SharedTools.dnf_install("curl", "jq")
     def dnf_install(*packages)
-      packages.all? do |pkg|
+      packages.each do |pkg|
         # SMELL: What if package is a library?
-        next true if system("which #{pkg} > /dev/null 2>&1")
+        next if system("which #{pkg} > /dev/null 2>&1")
 
         warn "SharedTools — #{pkg} not found, installing via dnf..."
-        system("sudo dnf install -y -q #{pkg} > /dev/null 2>&1")
+        raise LoadError, "#{pkg} could not be installed" unless system("sudo dnf install -y -q #{pkg} > /dev/null 2>&1")
       end
     end
 
     # Ensures each named npm package binary is available in PATH, installing
-    # globally via npm if missing. Returns false if npm itself is not found.
+    # globally via npm if missing. Raises LoadError if npm is not found or any install fails.
     #
     #   SharedTools.npm_install("typescript")
     #   SharedTools.npm_install("typescript", "ts-node")
     def npm_install(*packages)
-      unless system("which npm > /dev/null 2>&1")
-        warn "SharedTools — npm is not installed (https://nodejs.org)"
-        return false
-      end
+      raise LoadError, "npm is not installed (https://nodejs.org)" unless system("which npm > /dev/null 2>&1")
 
-      packages.all? do |pkg|
+      packages.each do |pkg|
         # SMELL: What if package is a library?
-        next true if system("which #{pkg} > /dev/null 2>&1")
+        next if system("which #{pkg} > /dev/null 2>&1")
 
         warn "SharedTools — #{pkg} not found, installing via npm..."
-        system("npm install -g --silent #{pkg} > /dev/null 2>&1")
+        raise LoadError, "#{pkg} could not be installed" unless system("npm install -g --silent #{pkg} > /dev/null 2>&1")
       end
     end
 
     # Ensures each named gem is available, installing via gem install if missing.
-    # Returns false if gem itself is not found (should never happen in a Ruby process).
+    # Raises LoadError if gem is not available or any install fails.
     #
     #   SharedTools.gem_install("nokogiri")
     #   SharedTools.gem_install("nokogiri", "oj")
     def gem_install(*packages)
-      unless system("which gem > /dev/null 2>&1")
-        warn "SharedTools — gem is not available"
-        return false
-      end
+      raise LoadError, "gem is not available" unless system("which gem > /dev/null 2>&1")
 
-      packages.all? do |pkg|
-        next true if system("gem list -i #{pkg} > /dev/null 2>&1")
+      packages.each do |pkg|
+        next if system("gem list -i #{pkg} > /dev/null 2>&1")
 
         warn "SharedTools — #{pkg} not found, installing via gem..."
-        system("gem install --silent #{pkg} > /dev/null 2>&1")
+        raise LoadError, "#{pkg} could not be installed" unless system("gem install --silent #{pkg} > /dev/null 2>&1")
       end
     end
 

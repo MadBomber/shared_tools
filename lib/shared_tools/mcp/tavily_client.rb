@@ -21,15 +21,21 @@
 #
 # Compatible with ruby_llm-mcp >= 0.7.0
 
-require "ruby_llm/mcp"
+require_relative "../utilities"
+require_relative "streamable_http_patch"
 
-return if ENV.fetch("TAVILY_API_KEY", "").empty?
+SharedTools.verify_envars("TAVILY_API_KEY")
 
 RubyLLM::MCP.add_client(
-  name: "tavily",
-  transport_type: :streamable,
+  name:            "tavily",
+  transport_type:  :streamable,
+  request_timeout: 30_000,
   config: {
     url:     "https://mcp.tavily.com/mcp/",
-    headers: { "Authorization" => "Bearer #{ENV.fetch('TAVILY_API_KEY', '')}" },
+    version: :http1,
+    headers: {
+      "Authorization" => "Bearer #{ENV.fetch('TAVILY_API_KEY', '')}",
+      "Accept"        => "application/json, text/event-stream",
+    },
   },
 )

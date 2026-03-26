@@ -31,7 +31,7 @@
 #   client = RubyLLM::MCP.clients["client-name"]
 #   chat   = RubyLLM.chat.with_tools(*client.tools)
 
-require "ruby_llm/mcp"
+require_relative "mcp/streamable_http_patch"
 
 threads = Dir[File.join(__dir__, "mcp", "*_client.rb")].map do |path|
   Thread.new do

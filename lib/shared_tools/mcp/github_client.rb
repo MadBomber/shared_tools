@@ -22,8 +22,8 @@
 
 require_relative "../utilities"
 
-return unless SharedTools.verify_envars("GITHUB_PERSONAL_ACCESS_TOKEN")
-return unless SharedTools.package_install("github-mcp-server")
+SharedTools.verify_envars("GITHUB_PERSONAL_ACCESS_TOKEN")
+SharedTools.package_install("github-mcp-server")
 
 require "ruby_llm/mcp"
 
