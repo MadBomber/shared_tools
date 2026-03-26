@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changing direction. Beginning with 0.3.0 will only support RubyLLM framework
 - `WeatherTool` demo updated to include a local forecast section combining `DnsTool` (external IP → geolocation) and `CurrentDateTimeTool` (real day of week) with `WeatherTool`.
 
+### Removed
+- `DevopsToolkit` — removed entirely. All operations were simulated and provided no real system interaction. The tool, its loader shim, its test file, and all demo/documentation references have been deleted.
+
 ### Deprecated
 - Support for OmniAI framework (use RubyLLM instead)
 - Support for llm.rb framework (use RubyLLM instead)

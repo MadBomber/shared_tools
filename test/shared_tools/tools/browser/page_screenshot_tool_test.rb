@@ -2,18 +2,9 @@
 
 require "test_helper"
 require "tempfile"
-require "base64"
+require "tmpdir"
 
 class PageScreenshotToolTest < Minitest::Test
-  def nokogiri_available?
-    begin
-      require 'nokogiri'
-      true
-    rescue LoadError
-      false
-    end
-  end
-
   class MockDriver
     def screenshot
       # Create a minimal PNG file (1x1 transparent pixel)
@@ -41,22 +32,26 @@ class PageScreenshotToolTest < Minitest::Test
     assert_kind_of ::RubyLLM::Tool, @tool
   end
 
-  def test_returns_base64_encoded_screenshot
-    skip "Nokogiri gem not installed" unless nokogiri_available?
-
+  def test_returns_saved_path_hash
     result = @tool.execute
-    assert_kind_of String, result
-    assert_match /^data:image\/png;base64,/, result
+    assert_kind_of Hash, result
+    assert_equal :ok, result[:status]
+    assert result[:saved_to]
+    assert_match(/\.png$/, result[:saved_to])
   end
 
-  def test_screenshot_is_valid_base64
-    skip "Nokogiri gem not installed" unless nokogiri_available?
-
+  def test_screenshot_file_exists_after_capture
     result = @tool.execute
-    base64_data = result.sub(/^data:image\/png;base64,/, '')
+    assert File.exist?(result[:saved_to])
+  ensure
+    File.delete(result[:saved_to]) if result && result[:saved_to] && File.exist?(result[:saved_to])
+  end
 
-    # Should successfully decode without raising an error
-    decoded = Base64.strict_decode64(base64_data)
-    assert decoded.length > 0
+  def test_custom_path_is_used
+    custom_path = File.join(Dir.tmpdir, "custom_test_#{Time.now.to_i}.png")
+    result = @tool.execute(path: custom_path)
+    assert_equal File.expand_path(custom_path), result[:saved_to]
+  ensure
+    File.delete(custom_path) if File.exist?(custom_path)
   end
 end

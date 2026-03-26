@@ -133,8 +133,11 @@ class BrowserToolTest < Minitest::Test
 
   def test_screenshot_action
     result = @tool.execute(action: SharedTools::Tools::BrowserTool::Action::SCREENSHOT)
-    assert_kind_of String, result
-    assert_match /^data:image\/png;base64,/, result
+    assert_kind_of Hash, result
+    assert_equal :ok, result[:status]
+    assert result[:saved_to]
+  ensure
+    File.delete(result[:saved_to]) if result.is_a?(Hash) && result[:saved_to] && File.exist?(result[:saved_to])
   end
 
   def test_cleanup_closes_driver

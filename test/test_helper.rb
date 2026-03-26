@@ -12,6 +12,7 @@ SimpleCov.start do
 end
 
 require "minitest/autorun"
+require "minitest/mock"
 require "minitest/pride"
 require "ruby_llm"
 require "shared_tools"

@@ -318,6 +318,69 @@ class WorkflowManagerToolTest < Minitest::Test
     assert_empty status_result[:next_actions]
   end
 
+  # List workflows tests
+  def test_list_returns_empty_when_no_workflows
+    result = @tool.execute(action: "list")
+
+    assert result[:success]
+    assert_equal 0, result[:total]
+    assert_equal [], result[:workflows]
+  end
+
+  def test_list_returns_all_workflows
+    # Create 3 workflows
+    3.times { |i| @tool.execute(action: "start", step_data: {label: "wf#{i}"}) }
+
+    result = @tool.execute(action: "list")
+
+    assert result[:success]
+    assert_equal 3, result[:total]
+    assert_equal 3, result[:workflows].length
+  end
+
+  def test_list_includes_workflow_summary_fields
+    @tool.execute(action: "start", step_data: {})
+
+    result = @tool.execute(action: "list")
+    wf = result[:workflows].first
+
+    assert wf[:workflow_id]
+    assert wf[:status]
+    assert_kind_of Integer, wf[:step_count]
+    assert wf[:created_at]
+  end
+
+  def test_list_reflects_correct_step_count
+    start_result = @tool.execute(action: "start", step_data: {})
+    wf_id = start_result[:workflow_id]
+    2.times { @tool.execute(action: "step", workflow_id: wf_id, step_data: {}) }
+
+    result = @tool.execute(action: "list")
+    wf = result[:workflows].find { |w| w[:workflow_id] == wf_id }
+
+    assert_equal 2, wf[:step_count]
+  end
+
+  def test_list_reflects_correct_status
+    start_result = @tool.execute(action: "start", step_data: {})
+    wf_id = start_result[:workflow_id]
+    @tool.execute(action: "complete", workflow_id: wf_id)
+
+    result = @tool.execute(action: "list")
+    wf = result[:workflows].find { |w| w[:workflow_id] == wf_id }
+
+    assert_equal "completed", wf[:status]
+  end
+
+  def test_list_is_sorted_by_created_at
+    3.times { |i| @tool.execute(action: "start", step_data: {i: i}) }
+
+    result = @tool.execute(action: "list")
+    timestamps = result[:workflows].map { |w| w[:created_at] }
+
+    assert_equal timestamps.sort, timestamps
+  end
+
   # Invalid action tests
   def test_invalid_action
     result = @tool.execute(action: "invalid_action")

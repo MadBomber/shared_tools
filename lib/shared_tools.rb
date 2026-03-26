@@ -48,5 +48,20 @@ module SharedTools
       print "\nIs it okay to proceed? (y/N"
       STDIN.getch == "y"
     end
+
+    # Force-load all tool classes into ObjectSpace.
+    # Called by AIA's GemActivator.trigger_tool_loading when shared_tools is
+    # passed to --require. Without this, Zeitwerk lazy-loads classes on first
+    # reference, so no RubyLLM::Tool subclasses appear in ObjectSpace at scan time.
+    def load_all_tools
+      SharedToolsLoader.eager_load
+    end
+
+    # Return all loaded RubyLLM::Tool subclasses provided by this gem.
+    # Also triggers eager loading so the list is complete.
+    def tools
+      load_all_tools
+      ObjectSpace.each_object(Class).select { |k| k < ::RubyLLM::Tool }.to_a
+    end
   end
 end
