@@ -1,4 +1,4 @@
-name: Deploy AIA Documentation to GitHub Pages
+name: Deploy SharedTools Documentation to GitHub Pages
 on:
   push:
     branches:

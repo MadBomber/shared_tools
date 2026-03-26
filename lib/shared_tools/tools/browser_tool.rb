@@ -146,10 +146,19 @@ module SharedTools
 
 
       # @param logger [Logger] optional logger
-      # @param driver [SharedTools::Tools::Browser::BaseDriver] optional, will attempt to create WatirDriver if not provided
+      # @param driver [SharedTools::Tools::Browser::BaseDriver] optional, will attempt to create WatirDriver when execute is called
       def initialize(logger: nil, driver: nil)
         @logger = logger || RubyLLM.logger
-        @driver = driver || default_driver
+        @driver = driver  # Defer default_driver to execute time to support RubyLLM tool discovery
+      end
+
+      # Set driver after instantiation (useful when tool is discovered by RubyLLM)
+      attr_writer :driver
+
+      # Reports whether this tool can function.
+      # Returns true when a driver was injected or the watir gem is loaded.
+      def available?
+        !!@driver || defined?(Watir)
       end
 
       def cleanup!
@@ -166,6 +175,9 @@ module SharedTools
       #
       # @return [String]
       def execute(action:, url: nil, selector: nil, value: nil, context_size: 2, full_html: false, text_content: nil)
+        # Lazily resolve driver at execute time
+        @driver ||= default_driver
+
         case action.to_s.downcase
         when Action::VISIT
           require_param!(:url, url)

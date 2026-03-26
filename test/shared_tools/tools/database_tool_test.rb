@@ -34,11 +34,23 @@ class DatabaseToolTest < Minitest::Test
     assert_kind_of ::RubyLLM::Tool, @tool
   end
 
-  def test_requires_driver
+  def test_requires_driver_at_execute_time
+    # Tool can be instantiated without driver (for RubyLLM tool discovery)
+    tool = SharedTools::Tools::DatabaseTool.new(driver: nil)
+    assert_instance_of SharedTools::Tools::DatabaseTool, tool
+
+    # But execute raises ArgumentError when driver is missing
     error = assert_raises(ArgumentError) do
-      SharedTools::Tools::DatabaseTool.new(driver: nil)
+      tool.execute(statements: ["SELECT 1"])
     end
     assert_includes error.message, "driver is required"
+  end
+
+  def test_driver_can_be_set_after_instantiation
+    tool = SharedTools::Tools::DatabaseTool.new
+    tool.driver = @driver
+    result = tool.execute(statements: ["SELECT 1"])
+    assert_equal :ok, result[0][:status]
   end
 
   def test_executes_single_statement

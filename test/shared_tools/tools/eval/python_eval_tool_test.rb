@@ -132,12 +132,13 @@ class PythonEvalToolTest < Minitest::Test
   def test_respects_auto_execute_false
     SharedTools.auto_execute(false)
 
-    # Mock STDIN.getch to simulate user pressing 'n' (decline)
-    STDIN.stub :getch, 'n' do
-      result = @tool.execute(code: "2 + 2")
+    original_stdin = $stdin
+    $stdin = StringIO.new('n')
+    result = @tool.execute(code: "2 + 2")
 
-      assert result.key?(:error)
-      assert_includes result[:error], "declined"
-    end
+    assert result.key?(:error)
+    assert_includes result[:error], "declined"
+  ensure
+    $stdin = original_stdin
   end
 end
