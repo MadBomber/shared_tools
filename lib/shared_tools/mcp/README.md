@@ -16,6 +16,18 @@ no local binary, nothing to install.
 |------|-------------|----------|----------|
 | `tavily_client.rb` | `"tavily"` | `TAVILY_API_KEY` | AI-optimized web search, news, research |
 
+### Brew-installed binary — `:stdio` transport
+
+The binary is installed automatically via Homebrew if not already present.
+Requires **Homebrew** (`https://brew.sh`).
+
+| File | Client name | Requires | Provides |
+|------|-------------|----------|----------|
+| `github_client.rb` | `"github"` | `GITHUB_PERSONAL_ACCESS_TOKEN` | Repositories, issues, PRs, code search |
+| `notion_client.rb` | `"notion"` | `NOTION_TOKEN` | Pages, databases, search, content CRUD |
+| `slack_client.rb` | `"slack"` | `SLACK_MCP_XOXP_TOKEN` or `SLACK_MCP_XOXB_TOKEN` | Channels, messages, threads, user info |
+| `hugging_face_client.rb` | `"hugging-face"` | `HF_TOKEN` | Models, datasets, Spaces, model cards |
+
 ### npx Auto-download — `:stdio` transport via `npx -y`
 
 The npm package is downloaded automatically on first use. The only prerequisite is
@@ -59,8 +71,26 @@ chat  = RubyLLM.chat.with_tools(*tools)
 | Variable | Used by | Where to get it |
 |----------|---------|-----------------|
 | `TAVILY_API_KEY` | `tavily_client.rb` | https://tavily.com (free tier) |
+| `GITHUB_PERSONAL_ACCESS_TOKEN` | `github_client.rb` | https://github.com/settings/tokens |
+| `NOTION_TOKEN` | `notion_client.rb` | https://www.notion.so/profile/integrations |
+| `SLACK_MCP_XOXP_TOKEN` | `slack_client.rb` | Slack OAuth — user token (full access) |
+| `SLACK_MCP_XOXB_TOKEN` | `slack_client.rb` | Slack OAuth — bot token (limited access) |
+| `HF_TOKEN` | `hugging_face_client.rb` | https://huggingface.co/settings/tokens |
 | `BRAVE_API_KEY` | `brave_search_client.rb` | https://brave.com/search/api/ (free tier) |
 | `MEMORY_FILE_PATH` | `memory_client.rb` | Optional — path to `.jsonl` persistence file |
+
+### Slack token types
+
+| Token prefix | Type | Access |
+|---|---|---|
+| `xoxp-` | User OAuth | Full access to all channels, search, DMs the user can see |
+| `xoxb-` | Bot token | Only channels the bot has been invited to; no message search |
+
+### Notion integration setup
+
+After creating an integration at https://www.notion.so/profile/integrations, you must
+**share each page or database** with the integration for it to be accessible. The MCP server
+can only see content that has been explicitly shared.
 
 ---
 
@@ -70,7 +100,6 @@ The following clients were removed because they required manual binary installat
 
 | Client | Reason removed |
 |--------|---------------|
-| `github_mcp_server.rb` | Required `brew install github-mcp-server` |
 | `imcp.rb` | Required `brew install --cask loopwork/tap/iMCP` (macOS only) |
 
 ---
