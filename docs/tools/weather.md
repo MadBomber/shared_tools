@@ -1,10 +1,10 @@
 # WeatherTool
 
-Real-time weather data retrieval from the OpenWeatherMap API.
+Real-time weather data retrieval from the OpenWeatherMap API, including current conditions, forecasts, and location-aware lookups.
 
 ## Overview
 
-The WeatherTool provides access to current weather conditions and forecasts for any city worldwide through the OpenWeatherMap API. It supports multiple unit systems and can optionally include extended forecast data.
+WeatherTool provides access to current weather conditions and forecasts for any city worldwide through the OpenWeatherMap API. It supports multiple unit systems and optional extended forecast data. Pair it with **DnsTool** and **CurrentDateTimeTool** for fully automatic local forecasts that detect your location from your IP address.
 
 ## Features
 
@@ -13,7 +13,7 @@ The WeatherTool provides access to current weather conditions and forecasts for 
 - **Multiple Units**: Metric (Celsius), Imperial (Fahrenheit), or Kelvin
 - **Comprehensive Data**: Temperature, feels-like, humidity, pressure, wind, cloudiness, visibility
 - **Global Coverage**: Weather data for cities worldwide
-- **Forecast Analysis**: Aggregated daily min/max/average values
+- **Local Forecast**: Combine with DnsTool to auto-detect your location
 
 ## Installation
 
@@ -35,12 +35,6 @@ You need a free API key from [OpenWeatherMap](https://openweathermap.org/api):
 export OPENWEATHER_API_KEY="your_api_key_here"
 ```
 
-Or in Ruby:
-
-```ruby
-ENV['OPENWEATHER_API_KEY'] = 'your_api_key_here'
-```
-
 ## Basic Usage
 
 ### Current Weather
@@ -50,88 +44,36 @@ require 'shared_tools'
 
 weather = SharedTools::Tools::WeatherTool.new
 
-# Get current weather for a city
-result = weather.execute(city: "London")
+result = weather.execute(city: "London,UK", units: "metric")
 puts "Temperature: #{result[:current][:temperature]}°C"
 puts "Conditions: #{result[:current][:description]}"
 ```
 
-### With Country Code
-
-For cities with common names, include the country code:
-
-```ruby
-# London, UK
-result = weather.execute(city: "London,UK", units: "metric")
-
-# Paris, France
-result = weather.execute(city: "Paris,FR", units: "metric")
-
-# Portland, Oregon, USA
-result = weather.execute(city: "Portland,US", units: "imperial")
-```
-
-## Unit Systems
-
-### Metric (Default)
-
-```ruby
-result = weather.execute(city: "Tokyo,JP", units: "metric")
-# Temperature in Celsius
-# Wind speed in m/s
-# Pressure in hPa
-```
-
-### Imperial
-
-```ruby
-result = weather.execute(city: "New York,US", units: "imperial")
-# Temperature in Fahrenheit
-# Wind speed in mph
-# Pressure in hPa
-```
-
-### Kelvin
-
-```ruby
-result = weather.execute(city: "Moscow,RU", units: "kelvin")
-# Temperature in Kelvin (scientific standard)
-# Wind speed in m/s
-# Pressure in hPa
-```
-
-## Forecast Data
-
-### Including Forecasts
+### With Forecast
 
 ```ruby
 result = weather.execute(
-  city: "London,UK",
+  city: "Tokyo,JP",
   units: "metric",
   include_forecast: true
 )
 
-# Access forecast data
 result[:forecast].each do |day|
   puts "#{day[:date]}: #{day[:temp_min]}°C - #{day[:temp_max]}°C"
-  puts "Conditions: #{day[:conditions]}"
 end
 ```
 
-### Forecast Data Structure
+## Unit Systems
 
-Each forecast day includes:
-- `date`: Date string (YYYY-MM-DD)
-- `temp_min`: Minimum temperature for the day
-- `temp_max`: Maximum temperature for the day
-- `temp_avg`: Average temperature
-- `conditions`: Most common weather condition
-- `avg_humidity`: Average humidity percentage
-- `avg_wind_speed`: Average wind speed
+| Unit | Temperature | Wind Speed |
+|------|-------------|------------|
+| `"metric"` | Celsius | m/s |
+| `"imperial"` | Fahrenheit | mph |
+| `"kelvin"` | Kelvin | m/s |
 
 ## Response Format
 
-### Successful Response (Current Weather Only)
+### Current Weather
 
 ```ruby
 {
@@ -149,7 +91,7 @@ Each forecast day includes:
     visibility: 10000
   },
   units: "metric",
-  timestamp: "2025-01-15T10:30:00Z"
+  timestamp: "2026-03-25T10:30:00Z"
 }
 ```
 
@@ -162,127 +104,50 @@ Each forecast day includes:
   current: { ... },
   forecast: [
     {
-      date: "2025-01-15",
+      date: "2026-03-25",
       temp_min: 12.5,
       temp_max: 16.8,
       temp_avg: 14.6,
       conditions: "partly cloudy",
       avg_humidity: 70,
       avg_wind_speed: 4.8
-    },
+    }
     # ... 2 more days
   ],
   units: "metric",
-  timestamp: "2025-01-15T10:30:00Z"
+  timestamp: "2026-03-25T10:30:00Z"
 }
 ```
 
-### Error Response
+## Local Forecast (Auto-Detect Location)
+
+Combine **WeatherTool**, **DnsTool**, and **CurrentDateTimeTool** to automatically detect your location from your IP address and fetch an accurate local forecast — including the correct day of week from the clock, not the LLM's training data.
 
 ```ruby
-{
-  success: false,
-  error: "City not found or API error message",
-  city: "InvalidCity",
-  suggestion: "Verify city name and API key configuration"
-}
-```
+require 'ruby_llm'
+require 'shared_tools/tools/dns_tool'
+require 'shared_tools/tools/weather_tool'
+require 'shared_tools/tools/current_date_time_tool'
 
-## Current Weather Fields
-
-### Temperature Data
-
-| Field | Description | Units |
-|-------|-------------|-------|
-| `temperature` | Current temperature | °C / °F / K |
-| `feels_like` | Perceived temperature | °C / °F / K |
-
-### Atmospheric Data
-
-| Field | Description | Units |
-|-------|-------------|-------|
-| `humidity` | Relative humidity | % |
-| `pressure` | Atmospheric pressure | hPa |
-| `visibility` | Visibility distance | meters |
-| `cloudiness` | Cloud coverage | % |
-
-### Wind Data
-
-| Field | Description | Units |
-|-------|-------------|-------|
-| `wind_speed` | Wind speed | m/s or mph |
-| `wind_direction` | Wind direction | degrees |
-
-### Weather Description
-
-| Field | Description |
-|-------|-------------|
-| `description` | Human-readable weather description (e.g., "partly cloudy", "light rain") |
-
-## Advanced Examples
-
-### Multiple Cities
-
-```ruby
-cities = ["London,UK", "Paris,FR", "Berlin,DE", "Rome,IT"]
-
-cities.each do |city|
-  result = weather.execute(city: city, units: "metric")
-
-  if result[:success]
-    temp = result[:current][:temperature]
-    desc = result[:current][:description]
-    puts "#{city}: #{temp}°C - #{desc}"
-  else
-    puts "#{city}: Error - #{result[:error]}"
-  end
-end
-```
-
-### Weather Comparison
-
-```ruby
-def compare_weather(city1, city2)
-  weather = SharedTools::Tools::WeatherTool.new
-
-  result1 = weather.execute(city: city1, units: "metric")
-  result2 = weather.execute(city: city2, units: "metric")
-
-  if result1[:success] && result2[:success]
-    temp1 = result1[:current][:temperature]
-    temp2 = result2[:current][:temperature]
-
-    diff = (temp1 - temp2).round(1)
-    warmer = diff > 0 ? city1 : city2
-
-    puts "#{warmer} is #{diff.abs}°C warmer"
-  end
-end
-
-compare_weather("Miami,US", "Seattle,US")
-```
-
-### Detailed Forecast Analysis
-
-```ruby
-result = weather.execute(
-  city: "San Francisco,US",
-  units: "imperial",
-  include_forecast: true
+chat = RubyLLM.chat.with_tools(
+  SharedTools::Tools::DnsTool.new,
+  SharedTools::Tools::WeatherTool.new,
+  SharedTools::Tools::CurrentDateTimeTool.new
 )
 
-if result[:success] && result[:forecast]
-  puts "3-Day Forecast for #{result[:city]}:"
-  puts "-" * 50
+chat.ask(<<~PROMPT)
+  I want to know the weather where I currently am.
 
-  result[:forecast].each do |day|
-    puts "\n#{day[:date]}:"
-    puts "  Temperature: #{day[:temp_min]}°F - #{day[:temp_max]}°F"
-    puts "  Conditions: #{day[:conditions]}"
-    puts "  Humidity: #{day[:avg_humidity]}%"
-    puts "  Wind: #{day[:avg_wind_speed]} mph"
-  end
-end
+  Use these tools in order:
+  1. current_date_time_tool (format: 'date') — get today's actual date and day of week
+  2. dns_tool (action: 'external_ip') — get my public IP address
+  3. dns_tool (action: 'ip_location') — geolocate that IP to find my city and country
+  4. weather_tool — fetch current weather and a 3-day forecast for that city (imperial units)
+
+  Use the real date and day of week from the tool when labelling today and
+  the following days. Tell me: where am I, what are the current conditions,
+  and what should I expect over the next three days?
+PROMPT
 ```
 
 ## Integration with LLM Agents
@@ -291,201 +156,50 @@ end
 require 'ruby_llm'
 
 agent = RubyLLM::Agent.new(
-  tools: [
-    SharedTools::Tools::WeatherTool.new
-  ]
+  tools: [SharedTools::Tools::WeatherTool.new]
 )
 
-# Let the LLM fetch weather data
-response = agent.process("What's the weather like in Tokyo right now?")
-response = agent.process("Give me a 3-day forecast for London")
-response = agent.process("Is it warmer in Miami or Seattle today?")
-```
-
-## Configuration
-
-### Custom Logger
-
-```ruby
-require 'logger'
-
-custom_logger = Logger.new($stdout)
-custom_logger.level = Logger::DEBUG
-
-weather = SharedTools::Tools::WeatherTool.new(logger: custom_logger)
+agent.process("What's the weather like in Tokyo right now?")
+agent.process("Give me a 3-day forecast for London in metric units.")
+agent.process("I'm planning a trip. Fetch weather for Paris, Barcelona, and Amsterdam and recommend the best destination for outdoor sightseeing.")
 ```
 
 ## Error Handling
 
-### API Key Not Configured
-
 ```ruby
-result = weather.execute(city: "London")
-# Without OPENWEATHER_API_KEY set:
-# {
-#   success: false,
-#   error: "OpenWeather API key not configured",
-#   ...
-# }
-```
+result = weather.execute(city: "InvalidCity12345", units: "metric")
 
-### City Not Found
-
-```ruby
-result = weather.execute(city: "InvalidCityName12345")
-# {
-#   success: false,
-#   error: "City not found",
-#   city: "InvalidCityName12345",
-#   suggestion: "Verify city name and API key configuration"
-# }
-```
-
-### API Request Failure
-
-```ruby
-# Network error, rate limit, or API issue
-result = weather.execute(city: "London")
-# {
-#   success: false,
-#   error: "API request failed: [error details]",
-#   ...
-# }
-```
-
-## Rate Limits
-
-OpenWeatherMap free tier has rate limits:
-
-- **Free Plan**: 60 calls/minute, 1,000,000 calls/month
-- **Startup Plan**: Higher limits available
-
-Monitor your usage at https://openweathermap.org/price
-
-## Performance Considerations
-
-- **API Latency**: Network request time varies (typically 100-500ms)
-- **Forecast Data**: Including forecasts requires an additional API call
-- **Caching**: Consider caching results for frequently requested cities
-- **Batch Requests**: Space out multiple requests to respect rate limits
-
-## Best Practices
-
-### Use Country Codes
-
-```ruby
-# Good - specific
-weather.execute(city: "Portland,US")  # Oregon, USA
-weather.execute(city: "Portland,AU")  # Victoria, Australia
-
-# Less reliable
-weather.execute(city: "Portland")  # Which Portland?
-```
-
-### Handle Errors Gracefully
-
-```ruby
-result = weather.execute(city: user_input)
-
-if result[:success]
-  # Use weather data
-  process_weather(result)
-else
-  # Show user-friendly error
-  puts "Unable to fetch weather: #{result[:error]}"
+unless result[:success]
+  puts "Error: #{result[:error]}"
   puts "Suggestion: #{result[:suggestion]}"
 end
 ```
 
-### Cache Results
+Common errors:
 
-```ruby
-class WeatherCache
-  def initialize
-    @weather = SharedTools::Tools::WeatherTool.new
-    @cache = {}
-    @cache_duration = 10 * 60  # 10 minutes
-  end
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `"API key not configured"` | `OPENWEATHER_API_KEY` not set | Export the env var |
+| `"City not found"` | Typo or ambiguous city name | Add country code: `"Portland,US"` |
+| `"API request failed"` | Network or rate limit | Check connectivity; wait and retry |
 
-  def get_weather(city, units: "metric")
-    cache_key = "#{city}:#{units}"
-    cached = @cache[cache_key]
+## Rate Limits
 
-    if cached && (Time.now - cached[:time]) < @cache_duration
-      return cached[:data]
-    end
+- **Free Plan**: 60 calls/minute, 1,000,000 calls/month
+- Monitor usage at https://openweathermap.org/price
 
-    result = @weather.execute(city: city, units: units)
-    @cache[cache_key] = {data: result, time: Time.now}
-    result
-  end
-end
-```
+## Best Practices
 
-## Security Considerations
-
-- ✅ API key stored in environment variable (not in code)
-- ✅ No arbitrary code execution
-- ✅ Input validation on city parameter
-- ✅ Safe HTTP requests via openweathermap gem
-- ⚠️ Protect API key (don't commit to version control)
-- ⚠️ Monitor API usage to prevent unexpected charges
-
-## Limitations
-
-- **Free Tier**: Limited to 60 calls/minute
-- **Forecast Period**: Only 3-day forecast provided
-- **Historical Data**: Not available (current and future only)
-- **City Resolution**: Some obscure locations may not be found
-- **Update Frequency**: Weather data updates vary by location
-
-## Troubleshooting
-
-### API Key Issues
-
-**Problem**: "API key not configured" error
-
-**Solution**:
-```bash
-# Set environment variable
-export OPENWEATHER_API_KEY="your_key_here"
-
-# Or in Ruby before using the tool
-ENV['OPENWEATHER_API_KEY'] = 'your_key_here'
-```
-
-### City Not Found
-
-**Problem**: Valid city returns "not found" error
-
-**Solution**: Try adding country code or checking spelling
-```ruby
-# Instead of
-weather.execute(city: "Muenchen")
-
-# Try
-weather.execute(city: "Munich,DE")
-```
-
-### Rate Limit Errors
-
-**Problem**: "Rate limit exceeded" error
-
-**Solution**: Space out requests or upgrade API plan
-```ruby
-cities.each do |city|
-  result = weather.execute(city: city)
-  sleep(1)  # Wait between requests
-end
-```
-
-## Related Tools
-
-- [CompositeAnalysisTool](index.md) - Can incorporate weather data in analysis
-- [WorkflowManagerTool](index.md) - For multi-step workflows involving weather data
+- Always include a country code: `"London,UK"` not just `"London"`
+- Including forecast data requires a second API call — omit `include_forecast` when not needed
+- For the most accurate day-of-week labelling, pair with **CurrentDateTimeTool** rather than relying on the LLM's training data
 
 ## References
 
 - [OpenWeatherMap API Documentation](https://openweathermap.org/api)
-- [OpenWeatherMap Ruby Gem](https://github.com/lucaswinningham/openweathermap)
 - [API Pricing](https://openweathermap.org/price)
+
+## Related Tools
+
+- [DnsTool](dns_tool.md) - IP geolocation for automatic location detection
+- [CurrentDateTimeTool](index.md) - Real date and day of week for accurate forecast labels

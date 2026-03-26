@@ -1,7 +1,7 @@
 <div align="center">
   <h1>SharedTools</h1>
   <img src="docs/assets/images/shared_tools.png" alt="Two Robots sharing the same set of tools" width="400">
-  <p><em>A Ruby gem providing LLM-callable tools for browser automation, file operations, code evaluation, and more</em></p>
+  <p><em>A Ruby gem providing LLM-callable tools for browser automation, file operations, code evaluation, document processing, network queries, data science, workflow management, and more</em></p>
 
   [![Gem Version](https://badge.fury.io/rb/shared_tools.svg)](https://badge.fury.io/rb/shared_tools)
   [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
@@ -16,12 +16,12 @@ SharedTools is a comprehensive collection of production-ready tools designed for
 
 ### Key Features
 
-- 🔧 **13+ Production Tools** - Browser automation, file operations, database queries, code evaluation, PDF processing, system control, mathematical calculations, weather data, workflow management, data analysis, Docker integration, and more
-- 🔒 **Human-in-the-Loop Authorization** - Built-in safety system for sensitive operations
-- 🎯 **Facade Pattern** - Simplified interfaces with complex capabilities under the hood
-- 🔌 **Pluggable Drivers** - Swap implementations for testing or different backends
-- 📚 **Comprehensive Documentation** - Detailed guides, examples, and API reference
-- ✅ **Well Tested** - 85%+ test coverage with Minitest
+- 🔧 **20+ Production Tools** — Browser automation, file operations, database queries, code evaluation, document processing, DNS and WHOIS lookups, IP geolocation, data science, weather data, workflow management, system utilities, and more
+- 🔒 **Human-in-the-Loop Authorization** — Built-in safety system for sensitive operations
+- 🎯 **Facade Pattern** — Simplified interfaces with complex capabilities under the hood
+- 🔌 **Pluggable Drivers** — Swap implementations for testing or different backends
+- 📚 **Comprehensive Documentation** — Detailed guides, examples, and API reference
+- ✅ **Well Tested** — 85%+ test coverage with Minitest
 
 ## Installation
 
@@ -45,19 +45,20 @@ Depending on which tools you use, you may need additional gems:
 ```ruby
 # For BrowserTool
 gem 'watir'
-gem 'webdrivers'
 
 # For DatabaseTool and DatabaseQueryTool
 gem 'sqlite3'  # or pg, mysql2, etc.
 
 # For DocTool
-gem 'pdf-reader'
+gem 'pdf-reader'   # PDF support
+gem 'docx'         # Microsoft Word (.docx) support
+gem 'roo'          # Spreadsheet support: CSV, XLSX, ODS, XLSM
 
 # Core dependencies (automatically installed)
-gem 'dentaku'          # For CalculatorTool
-gem 'openweathermap'   # For WeatherTool
-gem 'sequel'           # For DatabaseQueryTool
-gem 'nokogiri'         # For various tools
+gem 'dentaku'        # For CalculatorTool
+gem 'openweathermap' # For WeatherTool
+gem 'sequel'         # For DatabaseQueryTool
+gem 'nokogiri'       # For various tools
 ```
 
 ## Quick Start
@@ -67,24 +68,21 @@ require 'shared_tools'
 require 'ruby_llm'
 
 # Initialize an LLM agent with SharedTools
-agent = RubyLLM::Agent.new(
-  tools: [
-    SharedTools::Tools::BrowserTool.new,
-    SharedTools::Tools::DiskTool.new,
-    SharedTools::Tools::DatabaseTool.new,
-    SharedTools::Tools::CalculatorTool.new,
-    SharedTools::Tools::WeatherTool.new,
-    SharedTools::Tools::WorkflowManagerTool.new
-  ]
+chat = RubyLLM.chat.with_tools(
+  SharedTools::Tools::BrowserTool.new,
+  SharedTools::Tools::DiskTool.new,
+  SharedTools::Tools::DnsTool.new,
+  SharedTools::Tools::WeatherTool.new,
+  SharedTools::Tools::WorkflowManagerTool.new
 )
 
 # Use with human-in-the-loop authorization (default)
-agent.process("Visit example.com and save the page title to title.txt")
+chat.ask("Visit example.com and save the page title to title.txt")
 # User will be prompted: "Allow BrowserTool to visit https://example.com? (y/n)"
 
 # Or enable auto-execution for automated workflows
 SharedTools.auto_execute(true)
-agent.process("Calculate the square root of 144 and tell me the weather in London")
+chat.ask("Calculate the square root of 144 and tell me the weather in London")
 ```
 
 ## Tool Collections
@@ -93,19 +91,10 @@ agent.process("Calculate the square root of 144 and tell me the weather in Londo
 
 Web automation and scraping capabilities.
 
-**Actions:**
-- `visit` - Navigate to URLs
-- `page_inspect` - Get page HTML content
-- `ui_inspect` - Find elements by text
-- `selector_inspect` - Find elements by CSS selector
-- `click` - Click elements
-- `text_field_set` - Fill in forms
-- `screenshot` - Capture page screenshots
+**Actions:** `visit`, `page_inspect`, `ui_inspect`, `selector_inspect`, `click`, `text_field_set`, `screenshot`
 
-**Example:**
 ```ruby
 browser = SharedTools::Tools::BrowserTool.new
-
 browser.execute(action: "visit", url: "https://example.com")
 browser.execute(action: "page_inspect", full_html: false)
 ```
@@ -118,22 +107,10 @@ browser.execute(action: "page_inspect", full_html: false)
 
 Secure file system operations with path traversal protection.
 
-**Actions:**
-- `file_create` - Create new files
-- `file_read` - Read file contents
-- `file_write` - Write to files
-- `file_delete` - Delete files
-- `file_move` - Move/rename files
-- `file_replace` - Find and replace text in files
-- `directory_create` - Create directories
-- `directory_list` - List directory contents
-- `directory_move` - Move directories
-- `directory_delete` - Delete directories
+**Actions:** `file_create`, `file_read`, `file_write`, `file_delete`, `file_move`, `file_replace`, `directory_create`, `directory_list`, `directory_move`, `directory_delete`
 
-**Example:**
 ```ruby
 disk = SharedTools::Tools::DiskTool.new
-
 disk.execute(action: "file_create", path: "./report.txt")
 disk.execute(action: "file_write", path: "./report.txt", text: "Hello, World!")
 content = disk.execute(action: "file_read", path: "./report.txt")
@@ -147,13 +124,8 @@ content = disk.execute(action: "file_read", path: "./report.txt")
 
 Execute SQL operations on databases.
 
-**Actions:**
-- Execute SQL statements (CREATE, INSERT, SELECT, UPDATE, DELETE)
-- Batch statement execution
-- Transaction-like error handling (stops on first error)
-- Support for SQLite, PostgreSQL, MySQL via drivers
+**Features:** SELECT, INSERT, UPDATE, DELETE; read-only query mode; automatic LIMIT enforcement; pluggable drivers (SQLite, PostgreSQL, MySQL)
 
-**Example:**
 ```ruby
 require 'sqlite3'
 
@@ -178,19 +150,11 @@ results = database.execute(
 
 Safe code evaluation for Ruby, Python, and shell commands.
 
-**Languages:**
-- `ruby` - Execute Ruby code
-- `python` - Execute Python code (with sandboxing)
-- `shell` - Execute shell commands
+**Languages:** `ruby`, `python`, `shell`
 
-**Example:**
 ```ruby
 eval_tool = SharedTools::Tools::EvalTool.new
-
-# Ruby evaluation
 result = eval_tool.execute(language: "ruby", code: "puts 2 + 2")
-
-# Shell command execution (requires authorization by default)
 output = eval_tool.execute(language: "shell", code: "ls -la")
 ```
 
@@ -200,52 +164,74 @@ output = eval_tool.execute(language: "shell", code: "ls -la")
 
 ### 📄 Doc Tools
 
-PDF document processing and text extraction.
+Read and reason over documents in any format.
 
-**Actions:**
-- `read_pdf` - Read PDF content from specific pages or entire documents
-- Extract text, statistics, and metadata
-- Process multi-page documents
+**Actions:** `text_read`, `pdf_read`, `docx_read`, `spreadsheet_read`
 
-**Example:**
 ```ruby
 doc = SharedTools::Tools::DocTool.new
 
-# Read first page
-content = doc.execute(action: "read_pdf", path: "./document.pdf", page: 1)
+# Plain text
+doc.execute(action: "text_read", doc_path: "./notes.txt")
 
-# Read entire document
-full_content = doc.execute(action: "read_pdf", path: "./document.pdf")
+# PDF — specific pages or ranges
+doc.execute(action: "pdf_read", doc_path: "./report.pdf", page_numbers: "1, 5-10")
+
+# Microsoft Word
+doc.execute(action: "docx_read", doc_path: "./meeting.docx")
+
+# Spreadsheets (CSV, XLSX, ODS, XLSM)
+doc.execute(action: "spreadsheet_read", doc_path: "./data.xlsx", sheet: "Q1 Sales")
 ```
 
 [📖 Full Doc Documentation](https://madbomber.github.io/shared_tools/tools/doc/)
 
 ---
 
-### 🖱️ Computer Tools
+### 🌐 DNS Tool
 
-System-level automation for mouse, keyboard, and screen control.
+DNS resolution, WHOIS queries, IP geolocation, and external IP detection. No API key required.
 
-**Actions:**
-- `mouse_click` - Click at coordinates
-- `mouse_move` - Move mouse cursor
-- `mouse_position` - Get current mouse position
-- `type` - Type text
-- `key` - Press keyboard keys and shortcuts
-- `hold_key` - Hold keys for duration
-- `scroll` - Scroll windows
-- `wait` - Wait for specified duration
+**Actions:** `a`, `aaaa`, `mx`, `ns`, `txt`, `cname`, `reverse`, `all`, `external_ip`, `ip_location`, `whois`
 
-**Example:**
 ```ruby
-computer = SharedTools::Tools::ComputerTool.new
+dns = SharedTools::Tools::DnsTool.new
 
-computer.execute(action: "mouse_click", coordinate: {x: 100, y: 200})
-computer.execute(action: "type", text: "Hello, World!")
-computer.execute(action: "key", text: "Return")
+dns.execute(action: "mx", host: "gmail.com")
+dns.execute(action: "whois", host: "ruby-lang.org")
+dns.execute(action: "external_ip")
+dns.execute(action: "ip_location")           # geolocate your own IP
+dns.execute(action: "ip_location", host: "8.8.8.8")  # geolocate any IP
 ```
 
-[📖 Full Computer Documentation](https://madbomber.github.io/shared_tools/tools/computer/)
+[📖 Full DNS Documentation](https://madbomber.github.io/shared_tools/tools/dns_tool/)
+
+---
+
+### 🌤️ Weather Tool
+
+Real-time weather data from OpenWeatherMap API. Combine with DnsTool for automatic local forecasts.
+
+**Features:** Current conditions, 3-day forecast, metric/imperial/kelvin units, global coverage
+
+```ruby
+weather = SharedTools::Tools::WeatherTool.new
+weather.execute(city: "London,UK", units: "metric", include_forecast: true)
+```
+
+**Local forecast with automatic location detection:**
+
+```ruby
+chat = RubyLLM.chat.with_tools(
+  SharedTools::Tools::DnsTool.new,
+  SharedTools::Tools::WeatherTool.new,
+  SharedTools::Tools::CurrentDateTimeTool.new
+)
+
+chat.ask("Get my external IP, find my city, then give me the current weather and 3-day forecast.")
+```
+
+[📖 Full Weather Documentation](https://madbomber.github.io/shared_tools/tools/weather/)
 
 ---
 
@@ -253,76 +239,101 @@ computer.execute(action: "key", text: "Return")
 
 Safe mathematical calculations without code execution risks.
 
-**Features:**
-- Safe expression evaluation using Dentaku parser
-- Basic arithmetic: +, -, *, /, %, ^
-- Mathematical functions: sqrt, round, abs
-- Trigonometric functions: sin, cos, tan
-- Configurable precision (0-10 decimal places)
-- Comprehensive error handling
+**Features:** Arithmetic, math functions (sqrt, round, abs), trigonometry (sin, cos, tan), configurable precision
 
-**Example:**
 ```ruby
 calculator = SharedTools::Tools::CalculatorTool.new
-
-calculator.execute(expression: "2 + 2")
-# => {success: true, result: 4.0, precision: 2}
-
 calculator.execute(expression: "sqrt(16) * 2", precision: 4)
-# => {success: true, result: 8.0, precision: 4}
+# => {success: true, result: 8.0}
 ```
 
 ---
 
-### 🌤️ Weather Tool
+### 📊 Data Science Kit
 
-Real-time weather data from OpenWeatherMap API.
+Real statistical analysis on actual data — file-based or inline.
 
-**Features:**
-- Current weather conditions for any city worldwide
-- Multiple temperature units (metric, imperial, kelvin)
-- Optional 3-day forecast data
-- Comprehensive atmospheric data (humidity, pressure, wind)
-- Requires OPENWEATHER_API_KEY environment variable
+**Analysis types:** `statistical_summary`, `correlation_analysis`, `time_series`, `clustering`, `prediction`
 
-**Example:**
+**Inline data formats:** pipe-delimited tables, CSV strings, JSON arrays, comma-separated numbers
+
 ```ruby
-weather = SharedTools::Tools::WeatherTool.new
+kit = SharedTools::Tools::DataScienceKit.new
 
-weather.execute(city: "London,UK", units: "metric")
-# => {success: true, current: {temperature: 15.5, ...}}
+# From a file
+kit.execute(analysis_type: "statistical_summary", data_source: "./sales.csv")
 
-weather.execute(city: "New York,US", units: "imperial", include_forecast: true)
-# => Includes current weather and 3-day forecast
+# Inline pipe-delimited table
+kit.execute(
+  analysis_type: "correlation_analysis",
+  data: "| month | revenue | cost |\n| Jan | 12400 | 8200 |\n| Feb | 11800 | 7900 |"
+)
+```
+
+[📖 Full Data Science Documentation](https://madbomber.github.io/shared_tools/tools/data_science_kit/)
+
+---
+
+### 🖱️ Computer Tools
+
+System-level automation for mouse, keyboard, and screen control.
+
+**Actions:** `mouse_click`, `mouse_move`, `mouse_position`, `type`, `key`, `hold_key`, `scroll`, `wait`
+
+```ruby
+computer = SharedTools::Tools::ComputerTool.new
+computer.execute(action: "mouse_click", coordinate: {x: 100, y: 200})
+computer.execute(action: "type", text: "Hello, World!")
+```
+
+[📖 Full Computer Documentation](https://madbomber.github.io/shared_tools/tools/computer/)
+
+---
+
+### 🕐 Date/Time, System Info & Clipboard
+
+Utility tools for context and system access:
+
+```ruby
+# Current date and day of week (prevents LLM hallucination)
+dt = SharedTools::Tools::CurrentDateTimeTool.new
+dt.execute(format: "date")
+# => { date: "2026-03-25", day_of_week: "Wednesday", ... }
+
+# System hardware and OS info
+info = SharedTools::Tools::SystemInfoTool.new
+info.execute
+
+# Clipboard
+clipboard = SharedTools::Tools::ClipboardTool.new
+clipboard.execute(action: "read")
+clipboard.execute(action: "write", text: "Hello!")
 ```
 
 ---
 
 ### 🔄 Workflow Manager Tool
 
-Manage complex multi-step workflows with persistent state.
+Persistent multi-step workflow orchestration with JSON file storage.
 
-**Features:**
-- Create and track stateful workflows
-- Step-by-step execution with state persistence
-- Status monitoring and progress tracking
-- Workflow completion and cleanup
-- Survives process restarts
+**Actions:** `start`, `step`, `status`, `complete`, `list`
 
-**Example:**
 ```ruby
 workflow = SharedTools::Tools::WorkflowManagerTool.new
 
 # Start a workflow
-result = workflow.execute(action: "start", step_data: {project: "demo"})
+result = workflow.execute(action: "start", step_data: {project: "release-v2.0"})
 workflow_id = result[:workflow_id]
 
 # Execute steps
-workflow.execute(action: "step", workflow_id: workflow_id, step_data: {task: "compile"})
-workflow.execute(action: "step", workflow_id: workflow_id, step_data: {task: "test"})
+workflow.execute(action: "step", workflow_id: workflow_id, step_data: {task: "run_tests"})
+workflow.execute(action: "step", workflow_id: workflow_id, step_data: {task: "deploy"})
 
 # Check status
 workflow.execute(action: "status", workflow_id: workflow_id)
+
+# List all workflows
+workflow.execute(action: "list")
 
 # Complete
 workflow.execute(action: "complete", workflow_id: workflow_id)
@@ -334,51 +345,13 @@ workflow.execute(action: "complete", workflow_id: workflow_id)
 
 Multi-stage data analysis orchestration.
 
-**Features:**
-- Automatic data source detection (files or URLs)
-- Data structure analysis
-- Statistical insights generation
-- Visualization suggestions
-- Correlation analysis
-- Supports CSV, JSON, and text formats
-
-**Example:**
 ```ruby
 analyzer = SharedTools::Tools::CompositeAnalysisTool.new
-
 analyzer.execute(
   data_source: "./sales_data.csv",
   analysis_type: "comprehensive",
   options: {include_correlations: true, visualization_limit: 5}
 )
-# => Complete analysis with structure, insights, and visualizations
-```
-
----
-
-### 🗄️ Database Query Tool
-
-Safe, read-only database query execution.
-
-**Features:**
-- SELECT-only queries for security
-- Automatic LIMIT clause enforcement
-- Query timeout protection
-- Prepared statement support
-- Connection pooling
-- Supports PostgreSQL, MySQL, SQLite, and more
-
-**Example:**
-```ruby
-db_query = SharedTools::Tools::DatabaseQueryTool.new
-
-db_query.execute(
-  query: "SELECT * FROM users WHERE active = ?",
-  params: [true],
-  limit: 50,
-  timeout: 10
-)
-# => {success: true, row_count: 50, data: [...]}
 ```
 
 ---
@@ -387,21 +360,9 @@ db_query.execute(
 
 Execute Docker Compose commands safely.
 
-**Features:**
-- Run commands in Docker containers
-- Service specification
-- Automatic container cleanup
-- Build and run in one step
-
-**Example:**
 ```ruby
 docker = SharedTools::Tools::Docker::ComposeRunTool.new
-
-docker.execute(
-  service: "app",
-  command: "rspec",
-  args: ["spec/main_spec.rb"]
-)
+docker.execute(service: "app", command: "rspec", args: ["spec/main_spec.rb"])
 ```
 
 ---
@@ -410,24 +371,13 @@ docker.execute(
 
 Reference implementation for robust error handling patterns.
 
-**Features:**
-- Multiple error type handling
-- Retry mechanisms with exponential backoff
-- Input/output validation
-- Resource cleanup patterns
-- Detailed error categorization
-- Support reference IDs for debugging
-
-**Example:**
 ```ruby
 error_tool = SharedTools::Tools::ErrorHandlingTool.new
-
 error_tool.execute(
   operation: "process",
   data: {name: "test", value: 42},
   max_retries: 3
 )
-# => Demonstrates comprehensive error handling patterns
 ```
 
 ---
@@ -458,29 +408,45 @@ Comprehensive documentation is available at **[madbomber.github.io/shared_tools]
 
 ### Documentation Sections
 
-- **[Getting Started](https://madbomber.github.io/shared_tools/getting-started/installation/)** - Installation, quick start, basic usage
-- **[Tool Collections](https://madbomber.github.io/shared_tools/tools/)** - Detailed documentation for each tool
-- **[Guides](https://madbomber.github.io/shared_tools/guides/)** - Authorization, drivers, error handling, testing
-- **[Examples](https://madbomber.github.io/shared_tools/examples/)** - Working code examples and workflows
-- **[API Reference](https://madbomber.github.io/shared_tools/api/)** - Tool base class, facade pattern, driver interface
-- **[Development](https://madbomber.github.io/shared_tools/development/)** - Architecture, contributing, changelog
+- **[Getting Started](https://madbomber.github.io/shared_tools/getting-started/installation/)** — Installation, quick start, basic usage
+- **[Tool Collections](https://madbomber.github.io/shared_tools/tools/)** — Detailed documentation for each tool
+- **[Guides](https://madbomber.github.io/shared_tools/guides/)** — Authorization, drivers, error handling, testing
+- **[Examples](https://madbomber.github.io/shared_tools/examples/)** — Working code examples and workflows
+- **[API Reference](https://madbomber.github.io/shared_tools/api/)** — Tool base class, facade pattern, driver interface
+- **[Development](https://madbomber.github.io/shared_tools/development/)** — Architecture, contributing, changelog
 
 ## Examples
 
-The `/examples` directory contains working demonstrations:
+The `/examples` directory contains runnable demonstrations using a shared `common.rb` helper:
 
-- `browser_tool_example.rb` - Web automation
-- `disk_tool_example.rb` - File operations
-- `database_tool_example.rb` - SQL operations
-- `eval_tool_example.rb` - Code evaluation
-- `doc_tool_example.rb` - PDF processing
-- `comprehensive_workflow_example.rb` - Multi-tool workflow
-
-Run examples:
 ```bash
-bundle install
-ruby examples/browser_tool_example.rb
+bundle exec ruby -I examples examples/weather_tool_demo.rb
+bundle exec ruby -I examples examples/dns_tool_demo.rb
+bundle exec ruby -I examples examples/doc_tool_demo.rb
 ```
+
+| Demo | What it shows |
+|------|--------------|
+| `browser_tool_demo.rb` | Web automation |
+| `calculator_tool_demo.rb` | Math expressions |
+| `clipboard_tool_demo.rb` | Clipboard read/write |
+| `composite_analysis_tool_demo.rb` | Multi-stage analysis |
+| `computer_tool_demo.rb` | Mouse and keyboard |
+| `cron_tool_demo.rb` | Cron scheduling |
+| `current_date_time_tool_demo.rb` | Real date and time |
+| `data_science_kit_demo.rb` | Statistical analysis with inline data |
+| `database_tool_demo.rb` | SQL operations |
+| `database_query_tool_demo.rb` | Read-only SQL queries |
+| `disk_tool_demo.rb` | File operations |
+| `dns_tool_demo.rb` | DNS, WHOIS, geolocation |
+| `doc_tool_demo.rb` | Text, PDF, Word, spreadsheets |
+| `error_handling_tool_demo.rb` | Error handling patterns |
+| `eval_tool_demo.rb` | Code evaluation |
+| `mcp_client_demo.rb` | MCP client integration |
+| `system_info_tool_demo.rb` | System info |
+| `weather_tool_demo.rb` | Weather + local forecast |
+| `workflow_manager_tool_demo.rb` | Workflow orchestration |
+| `comprehensive_workflow_demo.rb` | Multi-tool pipeline |
 
 [📖 View All Examples](https://madbomber.github.io/shared_tools/examples/)
 
@@ -510,19 +476,12 @@ COVERAGE=true bundle exec rake test
 ### Building Documentation
 
 ```bash
-# Install MkDocs and dependencies
 pip install mkdocs-material
-
-# Serve documentation locally
-mkdocs serve
-
-# Build static site
-mkdocs build
+mkdocs serve    # Serve locally
+mkdocs build    # Build static site
 ```
 
 ### Code Quality
-
-The project uses standard Ruby tooling:
 
 - **Testing**: Minitest (85%+ coverage)
 - **Code Loading**: Zeitwerk for autoloading
@@ -533,58 +492,13 @@ The project uses standard Ruby tooling:
 
 Contributions are welcome! Here's how you can help:
 
-### Reporting Issues
-
-Found a bug or have a feature request? Please [open an issue](https://github.com/madbomber/shared_tools/issues/new) with:
-
-- Clear description of the problem
-- Steps to reproduce (for bugs)
-- Expected vs actual behavior
-- Ruby version and gem version
-- Code examples if applicable
-
-### Submitting Pull Requests
-
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes with tests
 4. Ensure tests pass (`bundle exec rake test`)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to your branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
-
-### Contribution Guidelines
-
-- Add tests for new features
-- Update documentation as needed
-- Follow existing code style
-- Keep commits focused and atomic
-- Write clear commit messages
+5. Open a Pull Request
 
 [📖 Contributing Guide](https://madbomber.github.io/shared_tools/development/contributing/)
-
-## Roadmap
-
-See the [Changelog](https://madbomber.github.io/shared_tools/development/changelog/) for version history and upcoming features.
-
-### Recent Additions (v0.12+)
-
-- ✅ Calculator Tool - Safe mathematical calculations with Dentaku
-- ✅ Weather Tool - Real-time weather data via OpenWeatherMap API
-- ✅ Workflow Manager Tool - Stateful multi-step workflow orchestration
-- ✅ Composite Analysis Tool - Multi-stage data analysis
-- ✅ Database Query Tool - Safe read-only database queries
-- ✅ Docker Compose Tool - Container command execution
-- ✅ Error Handling Tool - Reference implementation for robust patterns
-
-### Future Enhancements
-
-- Additional browser drivers (Selenium, Playwright)
-- More database adapters and query builders
-- Enhanced PDF processing capabilities
-- Additional document formats (Word, Excel)
-- Video and image processing tools
-- Extended data science and analytics capabilities
 
 ## Requirements
 

@@ -11,6 +11,7 @@ Add SharedTools to your Gemfile:
 
 ```ruby
 gem 'shared_tools'
+gem 'ruby_llm'  # Required LLM framework
 ```
 
 Then install:
@@ -32,6 +33,9 @@ SharedTools has the following core dependencies that are automatically installed
 - `ruby_llm` - Ruby LLM framework for tool integration
 - `zeitwerk` - Code autoloading
 - `nokogiri` - HTML/XML parsing
+- `dentaku` - Mathematical expression evaluation (CalculatorTool)
+- `openweathermap` - Weather API client (WeatherTool)
+- `sequel` - SQL toolkit (DatabaseQueryTool)
 
 ## Optional Dependencies
 
@@ -45,7 +49,7 @@ For the `BrowserTool`:
 gem 'watir'
 ```
 
-Watir also requires a browser driver (Chrome, Firefox, etc.). Install ChromeDriver:
+Watir also requires a browser driver. Install ChromeDriver:
 
 ```bash
 # macOS
@@ -60,11 +64,8 @@ apt-get install chromium-chromedriver
 For the `DatabaseTool`:
 
 ```ruby
-# SQLite
-gem 'sqlite3'
-
-# PostgreSQL
-gem 'pg'
+gem 'sqlite3'   # SQLite
+gem 'pg'        # PostgreSQL
 ```
 
 ### Document Processing
@@ -72,7 +73,15 @@ gem 'pg'
 For the `DocTool`:
 
 ```ruby
-gem 'pdf-reader', '~> 2.0'
+gem 'pdf-reader', '~> 2.0'   # PDF support
+gem 'docx'                    # Microsoft Word (.docx) support
+gem 'roo'                     # Spreadsheet support: CSV, XLSX, ODS, XLSM
+```
+
+Install all three to support all document formats:
+
+```bash
+gem install pdf-reader docx roo
 ```
 
 ### Code Evaluation
@@ -100,10 +109,19 @@ For a full-featured installation with all optional dependencies:
 ```ruby
 # Gemfile
 gem 'shared_tools'
-gem 'watir'            # Browser automation
-gem 'sqlite3'          # SQLite database
-gem 'pg'               # PostgreSQL database
-gem 'pdf-reader'       # PDF processing
+gem 'ruby_llm'
+
+# Browser automation
+gem 'watir'
+
+# Database
+gem 'sqlite3'
+gem 'pg'
+
+# Document processing
+gem 'pdf-reader'
+gem 'docx'
+gem 'roo'
 ```
 
 Then run:
@@ -137,7 +155,7 @@ ruby test_install.rb
 Expected output:
 
 ```
-SharedTools version: 0.5.1
+SharedTools version: 0.x.x
 RubyLLM detected: Yes
 DiskTool initialized successfully!
 ```
@@ -162,11 +180,21 @@ If BrowserTool fails with "browser not found":
 
 ### SQLite3 Compilation Issues
 
-On macOS, if `sqlite3` gem fails to install:
+On macOS, if the `sqlite3` gem fails to install:
 
 ```bash
 gem install sqlite3 -- --with-sqlite3-include=/usr/local/opt/sqlite/include \
                         --with-sqlite3-lib=/usr/local/opt/sqlite/lib
+```
+
+### DocTool — Missing Gem for Format
+
+If DocTool raises a `LoadError` when reading a specific format, install the corresponding gem:
+
+```bash
+gem install pdf-reader   # for PDF
+gem install docx         # for Word documents
+gem install roo          # for CSV, XLSX, ODS
 ```
 
 ## Next Steps
