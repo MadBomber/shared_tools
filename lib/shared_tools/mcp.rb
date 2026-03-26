@@ -36,8 +36,11 @@ require_relative "mcp/streamable_http_patch"
 threads = Dir[File.join(__dir__, "mcp", "*_client.rb")].map do |path|
   Thread.new do
     require path
-  rescue => e
-    warn "SharedTools::MCP — failed to load #{File.basename(path)}: #{e.message}"
+  rescue Exception => e
+    # LoadError (missing env var / package) is a ScriptError, not a StandardError,
+    # so bare `rescue => e` does not catch it. We silence all load failures here
+    # so that missing-key clients are simply skipped when requiring mcp.rb as a whole.
+    warn "SharedTools::MCP — skipping #{File.basename(path)}: #{e.message}"
   end
 end
 

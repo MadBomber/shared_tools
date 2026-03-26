@@ -90,6 +90,20 @@ class UtilitiesTest < Minitest::Test
     end
   end
 
+  def test_verify_envars_raises_load_error_which_is_a_script_error_not_standard_error
+    # LoadError < ScriptError < Exception — NOT a StandardError.
+    # This matters in mcp.rb where `rescue => e` (StandardError only) would let
+    # the LoadError escape the thread, triggering "terminated with exception".
+    # The loader must use `rescue Exception => e` to catch it.
+    with_env("SHARED_TOOLS_TEST_A" => nil) do
+      error = assert_raises(LoadError) do
+        SharedTools.verify_envars("SHARED_TOOLS_TEST_A")
+      end
+      assert_kind_of ScriptError, error
+      refute_kind_of StandardError, error
+    end
+  end
+
   # -------------------------------------------------------------------------
   # brew_install
   # -------------------------------------------------------------------------
