@@ -98,13 +98,10 @@ class RubyEvalToolTest < Minitest::Test
   def test_respects_auto_execute_false
     SharedTools.auto_execute(false)
 
-    original_stdin = $stdin
-    $stdin = StringIO.new('n')
-    result = @tool.execute(code: "2 + 2")
-
-    assert result.key?(:error)
-    assert_includes result[:error], "declined"
-  ensure
-    $stdin = original_stdin
+    with_stdin_input('n') do
+      result = @tool.execute(code: "2 + 2")
+      assert result.key?(:error)
+      assert_includes result[:error], "declined"
+    end
   end
 end

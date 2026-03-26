@@ -30,3 +30,13 @@ begin
 rescue LoadError
   # pdf-reader not available - some tests will be skipped
 end
+
+module Minitest
+  class Test
+    # Stub STDIN.getch to return +char+ for the duration of the block.
+    # Used by tests that exercise the human-in-the-loop execute? prompt.
+    def with_stdin_input(char)
+      STDIN.stub(:getch, char) { yield }
+    end
+  end
+end

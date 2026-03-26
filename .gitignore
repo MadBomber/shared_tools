@@ -7,3 +7,20 @@
 /spec/reports/
 /tmp/
 .aigcm_msg
+
+# Local tooling and generated files
+/.claude/
+/.serena/
+/site/
+/Gemfile.lock
+*.gem
+
+# Local scratch files
+CLAUDE.md
+fix_problems_plan.md
+more_tool_ideas.md
+self_agency.md
+temp.md
+workflow_tool_gaps.md
+screenshot_*.png
+examples/.workflows/
