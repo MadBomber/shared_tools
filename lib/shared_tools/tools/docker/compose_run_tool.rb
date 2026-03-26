@@ -16,7 +16,7 @@ module SharedTools
         params do
           string :service, description: "The service to run the command on (e.g. `app`).", required: false
           string :command, description: "The command to run (e.g. `rspec`)."
-          array :args, description: "The arguments for the command.", required: false
+          array :args, of: :string, description: "The arguments for the command.", required: false
         end
 
         # @example
