@@ -16,7 +16,7 @@ SharedTools is a comprehensive collection of production-ready tools designed for
 
 ### Key Features
 
-- 🔧 **20+ Production Tools** — Browser automation, file operations, database queries, code evaluation, document processing, DNS and WHOIS lookups, IP geolocation, data science, weather data, workflow management, system utilities, and more
+- 🔧 **21+ Production Tools** — Browser automation, file operations, database queries, code evaluation, document processing, DNS and WHOIS lookups, IP geolocation, data science, weather data, workflow management, system utilities, notifications, and more
 - 🔒 **Human-in-the-Loop Authorization** — Built-in safety system for sensitive operations
 - 🎯 **Facade Pattern** — Simplified interfaces with complex capabilities under the hood
 - 🔌 **Pluggable Drivers** — Swap implementations for testing or different backends
@@ -312,6 +312,34 @@ clipboard.execute(action: "write", text: "Hello!")
 
 ---
 
+### 🔔 Notification Tool
+
+Cross-platform desktop notifications, modal alert dialogs, and text-to-speech. Supports macOS and Linux with no gem dependencies.
+
+**Actions:** `notify`, `alert`, `speak`
+
+```ruby
+tool = SharedTools::Tools::NotificationTool.new
+
+# Non-blocking desktop banner
+tool.execute(action: "notify", message: "Build complete", title: "CI", sound: "Glass")
+
+# Modal dialog — blocks until user clicks; returns clicked button label
+result = tool.execute(action: "alert", message: "Deploy to production?", buttons: ["Yes", "No"])
+result[:button]  # => "Yes" or "No"
+
+# Text-to-speech
+tool.execute(action: "speak", message: "Task finished", voice: "Samantha", rate: 160)
+```
+
+| Action | macOS | Linux |
+|--------|-------|-------|
+| `notify` | osascript | notify-send |
+| `alert` | osascript dialog | zenity or terminal fallback |
+| `speak` | say | espeak-ng / espeak |
+
+---
+
 ### 🔄 Workflow Manager Tool
 
 Persistent multi-step workflow orchestration with JSON file storage.
@@ -443,6 +471,7 @@ bundle exec ruby -I examples examples/doc_tool_demo.rb
 | `error_handling_tool_demo.rb` | Error handling patterns |
 | `eval_tool_demo.rb` | Code evaluation |
 | `mcp_client_demo.rb` | MCP client integration |
+| `notification_tool_demo.rb` | Desktop notifications, alerts, TTS |
 | `system_info_tool_demo.rb` | System info |
 | `weather_tool_demo.rb` | Weather + local forecast |
 | `workflow_manager_tool_demo.rb` | Workflow orchestration |

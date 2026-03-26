@@ -119,6 +119,23 @@ Code evaluation in Ruby, Python, and shell — with authorization controls.
 
 ---
 
+### [notification_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/notification_tool_demo.rb)
+
+Cross-platform desktop notifications, modal dialogs, and text-to-speech across five sections:
+
+- **Notify** — banner notifications with title, subtitle, and sound
+- **Speak** — TTS with and without a rate override
+- **Alert** — single-button checkpoint and a Yes/No dialog that reports which button was clicked
+- **Combined workflow** — chains all three actions in one LLM prompt
+
+> **Note:** This demo triggers real OS interactions. The `alert` action **blocks** until you click a button; `speak` will use your system TTS engine.
+
+```bash
+bundle exec ruby -I examples examples/notification_tool_demo.rb
+```
+
+---
+
 ### [mcp_client_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/mcp_client_demo.rb)
 
 MCP (Model Context Protocol) client integration example.
@@ -176,7 +193,7 @@ bundle exec ruby -I examples examples/some_tool_demo.rb
 | Web & Network | browser_tool_demo, dns_tool_demo |
 | Files & Documents | disk_tool_demo, doc_tool_demo |
 | Data & Analysis | data_science_kit_demo, composite_analysis_tool_demo, database_tool_demo, database_query_tool_demo |
-| System & Utilities | computer_tool_demo, system_info_tool_demo, clipboard_tool_demo, current_date_time_tool_demo, cron_tool_demo |
+| System & Utilities | computer_tool_demo, system_info_tool_demo, clipboard_tool_demo, current_date_time_tool_demo, cron_tool_demo, notification_tool_demo |
 | External APIs | weather_tool_demo |
 | Workflow | workflow_manager_tool_demo, comprehensive_workflow_demo |
 | Code Execution | eval_tool_demo, calculator_tool_demo |

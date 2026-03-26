@@ -236,6 +236,28 @@ bundle exec ruby -I examples examples/eval_tool_demo.rb
 
 ---
 
+### `notification_tool_demo.rb`
+
+Cross-platform desktop notifications, modal alert dialogs, and text-to-speech covering all three actions:
+
+- **notify** — banner notifications with title, subtitle, and sound options
+- **speak** — TTS at default rate and with explicit words-per-minute override
+- **alert** — single-button checkpoint dialog and a two-button Yes/No that reports which was clicked
+- **Combined workflow** — all three actions chained in a single LLM prompt
+
+> **Note:** This demo triggers real OS interactions. `alert` **blocks** until you click a button. `speak` will use your system TTS engine out loud.
+
+**Linux prerequisites (optional):**
+```bash
+sudo apt install libnotify-bin zenity espeak-ng
+```
+
+```bash
+bundle exec ruby -I examples examples/notification_tool_demo.rb
+```
+
+---
+
 ### `mcp_client_demo.rb`
 
 Model Context Protocol (MCP) client integration: connecting to MCP servers (Tavily, GitHub, iMCP), using MCP tools in LLM conversations, multi-client orchestration, and accessing MCP resources.

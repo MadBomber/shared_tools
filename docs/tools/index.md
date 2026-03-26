@@ -209,6 +209,27 @@ weather.execute(city: "London,UK", units: "metric", include_forecast: true)
 
 ---
 
+### [NotificationTool](notification_tool.md)
+
+Cross-platform desktop notifications, modal alert dialogs, and text-to-speech. Supports macOS and Linux with no gem dependencies.
+
+**Actions:** `notify`, `alert`, `speak`
+
+```ruby
+tool = SharedTools::Tools::NotificationTool.new
+
+tool.execute(action: "notify", message: "Build complete", title: "CI")
+
+result = tool.execute(action: "alert", message: "Deploy to prod?", buttons: ["Yes", "No"])
+result[:button]  # => "Yes" or "No"
+
+tool.execute(action: "speak", message: "Task finished", voice: "Samantha")
+```
+
+[View NotificationTool Documentation →](notification_tool.md)
+
+---
+
 ### CurrentDateTimeTool
 
 Returns the current date, time, and day of week from the system clock — preventing LLMs from hallucinating temporal information.
@@ -321,6 +342,7 @@ error_tool.execute(operation: "process", data: {name: "test", value: 42}, max_re
 | SystemInfoTool | System info | None | No |
 | ClipboardTool | Clipboard | None | No |
 | CronTool | Cron scheduling | None | No |
+| NotificationTool | Desktop notifications, alerts, TTS | None (OS commands) | No |
 | WorkflowManagerTool | Workflow orchestration | None | No |
 | Docker ComposeRunTool | Container commands | Docker installed | No |
 | ErrorHandlingTool | Reference patterns | None | No |
@@ -341,6 +363,9 @@ error_tool.execute(operation: "process", data: {name: "test", value: 42}, max_re
 | Get current weather | WeatherTool |
 | Auto-detect my location from IP | DnsTool (ip_location) |
 | Get the current date and day | CurrentDateTimeTool |
+| Show a desktop notification | NotificationTool (notify) |
+| Speak text aloud | NotificationTool (speak) |
+| Prompt user with a dialog | NotificationTool (alert) |
 | Orchestrate a multi-step process | WorkflowManagerTool |
 | Run a command in a Docker container | Docker ComposeRunTool |
 

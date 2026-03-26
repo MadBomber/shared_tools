@@ -1,0 +1,355 @@
+{
+  "id": "37bcdad8-e55e-4729-b449-76babd8111d6",
+  "status": "completed",
+  "steps": [
+    {
+      "step_number": 1,
+      "data": {
+        "step_data": {
+          "step_name": "run_tests",
+          "step_type": "testing",
+          "description": "Execute the full test suite",
+          "status": "completed",
+          "metadata": {
+            "completion_time": "2026-03-25T15:35:00-05:00",
+            "result": "passed"
+          }
+        }
+      },
+      "result": {
+        "processed": true,
+        "input_keys": [
+          "step_data"
+        ],
+        "workflow_context": {
+          "current_step": 1,
+          "total_steps_so_far": 0
+        },
+        "timestamp": "2026-03-25T15:31:49-05:00"
+      },
+      "processed_at": "2026-03-25T15:31:49-05:00",
+      "execution_time_seconds": 0.001
+    },
+    {
+      "step_number": 2,
+      "data": {
+        "step_data": {
+          "step_name": "security_scan",
+          "step_type": "security",
+          "description": "Run dependency vulnerability scan",
+          "status": "completed",
+          "metadata": {
+            "completion_time": "2026-03-25T15:40:00-05:00",
+            "vulnerabilities_found": 0,
+            "result": "passed"
+          }
+        }
+      },
+      "result": {
+        "processed": true,
+        "input_keys": [
+          "step_data"
+        ],
+        "workflow_context": {
+          "current_step": 2,
+          "total_steps_so_far": 1
+        },
+        "timestamp": "2026-03-25T15:31:54-05:00"
+      },
+      "processed_at": "2026-03-25T15:31:54-05:00",
+      "execution_time_seconds": 0.001
+    },
+    {
+      "step_number": 3,
+      "data": {
+        "step_data": {
+          "step_name": "build_artifacts",
+          "step_type": "build",
+          "description": "Compile and package the release artifacts",
+          "status": "in-progress",
+          "metadata": {
+            "start_time": "2026-03-25T15:40:30-05:00"
+          }
+        }
+      },
+      "result": {
+        "processed": true,
+        "input_keys": [
+          "step_data"
+        ],
+        "workflow_context": {
+          "current_step": 3,
+          "total_steps_so_far": 2
+        },
+        "timestamp": "2026-03-25T15:31:54-05:00"
+      },
+      "processed_at": "2026-03-25T15:31:54-05:00",
+      "execution_time_seconds": 0.001
+    },
+    {
+      "step_number": 4,
+      "data": {
+        "step_data": {
+          "step_name": "build_artifacts",
+          "step_type": "build",
+          "description": "Compile and package the release artifacts",
+          "status": "completed",
+          "metadata": {
+            "completion_time": "2026-03-25T15:45:30-05:00",
+            "artifacts_count": 8,
+            "build_size_mb": 542,
+            "result": "passed"
+          }
+        }
+      },
+      "result": {
+        "processed": true,
+        "input_keys": [
+          "step_data"
+        ],
+        "workflow_context": {
+          "current_step": 4,
+          "total_steps_so_far": 3
+        },
+        "timestamp": "2026-03-25T15:32:04-05:00"
+      },
+      "processed_at": "2026-03-25T15:32:04-05:00",
+      "execution_time_seconds": 0.001
+    },
+    {
+      "step_number": 5,
+      "data": {
+        "step_data": {
+          "step_name": "staging_deploy",
+          "step_type": "deployment",
+          "description": "Deploy to staging environment",
+          "status": "completed",
+          "metadata": {
+            "completion_time": "2026-03-25T15:50:15-05:00",
+            "environment": "staging",
+            "deployment_status": "successful",
+            "health_checks": "passed"
+          }
+        }
+      },
+      "result": {
+        "processed": true,
+        "input_keys": [
+          "step_data"
+        ],
+        "workflow_context": {
+          "current_step": 5,
+          "total_steps_so_far": 4
+        },
+        "timestamp": "2026-03-25T15:32:04-05:00"
+      },
+      "processed_at": "2026-03-25T15:32:04-05:00",
+      "execution_time_seconds": 0.001
+    },
+    {
+      "step_number": 6,
+      "data": {
+        "step_data": {
+          "step_name": "qa_sign_off",
+          "step_type": "approval",
+          "description": "QA team reviews and approves staging",
+          "status": "blocked",
+          "metadata": {
+            "blocked_at": "2026-03-25T15:50:30-05:00",
+            "blocked_reason": "Waiting for QA team availability",
+            "blocking_note": "Waiting for QA team availability"
+          }
+        }
+      },
+      "result": {
+        "processed": true,
+        "input_keys": [
+          "step_data"
+        ],
+        "workflow_context": {
+          "current_step": 6,
+          "total_steps_so_far": 5
+        },
+        "timestamp": "2026-03-25T15:32:04-05:00"
+      },
+      "processed_at": "2026-03-25T15:32:04-05:00",
+      "execution_time_seconds": 0.001
+    },
+    {
+      "step_number": 7,
+      "data": {
+        "step_data": {
+          "step_name": "qa_sign_off",
+          "step_type": "approval",
+          "description": "QA team reviews and approves staging",
+          "status": "completed",
+          "metadata": {
+            "completion_time": "2026-03-25T16:15:00-05:00",
+            "approved_by": "QA Team",
+            "approval_notes": "All test cases passed. Ready for production deployment.",
+            "result": "approved"
+          }
+        }
+      },
+      "result": {
+        "processed": true,
+        "input_keys": [
+          "step_data"
+        ],
+        "workflow_context": {
+          "current_step": 7,
+          "total_steps_so_far": 6
+        },
+        "timestamp": "2026-03-25T15:32:13-05:00"
+      },
+      "processed_at": "2026-03-25T15:32:13-05:00",
+      "execution_time_seconds": 0.001
+    },
+    {
+      "step_number": 8,
+      "data": {
+        "step_data": {
+          "step_name": "production_deploy",
+          "step_type": "deployment",
+          "description": "Deploy to production",
+          "status": "in-progress",
+          "metadata": {
+            "start_time": "2026-03-25T16:15:30-05:00",
+            "environment": "production",
+            "deployment_strategy": "blue-green"
+          }
+        }
+      },
+      "result": {
+        "processed": true,
+        "input_keys": [
+          "step_data"
+        ],
+        "workflow_context": {
+          "current_step": 8,
+          "total_steps_so_far": 7
+        },
+        "timestamp": "2026-03-25T15:32:13-05:00"
+      },
+      "processed_at": "2026-03-25T15:32:13-05:00",
+      "execution_time_seconds": 0.001
+    },
+    {
+      "step_number": 9,
+      "data": {
+        "step_data": {
+          "step_name": "production_deploy",
+          "step_type": "deployment",
+          "description": "Deploy to production",
+          "status": "completed",
+          "metadata": {
+            "completion_time": "2026-03-25T16:35:45-05:00",
+            "environment": "production",
+            "deployment_strategy": "blue-green",
+            "health_checks": "passed",
+            "rollback_available": true,
+            "result": "successful"
+          }
+        }
+      },
+      "result": {
+        "processed": true,
+        "input_keys": [
+          "step_data"
+        ],
+        "workflow_context": {
+          "current_step": 9,
+          "total_steps_so_far": 8
+        },
+        "timestamp": "2026-03-25T15:32:21-05:00"
+      },
+      "processed_at": "2026-03-25T15:32:21-05:00",
+      "execution_time_seconds": 0.001
+    },
+    {
+      "step_number": 10,
+      "data": {
+        "step_data": {
+          "step_name": "notify_stakeholders",
+          "step_type": "notification",
+          "description": "Send release announcement",
+          "status": "completed",
+          "metadata": {
+            "completion_time": "2026-03-25T16:40:00-05:00",
+            "notification_type": "email",
+            "recipients_notified": 45,
+            "channels": [
+              "email",
+              "slack",
+              "github"
+            ],
+            "result": "delivered"
+          }
+        }
+      },
+      "result": {
+        "processed": true,
+        "input_keys": [
+          "step_data"
+        ],
+        "workflow_context": {
+          "current_step": 10,
+          "total_steps_so_far": 9
+        },
+        "timestamp": "2026-03-25T15:32:21-05:00"
+      },
+      "processed_at": "2026-03-25T15:32:21-05:00",
+      "execution_time_seconds": 0.001
+    }
+  ],
+  "created_at": "2026-03-25T15:31:42-05:00",
+  "updated_at": "2026-03-25T15:32:21-05:00",
+  "data": {
+    "step_data": {
+      "workflow_name": "v2.0.0-release",
+      "description": "Release workflow for version 2.0.0 including testing, security, building, and deployment",
+      "steps": [
+        {
+          "step_name": "run_tests",
+          "step_type": "testing",
+          "description": "Execute the full test suite"
+        },
+        {
+          "step_name": "security_scan",
+          "step_type": "security",
+          "description": "Run dependency vulnerability scan"
+        },
+        {
+          "step_name": "build_artifacts",
+          "step_type": "build",
+          "description": "Compile and package the release artifacts"
+        },
+        {
+          "step_name": "staging_deploy",
+          "step_type": "deployment",
+          "description": "Deploy to staging environment"
+        },
+        {
+          "step_name": "qa_sign_off",
+          "step_type": "approval",
+          "description": "QA team reviews and approves staging"
+        },
+        {
+          "step_name": "production_deploy",
+          "step_type": "deployment",
+          "description": "Deploy to production"
+        },
+        {
+          "step_name": "notify_stakeholders",
+          "step_type": "notification",
+          "description": "Send release announcement"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "step_count": 10,
+    "last_step_at": "2026-03-25T15:32:21-05:00"
+  },
+  "completed_at": "2026-03-25T15:32:21-05:00"
+}
