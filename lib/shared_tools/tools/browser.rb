@@ -9,12 +9,41 @@ require 'shared_tools'
 require_relative 'browser/base_driver'
 require_relative 'browser/inspect_utils'
 
-# Try to load watir for browser automation
+# Load formatters (used by inspect_tool and related components)
+require_relative 'browser/formatters/action_formatter'
+require_relative 'browser/formatters/data_entry_formatter'
+require_relative 'browser/formatters/element_formatter'
+require_relative 'browser/formatters/input_formatter'
+
+# Load elements helpers (used by inspect_tool)
+require_relative 'browser/elements/element_grouper'
+require_relative 'browser/elements/nearby_element_detector'
+
+# Load page_inspect helpers (used by page_inspect_tool)
+require_relative 'browser/page_inspect/button_summarizer'
+require_relative 'browser/page_inspect/form_summarizer'
+require_relative 'browser/page_inspect/html_summarizer'
+require_relative 'browser/page_inspect/link_summarizer'
+
+# Load selector_generator and its sub-modules (used by click_tool and related)
+require_relative 'browser/selector_generator/base_selectors'
+require_relative 'browser/selector_generator/contextual_selectors'
+require_relative 'browser/selector_generator'
+
+# Try to load Ferrum (preferred) for browser automation via Chrome DevTools Protocol
+begin
+  require 'ferrum'
+  require_relative 'browser/ferrum_driver'
+rescue LoadError
+  # Ferrum gem not installed
+end
+
+# Fall back to Watir if available
 begin
   require 'watir'
   require_relative 'browser/watir_driver'
 rescue LoadError
-  # Watir gem not installed, BrowserTools will require manual driver
+  # Watir gem not installed
 end
 
 # Load tools (order matters - utils loaded first)

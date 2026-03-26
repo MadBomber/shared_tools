@@ -104,9 +104,11 @@ module SharedTools
       # @param max_retries [Integer] Maximum retry attempts
       #
       # @return [Hash] Operation result with success status
-      def execute(operation:, simulate_error: nil, max_retries: 3, **data)
+      def execute(operation:, simulate_error: nil, max_retries: 3, data: {}, **_rest)
         @operation_start_time = Time.now
         @logger.info("ErrorHandlingTool#execute operation=#{operation} simulate_error=#{simulate_error}")
+        # Normalise data keys to symbols (JSON tool calls use string keys)
+        data = (data || {}).transform_keys(&:to_sym)
 
         begin
           # Validate inputs

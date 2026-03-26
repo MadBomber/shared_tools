@@ -1,56 +1,34 @@
 # frozen_string_literal: true
 
-require 'ruby_llm/tool'
+require_relative '../../shared_tools'
 
 module SharedTools
   module Tools
-    # A tool for retrieving system information including OS, CPU, memory, and disk details.
-    # Provides cross-platform support for macOS, Linux, and Windows.
+    # Returns OS, CPU, memory, disk, network, and Ruby runtime information.
     #
     # @example
     #   tool = SharedTools::Tools::SystemInfoTool.new
-    #   result = tool.execute(category: 'all')
-    #   puts result[:os][:name]        # "macOS"
-    #   puts result[:memory][:total]   # "32 GB"
-    class SystemInfoTool < RubyLLM::Tool
-      def self.name = 'system_info'
+    #   tool.execute                     # all categories
+    #   tool.execute(category: 'cpu')    # CPU only
+    class SystemInfoTool < ::RubyLLM::Tool
+      def self.name = 'system_info_tool'
 
-      description <<~'DESCRIPTION'
-        Retrieve system information including operating system, CPU, memory, and disk details.
-
-        This tool provides cross-platform system information:
-        - macOS: Uses system_profiler, sysctl, and df commands
-        - Linux: Uses /proc filesystem and df command
-        - Windows: Uses wmic and powershell commands
+      description <<~DESC
+        Retrieve system information from the local machine.
 
         Categories:
-        - 'all': Returns all system information (default)
-        - 'os': Operating system information only
-        - 'cpu': CPU information only
-        - 'memory': Memory information only
-        - 'disk': Disk space information only
-        - 'network': Network interface information only
-
-        Example usage:
-          tool = SharedTools::Tools::SystemInfoTool.new
-
-          # Get all system info
-          result = tool.execute(category: 'all')
-
-          # Get specific category
-          result = tool.execute(category: 'memory')
-          puts result[:total]  # Total RAM
-      DESCRIPTION
+        - 'os'      — Operating system name, version, hostname
+        - 'cpu'     — CPU model, core count, load averages
+        - 'memory'  — Total and available RAM in GB
+        - 'disk'    — Mounted filesystems with used/available space
+        - 'network' — Active network interfaces and their IP addresses
+        - 'ruby'    — Ruby version, platform, engine, RubyGems version
+        - 'all'     (default) — All of the above combined
+      DESC
 
       params do
-        string :category, description: <<~DESC.strip, required: false
-          The category of system information to retrieve:
-          - 'all' (default): All system information
-          - 'os': Operating system details
-          - 'cpu': CPU details
-          - 'memory': Memory/RAM details
-          - 'disk': Disk space details
-          - 'network': Network interface details
+        string :category, required: false, description: <<~DESC.strip
+          Info category. Options: 'os', 'cpu', 'memory', 'disk', 'network', 'ruby', 'all' (default).
         DESC
       end
 
@@ -59,358 +37,167 @@ module SharedTools
         @logger = logger || RubyLLM.logger
       end
 
-      # Execute system info retrieval
-      #
-      # @param category [String] category of info to retrieve
+      # @param category [String] which subsystem to query
       # @return [Hash] system information
       def execute(category: 'all')
-        @logger.info("SystemInfoTool#execute category=#{category.inspect}")
+        @logger.info("SystemInfoTool#execute category=#{category}")
 
         case category.to_s.downcase
-        when 'all'
-          get_all_info
-        when 'os'
-          { success: true, os: get_os_info }
-        when 'cpu'
-          { success: true, cpu: get_cpu_info }
-        when 'memory'
-          { success: true, memory: get_memory_info }
-        when 'disk'
-          { success: true, disk: get_disk_info }
-        when 'network'
-          { success: true, network: get_network_info }
+        when 'os'      then { success: true }.merge(os_info)
+        when 'cpu'     then { success: true }.merge(cpu_info)
+        when 'memory'  then { success: true }.merge(memory_info)
+        when 'disk'    then { success: true }.merge(disk_info)
+        when 'network' then { success: true }.merge(network_info)
+        when 'ruby'    then { success: true }.merge(ruby_info)
         else
-          {
-            success: false,
-            error: "Unknown category: #{category}. Valid categories are: all, os, cpu, memory, disk, network"
-          }
+          { success: true }
+            .merge(os_info)
+            .merge(cpu_info)
+            .merge(memory_info)
+            .merge(disk_info)
+            .merge(network_info)
+            .merge(ruby_info)
         end
       rescue => e
         @logger.error("SystemInfoTool error: #{e.message}")
-        {
-          success: false,
-          error: e.message
-        }
+        { success: false, error: e.message }
       end
 
       private
 
-      def get_all_info
+      def os_info
         {
-          success: true,
-          os: get_os_info,
-          cpu: get_cpu_info,
-          memory: get_memory_info,
-          disk: get_disk_info,
-          network: get_network_info,
-          ruby: get_ruby_info
+          os_platform: RUBY_PLATFORM,
+          os_name:     detect_os_name,
+          os_version:  detect_os_version,
+          hostname:    `hostname`.strip
         }
       end
 
-      def get_os_info
-        case platform
-        when :macos
-          {
-            name: 'macOS',
-            version: `sw_vers -productVersion 2>/dev/null`.strip,
-            build: `sw_vers -buildVersion 2>/dev/null`.strip,
-            hostname: `hostname 2>/dev/null`.strip,
-            kernel: `uname -r 2>/dev/null`.strip,
-            architecture: `uname -m 2>/dev/null`.strip,
-            uptime: parse_uptime(`uptime 2>/dev/null`.strip)
-          }
-        when :linux
-          {
-            name: get_linux_distro,
-            version: get_linux_version,
-            hostname: `hostname 2>/dev/null`.strip,
-            kernel: `uname -r 2>/dev/null`.strip,
-            architecture: `uname -m 2>/dev/null`.strip,
-            uptime: parse_uptime(`uptime 2>/dev/null`.strip)
-          }
-        when :windows
-          {
-            name: 'Windows',
-            version: `ver 2>nul`.strip,
-            hostname: `hostname 2>nul`.strip,
-            architecture: ENV['PROCESSOR_ARCHITECTURE'] || 'unknown'
-          }
+      def cpu_info
+        if RUBY_PLATFORM.include?('darwin')
+          model  = `sysctl -n machdep.cpu.brand_string 2>/dev/null`.strip
+          cores  = `sysctl -n hw.ncpu 2>/dev/null`.strip.to_i
+          load   = `sysctl -n vm.loadavg 2>/dev/null`.strip
+                     .gsub(/[{}]/, '').split.first(3).map(&:to_f)
         else
-          { name: 'unknown', platform: RUBY_PLATFORM }
-        end
-      end
-
-      def get_cpu_info
-        case platform
-        when :macos
-          {
-            model: `sysctl -n machdep.cpu.brand_string 2>/dev/null`.strip,
-            cores: `sysctl -n hw.ncpu 2>/dev/null`.strip.to_i,
-            physical_cores: `sysctl -n hw.physicalcpu 2>/dev/null`.strip.to_i,
-            architecture: `uname -m 2>/dev/null`.strip,
-            load_average: get_load_average
-          }
-        when :linux
-          cpu_info = File.read('/proc/cpuinfo') rescue ''
-          model = cpu_info[/model name\s*:\s*(.+)/, 1] || 'unknown'
-          cores = cpu_info.scan(/^processor/i).count
-          {
-            model: model,
-            cores: cores,
-            architecture: `uname -m 2>/dev/null`.strip,
-            load_average: get_load_average
-          }
-        when :windows
-          {
-            model: `wmic cpu get name 2>nul`.lines[1]&.strip || 'unknown',
-            cores: ENV['NUMBER_OF_PROCESSORS']&.to_i || 0,
-            architecture: ENV['PROCESSOR_ARCHITECTURE'] || 'unknown'
-          }
-        else
-          { cores: 0, model: 'unknown' }
-        end
-      end
-
-      def get_memory_info
-        case platform
-        when :macos
-          total_bytes = `sysctl -n hw.memsize 2>/dev/null`.strip.to_i
-          # Get page size and memory statistics
-          vm_stat = `vm_stat 2>/dev/null`
-          page_size = vm_stat[/page size of (\d+)/, 1]&.to_i || 4096
-          pages_free = vm_stat[/Pages free:\s+(\d+)/, 1]&.to_i || 0
-          pages_inactive = vm_stat[/Pages inactive:\s+(\d+)/, 1]&.to_i || 0
-
-          available_bytes = (pages_free + pages_inactive) * page_size
-          used_bytes = total_bytes - available_bytes
-
-          {
-            total: format_bytes(total_bytes),
-            total_bytes: total_bytes,
-            available: format_bytes(available_bytes),
-            available_bytes: available_bytes,
-            used: format_bytes(used_bytes),
-            used_bytes: used_bytes,
-            percent_used: ((used_bytes.to_f / total_bytes) * 100).round(1)
-          }
-        when :linux
-          meminfo = File.read('/proc/meminfo') rescue ''
-          total_kb = meminfo[/MemTotal:\s+(\d+)/, 1]&.to_i || 0
-          available_kb = meminfo[/MemAvailable:\s+(\d+)/, 1]&.to_i || 0
-          used_kb = total_kb - available_kb
-
-          {
-            total: format_bytes(total_kb * 1024),
-            total_bytes: total_kb * 1024,
-            available: format_bytes(available_kb * 1024),
-            available_bytes: available_kb * 1024,
-            used: format_bytes(used_kb * 1024),
-            used_bytes: used_kb * 1024,
-            percent_used: total_kb > 0 ? ((used_kb.to_f / total_kb) * 100).round(1) : 0
-          }
-        when :windows
-          # Using powershell for more reliable output
-          output = `powershell -command "Get-CimInstance Win32_OperatingSystem | Select-Object TotalVisibleMemorySize,FreePhysicalMemory" 2>nul`
-          total_kb = output[/TotalVisibleMemorySize\s*:\s*(\d+)/, 1]&.to_i || 0
-          free_kb = output[/FreePhysicalMemory\s*:\s*(\d+)/, 1]&.to_i || 0
-          used_kb = total_kb - free_kb
-
-          {
-            total: format_bytes(total_kb * 1024),
-            total_bytes: total_kb * 1024,
-            available: format_bytes(free_kb * 1024),
-            available_bytes: free_kb * 1024,
-            used: format_bytes(used_kb * 1024),
-            used_bytes: used_kb * 1024,
-            percent_used: total_kb > 0 ? ((used_kb.to_f / total_kb) * 100).round(1) : 0
-          }
-        else
-          { total: 'unknown', available: 'unknown' }
-        end
-      end
-
-      def get_disk_info
-        disks = []
-
-        case platform
-        when :macos, :linux
-          df_output = `df -h 2>/dev/null`.lines[1..]
-          df_output&.each do |line|
-            parts = line.split
-            next if parts.length < 6
-            next unless parts[0].start_with?('/') || parts[5]&.start_with?('/')
-
-            mount_point = parts[5] || parts[0]
-            disks << {
-              filesystem: parts[0],
-              size: parts[1],
-              used: parts[2],
-              available: parts[3],
-              percent_used: parts[4],
-              mount_point: mount_point
-            }
-          end
-        when :windows
-          output = `wmic logicaldisk get size,freespace,caption 2>nul`
-          output.lines[1..].each do |line|
-            parts = line.split
-            next if parts.length < 3
-
-            caption, free_space, size = parts
-            next unless size.to_i > 0
-
-            disks << {
-              filesystem: caption,
-              size: format_bytes(size.to_i),
-              available: format_bytes(free_space.to_i),
-              used: format_bytes(size.to_i - free_space.to_i),
-              percent_used: "#{((1 - free_space.to_f / size.to_i) * 100).round}%"
-            }
-          end
+          model  = File.read('/proc/cpuinfo')
+                     .match(/model name\s*:\s*(.+)/)&.captures&.first&.strip rescue 'Unknown'
+          cores  = `nproc 2>/dev/null`.strip.to_i
+          load   = File.read('/proc/loadavg').split.first(3).map(&:to_f) rescue [0.0, 0.0, 0.0]
         end
 
-        disks
-      end
-
-      def get_network_info
-        interfaces = []
-
-        case platform
-        when :macos
-          ifconfig = `ifconfig 2>/dev/null`
-          current_interface = nil
-
-          ifconfig.each_line do |line|
-            if line =~ /^(\w+):/
-              current_interface = { name: $1, addresses: [] }
-              interfaces << current_interface
-            elsif current_interface && line =~ /inet (\d+\.\d+\.\d+\.\d+)/
-              current_interface[:addresses] << { type: 'IPv4', address: $1 }
-            elsif current_interface && line =~ /inet6 ([a-f0-9:]+)/
-              current_interface[:addresses] << { type: 'IPv6', address: $1 }
-            end
-          end
-        when :linux
-          # Try ip command first, fall back to ifconfig
-          output = `ip addr 2>/dev/null`
-          if output.empty?
-            output = `ifconfig 2>/dev/null`
-          end
-
-          current_interface = nil
-          output.each_line do |line|
-            if line =~ /^\d+:\s+(\w+):/
-              current_interface = { name: $1, addresses: [] }
-              interfaces << current_interface
-            elsif line =~ /^(\w+):/
-              current_interface = { name: $1, addresses: [] }
-              interfaces << current_interface
-            elsif current_interface && line =~ /inet (\d+\.\d+\.\d+\.\d+)/
-              current_interface[:addresses] << { type: 'IPv4', address: $1 }
-            elsif current_interface && line =~ /inet6 ([a-f0-9:]+)/
-              current_interface[:addresses] << { type: 'IPv6', address: $1 }
-            end
-          end
-        when :windows
-          output = `ipconfig 2>nul`
-          current_interface = nil
-
-          output.each_line do |line|
-            if line =~ /adapter (.+):/i
-              current_interface = { name: $1.strip, addresses: [] }
-              interfaces << current_interface
-            elsif current_interface && line =~ /IPv4.*:\s*(\d+\.\d+\.\d+\.\d+)/
-              current_interface[:addresses] << { type: 'IPv4', address: $1 }
-            elsif current_interface && line =~ /IPv6.*:\s*([a-f0-9:]+)/i
-              current_interface[:addresses] << { type: 'IPv6', address: $1 }
-            end
-          end
-        end
-
-        # Filter out interfaces with no addresses
-        interfaces.select { |i| !i[:addresses].empty? }
-      end
-
-      def get_ruby_info
         {
-          version: RUBY_VERSION,
-          platform: RUBY_PLATFORM,
-          engine: RUBY_ENGINE,
-          engine_version: RUBY_ENGINE_VERSION,
-          patchlevel: RUBY_PATCHLEVEL
+          cpu_model:      model.empty? ? 'Unknown' : model,
+          cpu_cores:      cores,
+          load_avg_1m:    load[0],
+          load_avg_5m:    load[1],
+          load_avg_15m:   load[2]
         }
       end
 
-      def platform
-        case RUBY_PLATFORM
-        when /darwin/
-          :macos
-        when /linux/
-          :linux
-        when /mswin|mingw|cygwin/
-          :windows
+      def memory_info
+        if RUBY_PLATFORM.include?('darwin')
+          total    = `sysctl -n hw.memsize 2>/dev/null`.strip.to_i
+          vm_stat  = `vm_stat 2>/dev/null`
+          pg_size  = vm_stat.match(/page size of (\d+) bytes/)&.captures&.first&.to_i || 4096
+          free_pg  = vm_stat.match(/Pages free:\s+(\d+)/)&.captures&.first&.to_i || 0
+          inact_pg = vm_stat.match(/Pages inactive:\s+(\d+)/)&.captures&.first&.to_i || 0
+          available = (free_pg + inact_pg) * pg_size
         else
-          :unknown
+          mem = File.read('/proc/meminfo') rescue ''
+          total     = (mem.match(/MemTotal:\s+(\d+) kB/)&.captures&.first&.to_i || 0) * 1024
+          available = (mem.match(/MemAvailable:\s+(\d+) kB/)&.captures&.first&.to_i || 0) * 1024
         end
+
+        gb = 1024.0**3
+        {
+          memory_total_gb:     (total     / gb).round(2),
+          memory_available_gb: (available / gb).round(2),
+          memory_used_gb:      ((total - available) / gb).round(2)
+        }
       end
 
-      def format_bytes(bytes)
-        return '0 B' if bytes.nil? || bytes == 0
+      def disk_info
+        lines  = `df -k 2>/dev/null`.lines.drop(1)
+        mounts = lines.filter_map do |line|
+          parts = line.split
+          next unless parts.size >= 6
 
-        units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
-        exp = (Math.log(bytes) / Math.log(1024)).to_i
-        exp = units.length - 1 if exp >= units.length
-
-        "#{(bytes.to_f / (1024**exp)).round(2)} #{units[exp]}"
+          kb = 1024.0**2
+          {
+            filesystem:    parts[0],
+            mount_point:   parts[5],
+            size_gb:       (parts[1].to_i / kb).round(2),
+            used_gb:       (parts[2].to_i / kb).round(2),
+            available_gb:  (parts[3].to_i / kb).round(2),
+            use_percent:   parts[4]
+          }
+        end
+        { disks: mounts }
       end
 
-      def get_load_average
-        case platform
-        when :macos, :linux
-          uptime_output = `uptime 2>/dev/null`
-          if uptime_output =~ /load average[s]?:\s*([\d.]+),?\s*([\d.]+),?\s*([\d.]+)/
-            { '1min' => $1.to_f, '5min' => $2.to_f, '15min' => $3.to_f }
-          else
-            {}
+      def network_info
+        interfaces = {}
+
+        if RUBY_PLATFORM.include?('darwin')
+          current = nil
+          `ifconfig 2>/dev/null`.lines.each do |line|
+            if (m = line.match(/^(\w[\w:]+\d+):/))
+              current = m.captures.first
+              interfaces[current] = []
+            elsif current && (m = line.match(/\s+inet6?\s+(\S+)/))
+              addr = m.captures.first.split('%').first
+              interfaces[current] << addr
+            end
           end
         else
-          {}
+          current = nil
+          `ip addr 2>/dev/null`.lines.each do |line|
+            if (m = line.match(/^\d+: (\w+):/))
+              current = m.captures.first
+              interfaces[current] = []
+            elsif current && (m = line.match(/\s+inet6?\s+(\S+)/))
+              interfaces[current] << m.captures.first.split('/').first
+            end
+          end
         end
+
+        { network_interfaces: interfaces.reject { |_, ips| ips.empty? } }
       end
 
-      def parse_uptime(uptime_str)
-        # Extract uptime portion from the uptime command output
-        if uptime_str =~ /up\s+(.+?),\s+\d+\s+user/
-          $1.strip
-        elsif uptime_str =~ /up\s+(.+)/
-          $1.split(',').first.strip
-        else
-          uptime_str
-        end
+      def ruby_info
+        {
+          ruby_version:      RUBY_VERSION,
+          ruby_platform:     RUBY_PLATFORM,
+          ruby_engine:       RUBY_ENGINE,
+          ruby_description:  RUBY_DESCRIPTION,
+          rubygems_version:  Gem::VERSION
+        }
       end
 
-      def get_linux_distro
-        if File.exist?('/etc/os-release')
-          content = File.read('/etc/os-release')
-          content[/^NAME="?([^"\n]+)"?/, 1] || 'Linux'
-        elsif File.exist?('/etc/lsb-release')
-          content = File.read('/etc/lsb-release')
-          content[/DISTRIB_ID=(.+)/, 1] || 'Linux'
+      def detect_os_name
+        if RUBY_PLATFORM.include?('darwin')
+          `sw_vers -productName 2>/dev/null`.strip
+        elsif File.exist?('/etc/os-release')
+          File.read('/etc/os-release').match(/^NAME="?([^"\n]+)"?/)&.captures&.first || 'Linux'
         else
-          'Linux'
+          'Unknown'
         end
+      rescue
+        'Unknown'
       end
 
-      def get_linux_version
-        if File.exist?('/etc/os-release')
-          content = File.read('/etc/os-release')
-          content[/^VERSION="?([^"\n]+)"?/, 1] || ''
-        elsif File.exist?('/etc/lsb-release')
-          content = File.read('/etc/lsb-release')
-          content[/DISTRIB_RELEASE=(.+)/, 1] || ''
+      def detect_os_version
+        if RUBY_PLATFORM.include?('darwin')
+          `sw_vers -productVersion 2>/dev/null`.strip
+        elsif File.exist?('/etc/os-release')
+          File.read('/etc/os-release').match(/^VERSION="?([^"\n]+)"?/)&.captures&.first || 'Unknown'
         else
-          ''
+          'Unknown'
         end
+      rescue
+        'Unknown'
       end
     end
   end

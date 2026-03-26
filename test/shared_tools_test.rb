@@ -86,13 +86,38 @@ class SharedToolsTest < Minitest::Test
     end
   end
 
-  private
+  # .load_all_tools tests
+  def test_load_all_tools_triggers_eager_loading
+    # Should not raise
+    SharedTools.load_all_tools
+    assert true
+  end
 
-  def with_stdin_input(input)
-    original_stdin = $stdin
-    $stdin = StringIO.new(input)
-    yield
-  ensure
-    $stdin = original_stdin
+  def test_load_all_tools_makes_tool_classes_available
+    SharedTools.load_all_tools
+    # At least one known tool class should be defined after eager loading
+    assert defined?(SharedTools::Tools::DiskTool)
+    assert defined?(SharedTools::Tools::EvalTool)
+    assert defined?(SharedTools::Tools::WorkflowManagerTool)
+  end
+
+  # .tools tests
+  def test_tools_returns_array
+    result = SharedTools.tools
+    assert_kind_of Array, result
+  end
+
+  def test_tools_contains_ruby_llm_tool_subclasses
+    result = SharedTools.tools
+    assert result.all? { |k| k < ::RubyLLM::Tool },
+           "Expected all entries to be RubyLLM::Tool subclasses"
+  end
+
+  def test_tools_includes_known_tools
+    result = SharedTools.tools
+    class_names = result.map(&:name)
+    assert_includes class_names, 'disk_tool'
+    assert_includes class_names, 'workflow_manager'
+    assert_includes class_names, 'dns_tool'
   end
 end

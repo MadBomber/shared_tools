@@ -21,7 +21,15 @@ module SharedTools
         # @param text [String]
         # @param duration [Integer]
         def hold_key(text:, duration:)
-          raise NotImplementedError, "#{self.class.name}##{__method__} undefined"
+          options = text.to_s.split('+')
+          key     = options.pop
+          mask    = options.reduce(0) { |m, opt| m | Library::CoreGraphics::EventFlags.find(opt) }
+
+          @keyboard.key_down(key, mask: mask)
+          Kernel.sleep(duration.to_f)
+          @keyboard.key_up(key, mask: mask)
+
+          { success: true, key: text, duration: duration }
         end
 
         # @return [Hash<{ x: Integer, y: Integer }>]
@@ -86,10 +94,35 @@ module SharedTools
           @keyboard.type(text)
         end
 
-        # @param amount [Integer]
-        # @param direction [String] e.g. "up", "down", "left", "right"
+        # @param amount [Integer]    number of scroll units
+        # @param direction [String] "up", "down", "left", or "right"
         def scroll(amount:, direction:)
-          raise NotImplementedError, "#{self.class.name}##{__method__} undefined"
+          # Attach CGEventCreateScrollWheelEvent2 if not already done
+          unless Library::CoreGraphics.respond_to?(:CGEventCreateScrollWheelEvent2)
+            Library::CoreGraphics.module_eval do
+              attach_function :CGEventCreateScrollWheelEvent2,
+                              [:pointer, :uint32, :uint32, :int32, :int32, :int32],
+                              :pointer
+            end
+          end
+
+          amt = amount.to_i
+          # kCGScrollEventUnitLine = 1; wheel_count = 2 (vertical + horizontal)
+          delta_y, delta_x = case direction.to_s.downcase
+                             when 'up'    then [ amt,  0]
+                             when 'down'  then [-amt,  0]
+                             when 'left'  then [0, -amt]
+                             when 'right' then [0,  amt]
+                             else              [0,    0]
+                             end
+
+          event = Library::CoreGraphics.CGEventCreateScrollWheelEvent2(nil, 1, 2, delta_y, delta_x, 0)
+          Library::CoreGraphics.CGEventPost(
+            Library::CoreGraphics::EventTapLocation::HID_EVENT_TAP, event
+          )
+          Library::CoreGraphics.CFRelease(event)
+
+          { success: true, direction: direction, amount: amt }
         end
 
         # @yield [file]

@@ -3,18 +3,18 @@
 module SharedTools
   module Tools
     module Doc
-      # Reads plain text files (markdown, txt, source code, etc.)
+      # Read and return the full contents of a plain text file.
       #
       # @example
       #   tool = SharedTools::Tools::Doc::TextReaderTool.new
-      #   tool.execute(doc_path: "./README.md")
+      #   tool.execute(doc_path: "./guide.txt")
       class TextReaderTool < ::RubyLLM::Tool
         def self.name = 'doc_text_read'
 
-        description "Read the contents of a plain text file (markdown, txt, source code, etc.)."
+        description "Read the full contents of a plain text file."
 
         params do
-          string :doc_path, description: "Path to the text file."
+          string :doc_path, description: "Path to the text file to read."
         end
 
         # @param logger [Logger] optional logger
@@ -23,36 +23,33 @@ module SharedTools
         end
 
         # @param doc_path [String] path to the text file
-        #
-        # @return [Hash] file contents or error
+        # @return [Hash] file content and metadata
         def execute(doc_path:)
-          @logger.info("Reading text file: #{doc_path}")
+          @logger.info("TextReaderTool#execute doc_path=#{doc_path.inspect}")
 
-          path = File.expand_path(doc_path)
+          raise ArgumentError, "doc_path is required" if doc_path.nil? || doc_path.strip.empty?
+          raise ArgumentError, "File not found: #{doc_path}" unless File.exist?(doc_path)
+          raise ArgumentError, "Not a file: #{doc_path}" unless File.file?(doc_path)
 
-          unless File.exist?(path)
-            return { error: "File not found: #{doc_path}" }
-          end
+          content    = File.read(doc_path, encoding: 'utf-8')
+          line_count = content.lines.size
+          char_count = content.length
+          word_count = content.split.size
 
-          unless File.file?(path)
-            return { error: "Not a file: #{doc_path}" }
-          end
-
-          content   = File.read(path)
-          extension = File.extname(path)
-
-          @logger.info("Successfully read #{content.bytesize} bytes from #{doc_path}")
+          @logger.info("TextReaderTool read #{char_count} chars, #{line_count} lines from #{doc_path}")
 
           {
-            path:      doc_path,
-            extension: extension,
-            size:      content.bytesize,
-            lines:     content.count("\n") + 1,
-            content:   content
+            doc_path:   doc_path,
+            content:    content,
+            line_count: line_count,
+            word_count: word_count,
+            char_count: char_count
           }
+        rescue ArgumentError
+          raise
         rescue => e
-          @logger.error("Failed to read text file '#{doc_path}': #{e.message}")
-          { error: e.message }
+          @logger.error("TextReaderTool failed to read #{doc_path}: #{e.message}")
+          { error: e.message, doc_path: doc_path }
         end
       end
     end

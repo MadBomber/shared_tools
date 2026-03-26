@@ -2,22 +2,13 @@
 
 SharedTools provides a collection of LLM-callable tools for common operations. Each tool follows a consistent facade pattern with an action-based interface.
 
-## Available Tools
+## Core Tools
 
 ### [BrowserTool](browser.md)
 
 Web browser automation using Watir for visiting pages, inspecting content, clicking elements, filling forms, and capturing screenshots.
 
-**Key Features:**
-
-- Navigate to URLs
-- Inspect page content and DOM
-- Find elements by text or CSS selectors
-- Click buttons and links
-- Fill input fields
-- Take screenshots
-
-**Example:**
+**Actions:** `visit`, `page_inspect`, `ui_inspect`, `selector_inspect`, `click`, `text_field_set`, `screenshot`
 
 ```ruby
 browser = SharedTools::Tools::BrowserTool.new
@@ -31,16 +22,9 @@ browser.execute(action: "click", selector: "button.login")
 
 ### [DiskTool](disk.md)
 
-Secure file system operations with path traversal protection for managing files and directories.
+Secure file system operations with path traversal protection.
 
-**Key Features:**
-
-- Create, read, write, delete files
-- Create, list, move, delete directories
-- Find and replace text in files
-- Path security (sandboxing)
-
-**Example:**
+**Actions:** `file_create`, `file_read`, `file_write`, `file_delete`, `file_move`, `file_replace`, `directory_create`, `directory_list`, `directory_move`, `directory_delete`
 
 ```ruby
 disk = SharedTools::Tools::DiskTool.new
@@ -54,21 +38,13 @@ content = disk.execute(action: "file_read", path: "./data.txt")
 
 ### [EvalTool](eval.md)
 
-Execute code in multiple languages (Ruby, Python, Shell) with authorization controls.
+Execute code in multiple languages with authorization controls.
 
-**Key Features:**
-
-- Execute Ruby code
-- Execute Python scripts
-- Run shell commands
-- Authorization system for safety
-
-**Example:**
+**Languages:** `ruby`, `python`, `shell`
 
 ```ruby
 eval_tool = SharedTools::Tools::EvalTool.new
-result = eval_tool.execute(action: "ruby", code: "[1,2,3].sum")
-# => 6
+result = eval_tool.execute(language: "ruby", code: "[1,2,3].sum")
 ```
 
 [View EvalTool Documentation →](eval.md)
@@ -77,23 +53,17 @@ result = eval_tool.execute(action: "ruby", code: "[1,2,3].sum")
 
 ### [DocTool](doc.md)
 
-Read and process document formats, currently supporting PDF files.
+Read and process documents: plain text, PDF, Word (.docx), and spreadsheets (CSV, XLSX, ODS, XLSM).
 
-**Key Features:**
-
-- Read specific PDF pages
-- Support for page ranges
-- Extract text content
-
-**Example:**
+**Actions:** `text_read`, `pdf_read`, `docx_read`, `spreadsheet_read`
 
 ```ruby
 doc = SharedTools::Tools::DocTool.new
-result = doc.execute(
-  action: "pdf_read",
-  doc_path: "./report.pdf",
-  page_numbers: "1-5"
-)
+
+doc.execute(action: "text_read", doc_path: "./notes.txt")
+doc.execute(action: "pdf_read", doc_path: "./report.pdf", page_numbers: "1-5")
+doc.execute(action: "docx_read", doc_path: "./meeting.docx")
+doc.execute(action: "spreadsheet_read", doc_path: "./data.xlsx", sheet: "Q1")
 ```
 
 [View DocTool Documentation →](doc.md)
@@ -102,16 +72,7 @@ result = doc.execute(
 
 ### [DatabaseTool](database.md)
 
-Execute SQL statements against SQLite or PostgreSQL databases.
-
-**Key Features:**
-
-- Execute SELECT, INSERT, UPDATE, DELETE
-- Transaction-like execution (stops on error)
-- Support for multiple databases
-- Pluggable driver architecture
-
-**Example:**
+Execute SQL statements (CREATE, INSERT, SELECT, UPDATE, DELETE) with pluggable drivers.
 
 ```ruby
 driver = SharedTools::Tools::Database::SqliteDriver.new(db: db)
@@ -123,18 +84,24 @@ database.execute(statements: ["SELECT * FROM users"])
 
 ---
 
+### [DatabaseQueryTool](database.md)
+
+Safe, read-only SQL queries with automatic LIMIT enforcement and timeout protection.
+
+```ruby
+db_query = SharedTools::Tools::DatabaseQueryTool.new
+db_query.execute(query: "SELECT * FROM users WHERE active = ?", params: [true], limit: 50)
+```
+
+[View DatabaseQueryTool Documentation →](database.md)
+
+---
+
 ### [ComputerTool](computer.md)
 
 System-level automation for mouse, keyboard, and screen control.
 
-**Key Features:**
-
-- Mouse click, move, and position tracking
-- Keyboard typing and key press simulation
-- Scroll control
-- Wait functionality for timing
-
-**Example:**
+**Actions:** `mouse_click`, `mouse_move`, `mouse_position`, `type`, `key`, `hold_key`, `scroll`, `wait`
 
 ```ruby
 computer = SharedTools::Tools::ComputerTool.new
@@ -146,70 +113,46 @@ computer.execute(action: "type", text: "Hello, World!")
 
 ---
 
-### CalculatorTool
+## Data & Analysis Tools
 
-Safe mathematical calculations without code execution risks.
+### [CalculatorTool](calculator.md)
 
-**Key Features:**
+Safe mathematical expression evaluation using the Dentaku parser.
 
-- Safe expression evaluation using Dentaku
-- Basic arithmetic and mathematical functions
-- Trigonometric operations
-- Configurable precision (0-10 decimal places)
-- Comprehensive error handling
-
-**Example:**
+**Features:** Basic arithmetic, math functions (sqrt, round, abs), trigonometry (sin, cos, tan), configurable precision
 
 ```ruby
 calculator = SharedTools::Tools::CalculatorTool.new
 calculator.execute(expression: "sqrt(16) * 2", precision: 4)
-# => {success: true, result: 8.0, precision: 4}
+# => {success: true, result: 8.0}
 ```
+
+[View CalculatorTool Documentation →](calculator.md)
 
 ---
 
-### WeatherTool
+### [DataScienceKit](data_science_kit.md)
 
-Real-time weather data from OpenWeatherMap API.
+Real statistical analysis performed on actual data — not simulated results.
 
-**Key Features:**
+**Analysis types:** `statistical_summary`, `correlation_analysis`, `time_series`, `clustering`, `prediction`
 
-- Current weather conditions worldwide
-- Multiple temperature units (metric, imperial, kelvin)
-- Optional 3-day forecast
-- Atmospheric data (humidity, pressure, wind)
-- Requires OPENWEATHER_API_KEY environment variable
-
-**Example:**
+**Data sources:** File path (`data_source`) or inline string (`data`) — supports pipe-delimited tables, CSV, JSON, and comma-separated numbers.
 
 ```ruby
-weather = SharedTools::Tools::WeatherTool.new
-weather.execute(city: "London,UK", units: "metric", include_forecast: true)
-# => {success: true, current: {...}, forecast: [...]}
+kit = SharedTools::Tools::DataScienceKit.new
+
+# From a file
+kit.execute(analysis_type: "statistical_summary", data_source: "./sales.csv")
+
+# Inline pipe-delimited table
+kit.execute(
+  analysis_type: "correlation_analysis",
+  data: "| month | revenue | cost |\n| Jan | 12400 | 8200 |\n| Feb | 11800 | 7900 |"
+)
 ```
 
----
-
-### WorkflowManagerTool
-
-Manage complex multi-step workflows with persistent state tracking.
-
-**Key Features:**
-
-- Create and track stateful workflows
-- Step-by-step execution with persistence
-- Status monitoring and progress tracking
-- Workflow completion and cleanup
-- Survives process restarts
-
-**Example:**
-
-```ruby
-workflow = SharedTools::Tools::WorkflowManagerTool.new
-result = workflow.execute(action: "start", step_data: {project: "demo"})
-workflow_id = result[:workflow_id]
-workflow.execute(action: "step", workflow_id: workflow_id, step_data: {task: "compile"})
-```
+[View DataScienceKit Documentation →](data_science_kit.md)
 
 ---
 
@@ -217,16 +160,7 @@ workflow.execute(action: "step", workflow_id: workflow_id, step_data: {task: "co
 
 Multi-stage data analysis orchestration for comprehensive insights.
 
-**Key Features:**
-
-- Automatic data source detection (files or URLs)
-- Data structure analysis
-- Statistical insights generation
-- Visualization suggestions
-- Correlation analysis
-- Supports CSV, JSON, and text formats
-
-**Example:**
+**Features:** Automatic data source detection, structure analysis, statistical insights, visualisation suggestions, correlation analysis, CSV/JSON/text support
 
 ```ruby
 analyzer = SharedTools::Tools::CompositeAnalysisTool.new
@@ -239,28 +173,129 @@ analyzer.execute(
 
 ---
 
-### DatabaseQueryTool
+## Network & System Tools
 
-Safe, read-only database query execution with security controls.
+### [DnsTool](dns_tool.md)
 
-**Key Features:**
+DNS resolution, WHOIS queries, IP geolocation, and external IP detection. No API key required.
 
-- SELECT-only queries for security
-- Automatic LIMIT clause enforcement
-- Query timeout protection
-- Prepared statement support
-- Connection pooling
-- Supports PostgreSQL, MySQL, SQLite, and more
-
-**Example:**
+**Actions:** `a`, `aaaa`, `mx`, `ns`, `txt`, `cname`, `reverse`, `all`, `external_ip`, `ip_location`, `whois`
 
 ```ruby
-db_query = SharedTools::Tools::DatabaseQueryTool.new
-db_query.execute(
-  query: "SELECT * FROM users WHERE active = ?",
-  params: [true],
-  limit: 50
-)
+dns = SharedTools::Tools::DnsTool.new
+
+dns.execute(action: "a", host: "example.com")
+dns.execute(action: "external_ip")
+dns.execute(action: "ip_location", host: "8.8.8.8")
+dns.execute(action: "whois", host: "ruby-lang.org")
+```
+
+[View DnsTool Documentation →](dns_tool.md)
+
+---
+
+### [WeatherTool](weather.md)
+
+Real-time weather data from OpenWeatherMap. Combine with DnsTool for automatic local forecasts.
+
+**Features:** Current conditions, 3-day forecast, metric/imperial/kelvin units, global city coverage
+
+```ruby
+weather = SharedTools::Tools::WeatherTool.new
+weather.execute(city: "London,UK", units: "metric", include_forecast: true)
+```
+
+[View WeatherTool Documentation →](weather.md)
+
+---
+
+### [NotificationTool](notification_tool.md)
+
+Cross-platform desktop notifications, modal alert dialogs, and text-to-speech. Supports macOS and Linux with no gem dependencies.
+
+**Actions:** `notify`, `alert`, `speak`
+
+```ruby
+tool = SharedTools::Tools::NotificationTool.new
+
+tool.execute(action: "notify", message: "Build complete", title: "CI")
+
+result = tool.execute(action: "alert", message: "Deploy to prod?", buttons: ["Yes", "No"])
+result[:button]  # => "Yes" or "No"
+
+tool.execute(action: "speak", message: "Task finished", voice: "Samantha")
+```
+
+[View NotificationTool Documentation →](notification_tool.md)
+
+---
+
+### CurrentDateTimeTool
+
+Returns the current date, time, and day of week from the system clock — preventing LLMs from hallucinating temporal information.
+
+**Formats:** `"date"`, `"time"`, `"datetime"`, `"day_of_week"`, `"iso8601"`
+
+```ruby
+dt = SharedTools::Tools::CurrentDateTimeTool.new
+dt.execute(format: "date")
+# => { date: "2026-03-25", day_of_week: "Wednesday", ... }
+```
+
+---
+
+### SystemInfoTool
+
+System hardware and OS information: CPU, memory, disk, platform details.
+
+```ruby
+info = SharedTools::Tools::SystemInfoTool.new
+info.execute
+```
+
+---
+
+### ClipboardTool
+
+Read and write the system clipboard.
+
+```ruby
+clipboard = SharedTools::Tools::ClipboardTool.new
+clipboard.execute(action: "read")
+clipboard.execute(action: "write", text: "Hello from the LLM!")
+```
+
+---
+
+### CronTool
+
+Cron expression parsing and next-run time calculation.
+
+```ruby
+cron = SharedTools::Tools::CronTool.new
+cron.execute(expression: "0 9 * * MON-FRI")
+```
+
+---
+
+## Workflow & DevOps Tools
+
+### WorkflowManagerTool
+
+Manage persistent multi-step workflows with JSON file storage.
+
+**Actions:** `start`, `step`, `status`, `complete`, `list`
+
+```ruby
+workflow = SharedTools::Tools::WorkflowManagerTool.new
+
+result = workflow.execute(action: "start", step_data: {project: "release-v2.0"})
+workflow_id = result[:workflow_id]
+
+workflow.execute(action: "step", workflow_id: workflow_id, step_data: {task: "run_tests"})
+workflow.execute(action: "status", workflow_id: workflow_id)
+workflow.execute(action: "list")
+workflow.execute(action: "complete", workflow_id: workflow_id)
 ```
 
 ---
@@ -269,256 +304,74 @@ db_query.execute(
 
 Execute Docker Compose commands safely within containers.
 
-**Key Features:**
-
-- Run commands in Docker containers
-- Service specification support
-- Automatic container cleanup
-- Build and run in one step
-- Working directory support
-
-**Example:**
-
 ```ruby
 docker = SharedTools::Tools::Docker::ComposeRunTool.new
-docker.execute(
-  service: "app",
-  command: "rspec",
-  args: ["spec/main_spec.rb"]
-)
+docker.execute(service: "app", command: "rspec", args: ["spec/main_spec.rb"])
 ```
 
 ---
 
 ### ErrorHandlingTool
 
-Reference implementation demonstrating robust error handling patterns.
-
-**Key Features:**
-
-- Multiple error type handling
-- Retry mechanisms with exponential backoff
-- Input/output validation
-- Resource cleanup patterns
-- Detailed error categorization
-- Support reference IDs for debugging
-
-**Example:**
+Reference implementation demonstrating robust error handling patterns: retries with exponential backoff, input validation, resource cleanup.
 
 ```ruby
 error_tool = SharedTools::Tools::ErrorHandlingTool.new
-error_tool.execute(
-  operation: "process",
-  data: {name: "test", value: 42},
-  max_retries: 3
-)
+error_tool.execute(operation: "process", data: {name: "test", value: 42}, max_retries: 3)
 ```
 
 ---
 
-## Tool Architecture
-
-All tools share common architectural patterns:
-
-### Facade Pattern
-
-Each tool acts as a facade, providing a unified interface to complex operations:
-
-```ruby
-# Single tool, multiple related actions
-tool.execute(action: "action_one", params...)
-tool.execute(action: "action_two", params...)
-```
-
-### Action-Based Interface
-
-Tools use an action parameter to specify the operation:
-
-```ruby
-tool.execute(
-  action: "specific_action",
-  param1: "value1",
-  param2: "value2"
-)
-```
-
-### Driver Architecture
-
-Tools delegate to driver implementations for flexibility:
-
-```ruby
-# Use built-in driver
-tool = SharedTools::Tools::SomeTool.new
-
-# Or provide custom driver
-custom_driver = MyCustomDriver.new
-tool = SharedTools::Tools::SomeTool.new(driver: custom_driver)
-```
-
-### Authorization Integration
-
-Tools respect the global authorization setting:
-
-```ruby
-# Default: requires confirmation
-SharedTools.execute?(tool: 'tool_name', stuff: 'operation details')
-
-# Disable for automation
-SharedTools.auto_execute(true)
-```
-
 ## Tool Comparison
 
-| Tool | Primary Use | Authorization | Requires External Gem |
-|------|-------------|---------------|----------------------|
-| BrowserTool | Web automation | No | Yes (watir) |
-| DiskTool | File operations | No | No |
-| EvalTool | Code execution | Yes | No (Python for python action) |
-| DocTool | Document processing | No | Yes (pdf-reader) |
-| DatabaseTool | SQL operations | No | Yes (sqlite3 or pg) |
-| ComputerTool | System automation | No | Yes (platform-specific) |
-| CalculatorTool | Math calculations | No | Yes (dentaku - included) |
-| WeatherTool | Weather data | No | Yes (openweathermap - included) |
-| WorkflowManagerTool | Workflow orchestration | No | No |
-| CompositeAnalysisTool | Data analysis | No | No |
-| DatabaseQueryTool | Read-only SQL queries | No | Yes (sequel - included) |
-| Docker ComposeRunTool | Container commands | No | No (requires Docker) |
-| ErrorHandlingTool | Reference/example | No | No |
-
-## Common Usage Patterns
-
-### Pattern 1: Resource Management
-
-```ruby
-tool = SharedTools::Tools::BrowserTool.new
-begin
-  tool.execute(action: "visit", url: "https://example.com")
-  # Do work...
-ensure
-  tool.cleanup!  # Always clean up
-end
-```
-
-### Pattern 2: Error Handling
-
-```ruby
-begin
-  result = tool.execute(action: "some_action", param: "value")
-rescue ArgumentError => e
-  puts "Invalid parameters: #{e.message}"
-rescue StandardError => e
-  puts "Operation failed: #{e.message}"
-end
-```
-
-### Pattern 3: Multi-Tool Workflows
-
-```ruby
-# Combine tools for complex workflows
-browser = SharedTools::Tools::BrowserTool.new
-disk = SharedTools::Tools::DiskTool.new
-database = SharedTools::Tools::DatabaseTool.new(driver: driver)
-
-# 1. Scrape data
-html = browser.execute(action: "page_inspect", full_html: true)
-
-# 2. Save raw data
-disk.execute(action: "file_write", path: "./raw.html", text: html)
-
-# 3. Store in database
-database.execute(statements: ["INSERT INTO pages (content) VALUES ('#{html}')"])
-
-browser.cleanup!
-```
+| Tool | Primary Use | Requires Gem | Requires API Key |
+|------|-------------|-------------|-----------------|
+| BrowserTool | Web automation | watir | No |
+| DiskTool | File operations | None | No |
+| EvalTool | Code execution | None (Python optional) | No |
+| DocTool | Document reading | pdf-reader, docx, roo | No |
+| DatabaseTool | SQL read/write | sqlite3 or pg | No |
+| DatabaseQueryTool | Read-only SQL | sequel | No |
+| ComputerTool | System automation | Platform-specific | No |
+| CalculatorTool | Math expressions | dentaku (included) | No |
+| DataScienceKit | Statistical analysis | None | No |
+| CompositeAnalysisTool | Data analysis | None | No |
+| DnsTool | DNS / WHOIS / geolocation | None | No |
+| WeatherTool | Weather data | openweathermap (included) | Yes (free) |
+| CurrentDateTimeTool | Date and time | None | No |
+| SystemInfoTool | System info | None | No |
+| ClipboardTool | Clipboard | None | No |
+| CronTool | Cron scheduling | None | No |
+| NotificationTool | Desktop notifications, alerts, TTS | None (OS commands) | No |
+| WorkflowManagerTool | Workflow orchestration | None | No |
+| Docker ComposeRunTool | Container commands | Docker installed | No |
+| ErrorHandlingTool | Reference patterns | None | No |
 
 ## Tool Selection Guide
 
-### Choose BrowserTool when you need to:
-
-- Interact with web pages
-- Fill forms and click buttons
-- Scrape dynamic content
-- Take screenshots of web pages
-
-### Choose DiskTool when you need to:
-
-- Read or write files
-- Manage directory structures
-- Search and replace in files
-- Work with the file system safely
-
-### Choose EvalTool when you need to:
-
-- Execute Ruby code dynamically
-- Run Python scripts
-- Execute shell commands
-- Process data with code
-
-### Choose DocTool when you need to:
-
-- Extract text from PDFs
-- Read specific document pages
-- Process document content
-
-### Choose DatabaseTool when you need to:
-
-- Execute SQL queries
-- Manage database records
-- Perform CRUD operations
-- Work with relational data
-
-### Choose ComputerTool when you need to:
-
-- Automate mouse and keyboard actions
-- Control system-level operations
-- Simulate user interactions
-- Automate GUI applications
-
-### Choose CalculatorTool when you need to:
-
-- Perform safe mathematical calculations
-- Evaluate mathematical expressions
-- Avoid code execution risks
-- Get precise numeric results
-
-### Choose WeatherTool when you need to:
-
-- Get real-time weather data
-- Access weather forecasts
-- Retrieve atmospheric conditions
-- Work with weather APIs
-
-### Choose WorkflowManagerTool when you need to:
-
-- Manage multi-step processes
-- Track workflow state across sessions
-- Coordinate complex operations
-- Persist workflow progress
-
-### Choose CompositeAnalysisTool when you need to:
-
-- Analyze data from multiple sources
-- Generate statistical insights
-- Get visualization suggestions
-- Perform correlation analysis
-
-### Choose DatabaseQueryTool when you need to:
-
-- Execute read-only database queries
-- Ensure query security with SELECT-only access
-- Manage query timeouts
-- Use parameterized queries safely
-
-### Choose Docker ComposeRunTool when you need to:
-
-- Run commands in containers
-- Execute tests in isolated environments
-- Work with Docker Compose services
-- Automate containerized workflows
+| I need to... | Use |
+|--------------|-----|
+| Browse a website and extract content | BrowserTool |
+| Read, write, or organise files | DiskTool |
+| Execute code dynamically | EvalTool |
+| Read a PDF, Word doc, or spreadsheet | DocTool |
+| Run SQL queries | DatabaseTool / DatabaseQueryTool |
+| Automate mouse and keyboard | ComputerTool |
+| Evaluate a math expression | CalculatorTool |
+| Analyse data statistically | DataScienceKit |
+| Look up DNS records or WHOIS | DnsTool |
+| Get current weather | WeatherTool |
+| Auto-detect my location from IP | DnsTool (ip_location) |
+| Get the current date and day | CurrentDateTimeTool |
+| Show a desktop notification | NotificationTool (notify) |
+| Speak text aloud | NotificationTool (speak) |
+| Prompt user with a dialog | NotificationTool (alert) |
+| Orchestrate a multi-step process | WorkflowManagerTool |
+| Run a command in a Docker container | Docker ComposeRunTool |
 
 ## Next Steps
 
-- View detailed documentation for each tool
-- [Basic Usage Guide](../getting-started/basic-usage.md) - Learn common patterns
-- [Authorization System](../guides/authorization.md) - Control operation approval
-- [Working with Drivers](../guides/drivers.md) - Create custom drivers
+- [Basic Usage Guide](../getting-started/basic-usage.md) — Learn common patterns
+- [Authorization System](../guides/authorization.md) — Control operation approval
+- [Working with Drivers](../guides/drivers.md) — Create custom drivers
+- [Examples](../examples/index.md) — Runnable demo scripts for every tool

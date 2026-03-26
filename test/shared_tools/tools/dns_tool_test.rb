@@ -8,223 +8,91 @@ class DnsToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'dns', SharedTools::Tools::DnsTool.name
+    assert_equal 'dns_tool', SharedTools::Tools::DnsTool.name
   end
 
   def test_inherits_from_ruby_llm_tool
     assert_kind_of ::RubyLLM::Tool, @tool
   end
 
-  def test_can_instantiate_without_arguments
-    tool = SharedTools::Tools::DnsTool.new
-    assert_instance_of SharedTools::Tools::DnsTool, tool
+  # A record lookup — use localhost which always resolves
+  def test_a_record_lookup_localhost
+    result = @tool.execute(action: 'a', host: 'localhost')
+    assert result[:success]
+    assert result[:records]
+    assert_kind_of Array, result[:records]
+    # localhost always resolves to 127.0.0.1
+    assert result[:records].include?('127.0.0.1')
   end
 
-  # Lookup action tests
-
-  def test_lookup_returns_addresses
-    result = @tool.execute(action: 'lookup', hostname: 'google.com')
-
+  def test_a_record_returns_host_and_type
+    result = @tool.execute(action: 'a', host: 'localhost')
     assert result[:success]
-    assert_equal 'google.com', result[:hostname]
-    assert_equal 'A', result[:record_type]
-    assert result[:addresses].is_a?(Array)
-    assert result[:addresses].length > 0
+    assert_equal 'localhost', result[:host]
+    assert_equal 'A', result[:type]
   end
 
-  def test_lookup_a_record
-    result = @tool.execute(action: 'lookup', hostname: 'google.com', record_type: 'A')
-
-    assert result[:success]
-    assert result[:addresses].all? { |a| a[:type] == 'A' }
-    assert result[:addresses].all? { |a| a[:address] =~ /\d+\.\d+\.\d+\.\d+/ }
-  end
-
-  def test_lookup_aaaa_record
-    result = @tool.execute(action: 'lookup', hostname: 'google.com', record_type: 'AAAA')
-
-    assert result[:success]
-    # May or may not have AAAA records
-    if result[:addresses].length > 0
-      assert result[:addresses].all? { |a| a[:type] == 'AAAA' }
+  # Reverse lookup — 127.0.0.1 may not have a PTR record in all environments
+  def test_reverse_lookup_loopback
+    result = @tool.execute(action: 'reverse', host: '127.0.0.1')
+    # Result is always a Hash with a :success key, whether PTR exists or not
+    assert result.key?(:success)
+    assert_equal 'PTR', result[:type]
+    if result[:success]
+      assert result[:hostname]
+    else
+      assert result[:error]
     end
   end
 
-  def test_lookup_any_record
-    result = @tool.execute(action: 'lookup', hostname: 'google.com', record_type: 'ANY')
-
-    assert result[:success]
-    assert result[:addresses].is_a?(Array)
+  # external_ip action
+  def test_external_ip_returns_success_or_graceful_error
+    result = @tool.execute(action: 'external_ip')
+    # May fail if no internet — just check it returns a well-formed response
+    assert result.key?(:success)
+    if result[:success]
+      assert result[:ip]
+      assert_match(/\A\d+\.\d+\.\d+\.\d+\z/, result[:ip])
+    else
+      assert result[:error]
+    end
   end
 
-  def test_lookup_without_hostname_returns_error
-    result = @tool.execute(action: 'lookup', hostname: nil)
+  # ip_location action
+  def test_ip_location_returns_success_or_graceful_error
+    result = @tool.execute(action: 'ip_location', host: '8.8.8.8')
+    assert result.key?(:success)
+    if result[:success]
+      assert result[:ip]
+      assert result[:country]
+    else
+      assert result[:error]
+    end
+  end
 
+  # Missing host returns error for host-required actions
+  def test_a_record_missing_host_returns_error
+    result = @tool.execute(action: 'a', host: nil)
     refute result[:success]
-    assert_includes result[:error], "Hostname is required"
+    assert result[:error]
   end
 
-  def test_lookup_invalid_record_type_returns_error
-    result = @tool.execute(action: 'lookup', hostname: 'google.com', record_type: 'INVALID')
-
+  def test_mx_missing_host_returns_error
+    result = @tool.execute(action: 'mx', host: nil)
     refute result[:success]
-    assert_includes result[:error], "Unknown record type"
+    assert result[:error]
   end
 
-  # Reverse lookup tests
-
-  def test_reverse_lookup_valid_ip
-    result = @tool.execute(action: 'reverse', ip: '8.8.8.8')
-
-    assert result[:success]
-    assert_equal '8.8.8.8', result[:ip]
-    assert result[:hostnames].is_a?(Array)
-    # Google's DNS usually has reverse DNS
-  end
-
-  def test_reverse_lookup_without_ip_returns_error
-    result = @tool.execute(action: 'reverse', ip: nil)
-
-    refute result[:success]
-    assert_includes result[:error], "IP address is required"
-  end
-
-  def test_reverse_lookup_invalid_ip_returns_error
-    result = @tool.execute(action: 'reverse', ip: 'not.an.ip')
-
-    refute result[:success]
-    assert_includes result[:error], "Invalid IP address"
-  end
-
-  # MX lookup tests
-
-  def test_mx_lookup_returns_records
-    result = @tool.execute(action: 'mx', hostname: 'gmail.com')
-
-    assert result[:success]
-    assert_equal 'gmail.com', result[:hostname]
-    assert result[:mx_records].is_a?(Array)
-    assert result[:mx_records].length > 0
-
-    # Check structure of MX record
-    mx = result[:mx_records].first
-    assert mx[:priority]
-    assert mx[:exchange]
-  end
-
-  def test_mx_records_sorted_by_priority
-    result = @tool.execute(action: 'mx', hostname: 'gmail.com')
-
-    assert result[:success]
-    priorities = result[:mx_records].map { |r| r[:priority] }
-    assert_equal priorities, priorities.sort
-  end
-
-  def test_mx_lookup_without_hostname_returns_error
-    result = @tool.execute(action: 'mx', hostname: nil)
-
-    refute result[:success]
-    assert_includes result[:error], "Hostname is required"
-  end
-
-  # TXT lookup tests
-
-  def test_txt_lookup_returns_records
-    result = @tool.execute(action: 'txt', hostname: 'google.com')
-
-    assert result[:success]
-    assert_equal 'google.com', result[:hostname]
-    assert result[:txt_records].is_a?(Array)
-    assert result[:count] >= 0
-  end
-
-  def test_txt_lookup_without_hostname_returns_error
-    result = @tool.execute(action: 'txt', hostname: nil)
-
-    refute result[:success]
-    assert_includes result[:error], "Hostname is required"
-  end
-
-  # NS lookup tests
-
-  def test_ns_lookup_returns_nameservers
-    result = @tool.execute(action: 'ns', hostname: 'google.com')
-
-    assert result[:success]
-    assert_equal 'google.com', result[:hostname]
-    assert result[:nameservers].is_a?(Array)
-    assert result[:nameservers].length > 0
-  end
-
-  def test_ns_lookup_without_hostname_returns_error
-    result = @tool.execute(action: 'ns', hostname: nil)
-
-    refute result[:success]
-    assert_includes result[:error], "Hostname is required"
-  end
-
-  # All records tests
-
-  def test_all_returns_multiple_record_types
-    result = @tool.execute(action: 'all', hostname: 'google.com')
-
-    assert result[:success]
-    assert_equal 'google.com', result[:hostname]
-    assert result[:records].is_a?(Hash)
-
-    # Google should have at least A records
-    assert result[:records][:A]
-  end
-
-  def test_all_without_hostname_returns_error
-    result = @tool.execute(action: 'all', hostname: nil)
-
-    refute result[:success]
-    assert_includes result[:error], "Hostname is required"
-  end
-
-  # Unknown action test
-
+  # Unknown action
   def test_unknown_action_returns_error
-    result = @tool.execute(action: 'unknown')
-
+    result = @tool.execute(action: 'bogus', host: 'localhost')
     refute result[:success]
-    assert_includes result[:error], "Unknown action"
-    assert_includes result[:error], "Valid actions"
+    assert result[:error]
   end
 
-  # Case insensitivity tests
-
-  def test_action_is_case_insensitive
-    result_lower = @tool.execute(action: 'lookup', hostname: 'google.com')
-    result_upper = @tool.execute(action: 'LOOKUP', hostname: 'google.com')
-    result_mixed = @tool.execute(action: 'Lookup', hostname: 'google.com')
-
-    assert result_lower[:success]
-    assert result_upper[:success]
-    assert result_mixed[:success]
-  end
-
-  def test_record_type_is_case_insensitive
-    result_lower = @tool.execute(action: 'lookup', hostname: 'google.com', record_type: 'a')
-    result_upper = @tool.execute(action: 'lookup', hostname: 'google.com', record_type: 'A')
-
-    assert result_lower[:success]
-    assert result_upper[:success]
-  end
-
-  # IP validation tests
-
-  def test_valid_ipv4_format
-    result = @tool.execute(action: 'reverse', ip: '192.168.1.1')
-
-    assert result[:success]
-  end
-
-  def test_invalid_ipv4_out_of_range
-    result = @tool.execute(action: 'reverse', ip: '256.0.0.1')
-
-    refute result[:success]
-    assert_includes result[:error], "Invalid IP address"
+  # Response shape
+  def test_result_always_has_success_key
+    result = @tool.execute(action: 'a', host: 'localhost')
+    assert result.key?(:success)
   end
 end

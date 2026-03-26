@@ -1,24 +1,53 @@
 # lib/shared_tools/mcp.rb
 #
-# MCP (Model Context Protocol) support for SharedTools using ruby_llm-mcp gem >= 0.7.0
+# MCP (Model Context Protocol) client support for SharedTools.
+# Requires the ruby_llm-mcp gem >= 0.7.0 and RubyLLM >= 1.9.0.
 #
-# This module provides integration with various MCP servers, allowing Ruby applications
-# to connect to external services and tools through the Model Context Protocol.
+# @see https://github.com/patvice/ruby_llm-mcp
+# @see https://www.rubyllm-mcp.com
 #
-# @see https://github.com/patvice/ruby_llm-mcp RubyLLM MCP documentation
-# @see https://www.rubyllm-mcp.com Official documentation
+# Two categories of client are provided, both requiring no pre-installed binaries:
 #
-# Usage:
-#   require 'shared_tools/mcp/imcp'              # Load iMCP client
-#   require 'shared_tools/mcp/github_mcp_server' # Load GitHub client
-#   require 'shared_tools/mcp/tavily_mcp_server' # Load Tavily client
+# REMOTE HTTP (transport: :streamable)
+#   Connect to cloud-hosted MCP servers. Requires only an API key.
 #
-# Requirements:
-#   - ruby_llm-mcp >= 0.7.0
-#   - RubyLLM >= 1.9.0
+#   require 'shared_tools/mcp/tavily_client'      # Web search (TAVILY_API_KEY)
 #
-# Version 0.7.0 Changes:
-#   - Complex parameter support is now enabled by default
-#   - Requires RubyLLM 1.9+
-#   - support_complex_parameters! method is deprecated
+# NPX AUTO-DOWNLOAD (transport: :stdio via npx -y)
+#   The npm package is downloaded on first use. Requires Node.js / npx.
 #
+#   require 'shared_tools/mcp/memory_client'              # Persistent knowledge graph
+#   require 'shared_tools/mcp/sequential_thinking_client' # Chain-of-thought reasoning
+#   require 'shared_tools/mcp/chart_client'               # Chart / visualisation generation
+#   require 'shared_tools/mcp/brave_search_client'        # Web search (BRAVE_API_KEY)
+#
+# Requiring this file loads ALL available clients concurrently using threads.
+# Each client's transport connection is established in parallel, so total startup
+# time equals the slowest single client rather than the sum of all clients.
+#
+# Clients whose API keys are missing are silently skipped.
+#
+# After loading, access clients via:
+#   client = RubyLLM::MCP.clients["client-name"]
+#   chat   = RubyLLM.chat.with_tools(*client.tools)
+
+require_relative "mcp/streamable_http_patch"
+
+threads = Dir[File.join(__dir__, "mcp", "*_client.rb")].map do |path|
+  # Derive the canonical client name from the filename:
+  # "brave_search_client.rb" → "brave-search", "hugging_face_client.rb" → "hugging-face"
+  client_name = File.basename(path, "_client.rb").tr("_", "-")
+
+  Thread.new do
+    require path
+    SharedTools.record_mcp_result(client_name)
+  rescue Exception => e
+    # LoadError (missing env var / package) is a ScriptError, not a StandardError,
+    # so bare `rescue => e` does not catch it. We record the failure and warn so
+    # that missing-key clients are simply skipped when requiring mcp.rb as a whole.
+    SharedTools.record_mcp_result(client_name, error: e)
+    warn "SharedTools::MCP — skipping #{File.basename(path)}: #{e.message}"
+  end
+end
+
+threads.each(&:join)

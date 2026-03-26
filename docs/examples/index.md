@@ -1,338 +1,207 @@
 # Examples
 
-This section contains practical examples demonstrating how to use SharedTools in your LLM applications.
-
-## Available Examples
-
-### Basic Tool Examples
-
-Each tool has a dedicated example file in the `/examples` directory showing basic usage:
-
-#### [Browser Tool Example](https://github.com/madbomber/shared_tools/blob/main/examples/browser_tool_example.rb)
-Demonstrates web automation capabilities including:
-
-- Navigating to web pages
-- Inspecting page content and HTML
-- Finding elements by text or CSS selectors
-- Clicking elements
-- Filling in forms
-- Taking screenshots
-
-```ruby
-require 'shared_tools'
-
-# Initialize browser tool with Watir driver
-browser = SharedTools::Tools::BrowserTool.new
-
-# Navigate to a website
-browser.execute(
-  action: SharedTools::Tools::BrowserTool::Action::VISIT,
-  url: "https://example.com"
-)
-
-# Get page summary
-summary = browser.execute(
-  action: SharedTools::Tools::BrowserTool::Action::PAGE_INSPECT
-)
-```
-
-#### [Disk Tool Example](https://github.com/madbomber/shared_tools/blob/main/examples/disk_tool_example.rb)
-Shows file system operations including:
-
-- Creating and deleting directories
-- Reading and writing files
-- Moving files and directories
-- Listing directory contents
-- Replacing text in files
-
-```ruby
-require 'shared_tools'
-
-# Initialize disk tool
-disk = SharedTools::Tools::DiskTool.new
-
-# Create a file
-disk.execute(
-  action: SharedTools::Tools::DiskTool::Action::FILE_CREATE,
-  path: "./demo.txt"
-)
-
-# Write content
-disk.execute(
-  action: SharedTools::Tools::DiskTool::Action::FILE_WRITE,
-  path: "./demo.txt",
-  text: "Hello, World!"
-)
-
-# Read content
-content = disk.execute(
-  action: SharedTools::Tools::DiskTool::Action::FILE_READ,
-  path: "./demo.txt"
-)
-```
-
-#### [Database Tool Example](https://github.com/madbomber/shared_tools/blob/main/examples/database_tool_example.rb)
-Illustrates database operations including:
-
-- Creating tables
-- Inserting data
-- Querying with SELECT statements
-- Updating and deleting records
-- Transaction handling
-
-```ruby
-require 'shared_tools'
-require 'sqlite3'
-
-# Setup database connection
-db = SQLite3::Database.new(':memory:')
-driver = SharedTools::Tools::Database::SqliteDriver.new(db: db)
-database = SharedTools::Tools::DatabaseTool.new(driver: driver)
-
-# Execute SQL statements
-results = database.execute(
-  statements: [
-    "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)",
-    "INSERT INTO users (name) VALUES ('Alice')",
-    "SELECT * FROM users"
-  ]
-)
-```
-
-#### [Computer Tool Example](https://github.com/madbomber/shared_tools/blob/main/examples/computer_tool_example.rb)
-Demonstrates system-level operations:
-
-- Taking screenshots
-- Getting screen information
-- Performing mouse actions
-- Keyboard input simulation
-- Accessing system clipboard
-
-```ruby
-require 'shared_tools'
-
-# Initialize computer tool (Mac-specific in this example)
-computer = SharedTools::Tools::ComputerTool.new
-
-# Take a screenshot
-screenshot = computer.execute(
-  action: SharedTools::Tools::ComputerTool::Action::SCREENSHOT
-)
-
-# Get screen dimensions
-info = computer.execute(
-  action: SharedTools::Tools::ComputerTool::Action::SCREEN_INFO
-)
-```
-
-#### [Eval Tool Example](https://github.com/madbomber/shared_tools/blob/main/examples/eval_tool_example.rb)
-Shows code evaluation capabilities:
-
-- Ruby code evaluation
-- Python code evaluation (with safe sandboxing)
-- Shell command execution
-- Error handling and output capture
-
-```ruby
-require 'shared_tools'
-
-# Initialize eval tool
-eval_tool = SharedTools::Tools::EvalTool.new
-
-# Evaluate Ruby code
-result = eval_tool.execute(
-  language: 'ruby',
-  code: 'puts [1, 2, 3].sum'
-)
-
-# Execute shell commands
-output = eval_tool.execute(
-  language: 'shell',
-  code: 'ls -la'
-)
-```
-
-#### [Doc Tool Example](https://github.com/madbomber/shared_tools/blob/main/examples/doc_tool_example.rb)
-Demonstrates document processing:
-
-- Reading PDF files
-- Extracting text from specific pages
-- Processing multi-page documents
-- Handling PDF metadata
-
-```ruby
-require 'shared_tools'
-
-# Initialize doc tool
-doc = SharedTools::Tools::DocTool.new
-
-# Read PDF content
-content = doc.execute(
-  action: 'read_pdf',
-  path: './document.pdf',
-  page: 1
-)
-```
-
-### Advanced Workflow Example
-
-#### [Comprehensive Workflow Example](https://github.com/madbomber/shared_tools/blob/main/examples/comprehensive_workflow_example.rb)
-A complete end-to-end example showing how multiple tools work together in a realistic workflow:
-
-**Scenario**: Web Scraping to Database with Report Generation
-
-This example demonstrates:
-
-1. **Web Scraping Phase**
-   - Using BrowserTool to navigate to a product catalog
-   - Extracting structured data from HTML
-   - Parsing and transforming the data
-
-2. **Database Storage Phase**
-   - Creating database tables with DatabaseTool
-   - Inserting scraped data
-   - Performing queries and aggregations
-   - Generating statistics
-
-3. **Report Generation Phase**
-   - Using DiskTool to create report directories
-   - Generating Markdown reports
-   - Exporting data to JSON and CSV formats
-   - Organizing output files
-
-```ruby
-# Phase 1: Scrape data
-browser = SharedTools::Tools::BrowserTool.new(driver: browser_driver)
-browser.execute(action: "visit", url: "https://example.com/products")
-html = browser.execute(action: "page_inspect", full_html: true)
-
-# Phase 2: Store in database
-database = SharedTools::Tools::DatabaseTool.new(driver: db_driver)
-database.execute(statements: [
-  "CREATE TABLE products (...)",
-  "INSERT INTO products VALUES (...)"
-])
-
-# Phase 3: Generate reports
-disk = SharedTools::Tools::DiskTool.new
-disk.execute(action: "file_write", path: "./report.md", text: report_content)
-```
-
-See the [Workflows Guide](./workflows.md) for a detailed breakdown of this example.
+Practical demonstrations showing how to use SharedTools with LLM agents. All examples are in the `/examples` directory and use a shared `common.rb` helper that sets up the LLM chat session.
 
 ## Running the Examples
 
-All examples are located in the `/examples` directory and can be run directly:
-
 ```bash
-# Install dependencies first
 bundle install
 
-# Run a specific example
-ruby examples/browser_tool_example.rb
-ruby examples/comprehensive_workflow_example.rb
+# Run any demo
+bundle exec ruby -I examples examples/weather_tool_demo.rb
+bundle exec ruby -I examples examples/dns_tool_demo.rb
+bundle exec ruby -I examples examples/doc_tool_demo.rb
 ```
 
-## Mock Drivers for Testing
+Some demos require environment variables:
 
-Many examples include mock driver implementations that demonstrate the driver interface pattern:
+```bash
+# WeatherTool demos
+export OPENWEATHER_API_KEY="your_key_here"
+```
 
-- **MockBrowserDriver**: Simulates browser behavior without requiring a real browser
-- **SimpleSqliteDriver**: Minimal database driver implementation
-- **LocalDriver**: File system operations within a specified root directory
+---
 
-These mock drivers are useful for:
+## Tool Demos
 
-- Understanding the driver interface requirements
-- Testing without external dependencies
-- Creating your own custom drivers
+### [browser_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/browser_tool_demo.rb)
 
-## Next Steps
+Web automation: navigate pages, inspect content, click elements, fill forms, take screenshots.
 
-- Learn about [Multi-Tool Workflows](./workflows.md)
-- Explore the [Tool API Reference](../api/index.md)
-- Read about [Testing Your Tools](../guides/testing.md)
-- Understand [Error Handling Patterns](../guides/error-handling.md)
+---
 
-## Example Categories
+### [calculator_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/calculator_tool_demo.rb)
 
-### By Tool Type
+Safe mathematical expression evaluation: arithmetic, functions, trigonometry, configurable precision.
 
-- **Browser Automation**: [browser_tool_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/browser_tool_example.rb)
-- **File System**: [disk_tool_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/disk_tool_example.rb)
-- **Database**: [database_tool_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/database_tool_example.rb)
-- **System Control**: [computer_tool_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/computer_tool_example.rb)
-- **Code Execution**: [eval_tool_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/eval_tool_example.rb)
-- **Document Processing**: [doc_tool_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/doc_tool_example.rb)
+---
+
+### [clipboard_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/clipboard_tool_demo.rb)
+
+Read and write the system clipboard.
+
+---
+
+### [composite_analysis_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/composite_analysis_tool_demo.rb)
+
+Multi-stage data analysis orchestration: structure analysis, statistical insights, visualisation suggestions.
+
+---
+
+### [computer_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/computer_tool_demo.rb)
+
+System-level automation: mouse clicks and movement, keyboard typing and shortcuts, screenshots, scrolling.
+
+---
+
+### [cron_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/cron_tool_demo.rb)
+
+Cron expression parsing, scheduling utilities, and next-run time calculations.
+
+---
+
+### [current_date_time_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/current_date_time_tool_demo.rb)
+
+Fetch the real current date, time, and day of week — prevents LLMs from hallucinating temporal information.
+
+---
+
+### [data_science_kit_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/data_science_kit_demo.rb)
+
+Statistical summary, correlation analysis, time series, clustering, and prediction — using both file-based and inline pipe-delimited data.
+
+---
+
+### [database_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/database_tool_demo.rb)
+
+Full SQL operations (CREATE, INSERT, SELECT, UPDATE, DELETE) with the pluggable driver architecture.
+
+---
+
+### [database_query_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/database_query_tool_demo.rb)
+
+Safe read-only SQL queries with automatic LIMIT enforcement and timeout protection.
+
+---
+
+### [disk_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/disk_tool_demo.rb)
+
+Secure file system operations: create, read, write, delete, move files and directories.
+
+---
+
+### [dns_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/dns_tool_demo.rb)
+
+DNS lookups (A, AAAA, MX, NS, TXT, CNAME, reverse), WHOIS queries for domains and IPs, external IP detection, and IP geolocation. Demonstrates combining multiple actions in a single LLM workflow.
+
+---
+
+### [doc_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/doc_tool_demo.rb)
+
+Document reading across all supported formats:
+- Plain text files
+- PDF documents (specific pages and page ranges)
+- Microsoft Word (.docx) documents built from scratch
+- CSV expense reports
+- Multi-sheet Excel (.xlsx) workbooks
+
+---
+
+### [error_handling_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/error_handling_tool_demo.rb)
+
+Reference implementation for robust error handling: retries with exponential backoff, input validation, resource cleanup, and error categorisation.
+
+---
+
+### [eval_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/eval_tool_demo.rb)
+
+Code evaluation in Ruby, Python, and shell — with authorization controls.
+
+---
+
+### [notification_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/notification_tool_demo.rb)
+
+Cross-platform desktop notifications, modal dialogs, and text-to-speech across five sections:
+
+- **Notify** — banner notifications with title, subtitle, and sound
+- **Speak** — TTS with and without a rate override
+- **Alert** — single-button checkpoint and a Yes/No dialog that reports which button was clicked
+- **Combined workflow** — chains all three actions in one LLM prompt
+
+> **Note:** This demo triggers real OS interactions. The `alert` action **blocks** until you click a button; `speak` will use your system TTS engine.
+
+```bash
+bundle exec ruby -I examples examples/notification_tool_demo.rb
+```
+
+---
+
+### [mcp_client_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/mcp_client_demo.rb)
+
+MCP (Model Context Protocol) client integration example.
+
+---
+
+### [system_info_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/system_info_tool_demo.rb)
+
+System hardware and OS information: CPU, memory, disk, platform details.
+
+---
+
+### [weather_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/weather_tool_demo.rb)
+
+Real-time weather data for multiple cities, travel recommendations, packing advice, and — most notably — a local forecast that auto-detects your location via DnsTool and uses CurrentDateTimeTool to get the correct day of week.
+
+Requires `OPENWEATHER_API_KEY`.
+
+---
+
+### [workflow_manager_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/workflow_manager_tool_demo.rb)
+
+Multi-step workflow orchestration: start a workflow, list all existing workflows, execute steps, check status, and complete. Demonstrates a full software release pipeline tracked from creation to completion.
+
+---
+
+### [comprehensive_workflow_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/comprehensive_workflow_demo.rb)
+
+End-to-end multi-tool workflow combining web scraping, database storage, and report generation.
+
+---
+
+## Shared Helper: common.rb
+
+All demos require `common.rb`, which provides:
+
+- `title(label, char: '=')` — prints a formatted section header
+- `ask(prompt)` — sends a prompt to the shared `@chat` session and prints the response
+- `new_chat` — creates a fresh chat session (used to reset context between demo sections)
+- `@chat` — the default chat session with `ENV['RUBY_LLM_DEBUG'] = 'true'` enabled
+
+```ruby
+# Run any demo with the examples directory in the load path
+bundle exec ruby -I examples examples/some_tool_demo.rb
+```
+
+---
+
+## Demo Categories
+
+### By Capability
+
+| Category | Demos |
+|----------|-------|
+| Web & Network | browser_tool_demo, dns_tool_demo |
+| Files & Documents | disk_tool_demo, doc_tool_demo |
+| Data & Analysis | data_science_kit_demo, composite_analysis_tool_demo, database_tool_demo, database_query_tool_demo |
+| System & Utilities | computer_tool_demo, system_info_tool_demo, clipboard_tool_demo, current_date_time_tool_demo, cron_tool_demo, notification_tool_demo |
+| External APIs | weather_tool_demo |
+| Workflow | workflow_manager_tool_demo, comprehensive_workflow_demo |
+| Code Execution | eval_tool_demo, calculator_tool_demo |
 
 ### By Complexity
 
-- **Beginner**: Single-tool examples showing basic operations
-- **Intermediate**: Examples with custom drivers and error handling
-- **Advanced**: [comprehensive_workflow_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/comprehensive_workflow_example.rb) showing multi-tool integration
-
-### By Use Case
-
-- **Data Collection**: Web scraping and extraction
-- **Data Processing**: Database operations and transformations
-- **Report Generation**: Creating output files in multiple formats
-- **System Automation**: Orchestrating multiple tools together
-
-## Common Patterns
-
-### Human-in-the-Loop Authorization
-
-All tools respect the SharedTools authorization system:
-
-```ruby
-# Require user confirmation (default)
-SharedTools.auto_execute(false)
-
-# The AI will ask permission before executing
-disk.execute(action: "file_delete", path: "./important.txt")
-
-# Auto-execute for automated workflows
-SharedTools.auto_execute(true)
-```
-
-### Error Handling
-
-Examples demonstrate proper error handling:
-
-```ruby
-begin
-  result = database.execute(statements: ["SELECT * FROM missing_table"])
-  if result.first[:status] == :error
-    puts "Database error: #{result.first[:result]}"
-  end
-rescue => e
-  puts "Unexpected error: #{e.message}"
-end
-```
-
-### Cleanup and Resource Management
-
-Examples show proper resource cleanup:
-
-```ruby
-browser = SharedTools::Tools::BrowserTool.new
-begin
-  # Use the tool
-  browser.execute(action: "visit", url: "https://example.com")
-ensure
-  # Always cleanup
-  browser.cleanup!
-end
-```
-
-## Contributing Examples
-
-Have a great example to share? See our [Contributing Guide](../development/contributing.md) for information on submitting examples.
-
-Good examples:
-
-- Solve a real-world problem
-- Are well-commented and explain the "why"
-- Include error handling
-- Clean up resources properly
-- Can run independently with minimal setup
+| Level | Demos |
+|-------|-------|
+| Beginner | calculator_tool_demo, current_date_time_tool_demo, disk_tool_demo |
+| Intermediate | dns_tool_demo, doc_tool_demo, data_science_kit_demo, weather_tool_demo |
+| Advanced | comprehensive_workflow_demo, workflow_manager_tool_demo |

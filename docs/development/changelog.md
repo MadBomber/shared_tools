@@ -7,8 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `DnsTool` — DNS resolution (A, AAAA, MX, NS, TXT, CNAME, reverse, all), WHOIS queries for domains and IPs, external IP detection via public services, and IP geolocation via ip-api.com. No API key required.
+- `CurrentDateTimeTool` — Returns the real current date, time, and day of week from the system clock, preventing LLMs from hallucinating temporal information.
+- `DataScienceKit` — Statistical summary, correlation analysis, time series, clustering, and prediction. Accepts both file paths (`data_source`) and inline data (`data`) in pipe-delimited, CSV, JSON, or comma-separated number formats. All computation is real, not simulated.
+- `SystemInfoTool` — Hardware and OS information (CPU, memory, disk, platform).
+- `ClipboardTool` — Read and write the system clipboard.
+- `CronTool` — Cron expression parsing and next-run time calculation.
+- `WorkflowManagerTool` `list` action — enumerate all existing workflows with status, step count, and timestamps.
+- `DocTool` `docx_read` action — read text content from Microsoft Word (.docx) files, with optional paragraph range. Requires the `docx` gem.
+- `DocTool` `spreadsheet_read` action — read tabular data from CSV, XLSX, ODS, and XLSM files with sheet selection, row range, and header control. Requires the `roo` gem.
+- `DocTool` `text_read` action — read plain text files without any external gem dependency.
+- `examples/common.rb` — shared helper providing `title`, `ask`, `new_chat`, and `@chat` for all demo scripts.
+- All example scripts renamed from `*_example.rb` to `*_demo.rb` for consistency.
+
 ### Changed
 - Changing direction. Beginning with 0.3.0 will only support RubyLLM framework
+- `WeatherTool` demo updated to include a local forecast section combining `DnsTool` (external IP → geolocation) and `CurrentDateTimeTool` (real day of week) with `WeatherTool`.
+
+### Removed
+- `DevopsToolkit` — removed entirely. All operations were simulated and provided no real system interaction. The tool, its loader shim, its test file, and all demo/documentation references have been deleted.
 
 ### Deprecated
 - Support for OmniAI framework (use RubyLLM instead)

@@ -1,473 +1,331 @@
 # frozen_string_literal: true
 
-require 'ruby_llm/tool'
 require 'time'
+require_relative '../../shared_tools'
 
 module SharedTools
   module Tools
-    # A tool for parsing, validating, and explaining cron expressions.
-    # Supports standard 5-field cron format (minute, hour, day of month, month, day of week).
+    # Parse, validate, explain, and generate cron expressions.
     #
     # @example
     #   tool = SharedTools::Tools::CronTool.new
-    #   result = tool.execute(action: 'parse', expression: '0 9 * * 1-5')
-    #   puts result[:description]  # "At 09:00, Monday through Friday"
-    class CronTool < RubyLLM::Tool
-      def self.name = 'cron'
+    #   tool.execute(action: 'parse',      expression: '0 9 * * 1-5')
+    #   tool.execute(action: 'validate',   expression: '*/15 * * * *')
+    #   tool.execute(action: 'next_times', expression: '0 * * * *', count: 5)
+    #   tool.execute(action: 'generate',   description: 'every day at 9am')
+    class CronTool < ::RubyLLM::Tool
+      def self.name = 'cron_tool'
 
-      description <<~'DESCRIPTION'
-        Parse, validate, and explain cron expressions.
-
-        Supports standard 5-field cron format:
-        - minute (0-59)
-        - hour (0-23)
-        - day of month (1-31)
-        - month (1-12 or JAN-DEC)
-        - day of week (0-7 or SUN-SAT, where 0 and 7 are Sunday)
-
-        Special characters supported:
-        - * (any value)
-        - , (value list separator)
-        - - (range of values)
-        - / (step values)
+      description <<~DESC
+        Parse, validate, explain, and generate cron expressions (standard 5-field format).
 
         Actions:
-        - 'parse': Parse and explain a cron expression
-        - 'validate': Check if a cron expression is valid
-        - 'next': Calculate the next N execution times
-        - 'generate': Generate a cron expression from a description
+        - 'parse'      — Parse and explain a cron expression
+        - 'validate'   — Check whether a cron expression is valid
+        - 'next_times' — List the next N execution times (default 5)
+        - 'generate'   — Generate a cron expression from a natural language description
 
-        Example usage:
-          tool = SharedTools::Tools::CronTool.new
+        Cron format: minute hour day month weekday
+          - Each field accepts: number, range (1-5), list (1,3,5), step (*/15), or wildcard (*)
+          - Weekday: 0-7 (0 and 7 both mean Sunday)
 
-          # Parse and explain
-          tool.execute(action: 'parse', expression: '0 9 * * 1-5')
-          # => "At 09:00, Monday through Friday"
-
-          # Validate
-          tool.execute(action: 'validate', expression: '0 9 * * *')
-          # => { valid: true }
-
-          # Get next execution times
-          tool.execute(action: 'next', expression: '0 * * * *', count: 5)
-
-          # Generate from description
-          tool.execute(action: 'generate', description: 'every day at 9am')
-      DESCRIPTION
+        Generate examples: 'every day at 9am', 'every monday at noon', 'every 15 minutes',
+                           'every weekday', 'first day of every month at midnight'
+      DESC
 
       params do
-        string :action, description: <<~DESC.strip
-          The action to perform:
-          - 'parse': Parse and explain a cron expression
-          - 'validate': Check if expression is valid
-          - 'next': Calculate next execution times
-          - 'generate': Generate expression from description
-        DESC
-
-        string :expression, description: <<~DESC.strip, required: false
-          The cron expression to parse, validate, or calculate.
-          Required for 'parse', 'validate', and 'next' actions.
-        DESC
-
-        string :description, description: <<~DESC.strip, required: false
-          Human-readable schedule description for 'generate' action.
-          Examples: 'every day at 9am', 'every monday at noon', 'every 5 minutes'
-        DESC
-
-        integer :count, description: <<~DESC.strip, required: false
-          Number of next execution times to return for 'next' action.
-          Default: 5, Maximum: 20
-        DESC
+        string  :action,      description: "Action: 'parse', 'validate', 'next_times', 'generate'"
+        string  :expression,  required: false, description: "5-field cron expression. Required for parse, validate, next_times."
+        integer :count,       required: false, description: "Number of next execution times. Default: 5."
+        string  :description, required: false, description: "Natural language schedule description. Required for generate."
       end
-
-      DAYS_OF_WEEK = {
-        'SUN' => 0, 'MON' => 1, 'TUE' => 2, 'WED' => 3,
-        'THU' => 4, 'FRI' => 5, 'SAT' => 6
-      }.freeze
-
-      MONTHS = {
-        'JAN' => 1, 'FEB' => 2, 'MAR' => 3, 'APR' => 4,
-        'MAY' => 5, 'JUN' => 6, 'JUL' => 7, 'AUG' => 8,
-        'SEP' => 9, 'OCT' => 10, 'NOV' => 11, 'DEC' => 12
-      }.freeze
 
       # @param logger [Logger] optional logger
       def initialize(logger: nil)
         @logger = logger || RubyLLM.logger
       end
 
-      # Execute cron action
-      #
-      # @param action [String] action to perform
-      # @param expression [String, nil] cron expression
-      # @param description [String, nil] schedule description for generate
-      # @param count [Integer, nil] number of next executions
+      # @param action      [String]       action to perform
+      # @param expression  [String, nil]  cron expression
+      # @param count       [Integer, nil] number of times for next_times
+      # @param description [String, nil]  natural language description for generate
       # @return [Hash] result
-      def execute(action:, expression: nil, description: nil, count: nil)
-        @logger.info("CronTool#execute action=#{action.inspect}")
+      def execute(action:, expression: nil, count: nil, description: nil)
+        @logger.info("CronTool#execute action=#{action}")
 
         case action.to_s.downcase
-        when 'parse'
-          parse_expression(expression)
-        when 'validate'
-          validate_expression(expression)
-        when 'next'
-          next_executions(expression, count || 5)
-        when 'generate'
-          generate_expression(description)
+        when 'parse'      then parse_expression(expression)
+        when 'validate'   then validate_expression(expression)
+        when 'next_times' then next_times(expression, (count || 5).to_i)
+        when 'generate'   then generate_expression(description)
         else
-          {
-            success: false,
-            error: "Unknown action: #{action}. Valid actions are: parse, validate, next, generate"
-          }
+          { success: false, error: "Unknown action '#{action}'. Use: parse, validate, next_times, generate" }
         end
       rescue => e
         @logger.error("CronTool error: #{e.message}")
-        {
-          success: false,
-          error: e.message
-        }
+        { success: false, error: e.message }
       end
 
       private
 
-      def parse_expression(expression)
-        return { success: false, error: "Expression is required" } if expression.nil? || expression.empty?
+      FIELD_NAMES   = %w[minute hour day month weekday].freeze
+      FIELD_RANGES  = {
+        'minute'  => 0..59,
+        'hour'    => 0..23,
+        'day'     => 1..31,
+        'month'   => 1..12,
+        'weekday' => 0..7
+      }.freeze
+      DAY_NAMES     = %w[Sunday Monday Tuesday Wednesday Thursday Friday Saturday].freeze
+      MONTH_NAMES   = %w[January February March April May June July August
+                         September October November December].freeze
 
-        validation = validate_expression(expression)
-        return validation unless validation[:valid]
+      # -------------------------------------------------------------------------
+      # Action implementations
+      # -------------------------------------------------------------------------
 
-        parts = expression.strip.split(/\s+/)
-        minute, hour, dom, month, dow = parts
-
-        {
-          success: true,
-          expression: expression,
-          fields: {
-            minute: minute,
-            hour: hour,
-            day_of_month: dom,
-            month: month,
-            day_of_week: dow
-          },
-          description: build_description(minute, hour, dom, month, dow),
-          expanded: {
-            minutes: expand_field(minute, 0, 59),
-            hours: expand_field(hour, 0, 23),
-            days_of_month: expand_field(dom, 1, 31),
-            months: expand_field(month, 1, 12),
-            days_of_week: expand_field(dow, 0, 6)
-          }
-        }
+      def parse_expression(expr)
+        require_expr!(expr)
+        parts = split_expr(expr)
+        fields = {}
+        FIELD_NAMES.zip(parts).each do |name, raw|
+          fields[name] = { raw: raw, values: expand_field(raw, FIELD_RANGES[name]) }
+        end
+        { success: true, valid: true, expression: expr, fields: fields, explanation: explain(parts) }
+      rescue ArgumentError => e
+        { success: false, valid: false, expression: expr, error: e.message }
       end
 
-      def validate_expression(expression)
-        return { valid: false, error: "Expression is required" } if expression.nil? || expression.empty?
-
-        parts = expression.strip.split(/\s+/)
-
-        unless parts.length == 5
-          return {
-            valid: false,
-            error: "Invalid cron expression: expected 5 fields, got #{parts.length}"
-          }
-        end
-
-        minute, hour, dom, month, dow = parts
-
-        errors = []
-        errors << validate_field(minute, 0, 59, 'minute')
-        errors << validate_field(hour, 0, 23, 'hour')
-        errors << validate_field(dom, 1, 31, 'day of month')
-        errors << validate_field(month, 1, 12, 'month')
-        errors << validate_field(dow, 0, 7, 'day of week')
-
-        errors.compact!
-
-        if errors.empty?
-          { valid: true, expression: expression }
-        else
-          { valid: false, errors: errors }
-        end
+      def validate_expression(expr)
+        require_expr!(expr)
+        parts = split_expr(expr)
+        FIELD_NAMES.zip(parts).each { |name, raw| expand_field(raw, FIELD_RANGES[name]) }
+        { success: true, valid: true, expression: expr, explanation: explain(parts) }
+      rescue ArgumentError => e
+        { success: true, valid: false, expression: expr, error: e.message }
       end
 
-      def next_executions(expression, count)
-        return { success: false, error: "Expression is required" } if expression.nil? || expression.empty?
+      def next_times(expr, count)
+        require_expr!(expr)
+        parts = split_expr(expr)
 
-        validation = validate_expression(expression)
-        return { success: false, error: validation[:errors]&.join(', ') || validation[:error] } unless validation[:valid]
+        sets = FIELD_NAMES.map.with_index { |name, i| expand_field(parts[i], FIELD_RANGES[name]) }
+        mins_set, hrs_set, days_set, months_set, wdays_set = sets
 
-        count = [[count.to_i, 1].max, 20].min
+        # Normalise Sunday: weekday 7 == 0
+        wdays_set = wdays_set.map { |d| d == 7 ? 0 : d }.uniq.sort
 
-        parts = expression.strip.split(/\s+/)
-        minute_spec, hour_spec, dom_spec, month_spec, dow_spec = parts
+        times  = []
+        t      = Time.now
+        # Advance to the next minute boundary
+        t      = Time.new(t.year, t.month, t.day, t.hour, t.min + 1, 0)
+        limit  = 527_040 # 1 year of minutes — safety cap
 
-        minutes = expand_field(minute_spec, 0, 59)
-        hours = expand_field(hour_spec, 0, 23)
-        doms = expand_field(dom_spec, 1, 31)
-        months = expand_field(month_spec, 1, 12)
-        dows = expand_field(dow_spec, 0, 6)
-
-        executions = []
-        current = Time.now + 60 # Start from next minute
-
-        max_iterations = 366 * 24 * 60 # One year of minutes max
-        iterations = 0
-
-        while executions.length < count && iterations < max_iterations
-          iterations += 1
-
-          if matches_cron?(current, minutes, hours, doms, months, dows)
-            executions << current.strftime('%Y-%m-%d %H:%M')
-            current += 60
-          else
-            current += 60
+        while times.size < count && limit > 0
+          limit -= 1
+          if months_set.include?(t.month) &&
+             days_set.include?(t.day) &&
+             wdays_set.include?(t.wday) &&
+             hrs_set.include?(t.hour) &&
+             mins_set.include?(t.min)
+            times << t.strftime('%Y-%m-%d %H:%M (%A)')
           end
+          t += 60
         end
 
-        {
-          success: true,
-          expression: expression,
-          count: executions.length,
-          next_executions: executions
-        }
+        { success: true, expression: expr, explanation: explain(parts), next_times: times }
       end
 
-      def generate_expression(description)
-        return { success: false, error: "Description is required" } if description.nil? || description.empty?
+      def generate_expression(desc)
+        raise ArgumentError, "description is required for the generate action" if desc.nil? || desc.strip.empty?
 
-        desc = description.downcase.strip
-        expression = nil
+        d    = desc.downcase
+        expr = match_pattern(d)
 
-        # Common patterns - more specific patterns must come before general ones
-        case desc
-        when /every\s+minute/
-          expression = '* * * * *'
-        when /every\s+(\d+)\s+minutes?/
-          interval = $1.to_i
-          expression = "*/#{interval} * * * *"
-        when /every\s+hour/
-          expression = '0 * * * *'
-        when /every\s+(\d+)\s+hours?/
-          interval = $1.to_i
-          expression = "0 */#{interval} * * *"
-        when /every\s+day\s+at\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/
-          hour, min, ampm = $1.to_i, ($2 || '0').to_i, $3
-          hour += 12 if ampm == 'pm' && hour != 12
-          hour = 0 if ampm == 'am' && hour == 12
-          expression = "#{min} #{hour} * * *"
-        when /every\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\s+at\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/
-          day_name = $1.upcase[0..2]
-          day_num = DAYS_OF_WEEK[day_name]
-          hour, min, ampm = $2.to_i, ($3 || '0').to_i, $4
-          hour += 12 if ampm == 'pm' && hour != 12
-          hour = 0 if ampm == 'am' && hour == 12
-          expression = "#{min} #{hour} * * #{day_num}"
-        when /every\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)/
-          day_name = $1.upcase[0..2]
-          day_num = DAYS_OF_WEEK[day_name]
-          expression = "0 0 * * #{day_num}"
-        when /weekdays?\s+at\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/
-          hour, min, ampm = $1.to_i, ($2 || '0').to_i, $3
-          hour += 12 if ampm == 'pm' && hour != 12
-          hour = 0 if ampm == 'am' && hour == 12
-          expression = "#{min} #{hour} * * 1-5"
-        when /weekends?\s+at\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/
-          hour, min, ampm = $1.to_i, ($2 || '0').to_i, $3
-          hour += 12 if ampm == 'pm' && hour != 12
-          hour = 0 if ampm == 'am' && hour == 12
-          expression = "#{min} #{hour} * * 0,6"
-        when /at\s+noon/
-          expression = '0 12 * * *'
-        when /at\s+midnight/
-          expression = '0 0 * * *'
-        when /monthly|first\s+of\s+(the\s+)?month/
-          expression = '0 0 1 * *'
-        when /yearly|annually/
-          expression = '0 0 1 1 *'
-        when /hourly\s+at\s+:?(\d{2})/
-          min = $1.to_i
-          expression = "#{min} * * * *"
-        end
-
-        if expression
-          parsed = parse_expression(expression)
-          {
-            success: true,
-            description: description,
-            expression: expression,
-            explanation: parsed[:description]
-          }
+        if expr
+          parts = expr.split
+          { success: true, description: desc, expression: expr, explanation: explain(parts) }
         else
           {
             success: false,
-            error: "Could not parse description: '#{description}'. Try formats like 'every day at 9am', 'every monday at noon', 'every 5 minutes'"
+            description: desc,
+            error: "Could not generate an expression from that description. " \
+                   "Try: 'every day at 9am', 'every monday at noon', 'every 15 minutes', " \
+                   "'every weekday', 'first day of every month at midnight'."
           }
         end
       end
 
-      def validate_field(field, min, max, name)
-        return nil if field == '*'
+      # -------------------------------------------------------------------------
+      # Pattern matching for generate
+      # -------------------------------------------------------------------------
 
-        # Handle step values
-        if field.include?('/')
-          base, step = field.split('/')
-          return "Invalid step value in #{name}" unless step =~ /^\d+$/ && step.to_i > 0
-          return validate_field(base, min, max, name) unless base == '*'
-          return nil
+      def match_pattern(d)
+        return '* * * * *' if d.include?('every minute')
+
+        if (m = d.match(/every\s+(\d+)\s+minutes?/))
+          return "*/#{m[1]} * * * *"
         end
 
-        # Handle ranges
-        if field.include?('-')
-          parts = field.split('-')
-          return "Invalid range in #{name}" unless parts.length == 2
-          start_val = normalize_value(parts[0], name)
-          end_val = normalize_value(parts[1], name)
-          return "Invalid range values in #{name}" if start_val.nil? || end_val.nil?
-          return "Range out of bounds in #{name}" if start_val < min || end_val > max || start_val > end_val
-          return nil
+        if d.match?(/every\s+hour\b/) && !d.match?(/\d+\s+hours?/)
+          return '0 * * * *'
         end
 
-        # Handle lists
-        if field.include?(',')
-          field.split(',').each do |val|
-            err = validate_field(val.strip, min, max, name)
-            return err if err
-          end
-          return nil
+        if (m = d.match(/every\s+(\d+)\s+hours?/))
+          return "0 */#{m[1]} * * *"
         end
 
-        # Single value
-        val = normalize_value(field, name)
-        return "Invalid value '#{field}' in #{name}" if val.nil?
-        return "Value #{val} out of bounds (#{min}-#{max}) in #{name}" if val < min || val > max
+        return '0 9 * * 1-5' if d.include?('weekday')
+        return '0 0 * * 0,6' if d.include?('weekend')
+
+        day_pattern = DAY_NAMES.map(&:downcase).join('|')
+
+        if (m = d.match(/every\s+(#{day_pattern})\s+at\s+(\d+)(?::(\d+))?\s*(am|pm)?/))
+          day_num = DAY_NAMES.map(&:downcase).index(m[1])
+          return "#{hm_to_cron(m[2], m[3], m[4])} * * #{day_num}"
+        end
+
+        if (m = d.match(/every\s+(#{day_pattern})\s+at\s+noon/))
+          day_num = DAY_NAMES.map(&:downcase).index(m[1])
+          return "0 12 * * #{day_num}"
+        end
+
+        if (m = d.match(/every\s+(#{day_pattern})/))
+          day_num = DAY_NAMES.map(&:downcase).index(m[1])
+          return "0 0 * * #{day_num}"
+        end
+
+        return '0 12 * * *'  if d.include?('noon')
+        return '0 0 * * *'   if d.include?('midnight')
+
+        if (m = d.match(/every\s+day\s+at\s+(\d+)(?::(\d+))?\s*(am|pm)?/))
+          return "#{hm_to_cron(m[1], m[2], m[3])} * * *"
+        end
+
+        if (m = d.match(/first\s+day\s+(?:of\s+(?:every\s+)?month\s+)?at\s+(\d+)(?::(\d+))?\s*(am|pm)?/))
+          return "#{hm_to_cron(m[1], m[2], m[3])} 1 * *"
+        end
+
+        return '0 0 1 * *' if d.match?(/first\s+day/)
 
         nil
       end
 
-      def normalize_value(val, field_name)
-        return nil if val.nil? || val.empty?
-
-        # Handle day of week names
-        if %w[day\ of\ week].include?(field_name)
-          return DAYS_OF_WEEK[val.upcase] if DAYS_OF_WEEK.key?(val.upcase)
-        end
-
-        # Handle month names
-        if field_name == 'month'
-          return MONTHS[val.upcase] if MONTHS.key?(val.upcase)
-        end
-
-        return val.to_i if val =~ /^\d+$/
-
-        nil
+      # Convert hour/minute/ampm strings to "min hour" cron tokens.
+      def hm_to_cron(h, m, ap)
+        hour = h.to_i
+        min  = (m || '0').to_i
+        hour += 12 if ap == 'pm' && hour != 12
+        hour  = 0  if ap == 'am' && hour == 12
+        "#{min} #{hour}"
       end
 
-      def expand_field(field, min, max)
-        return (min..max).to_a if field == '*'
+      # -------------------------------------------------------------------------
+      # Field expansion
+      # -------------------------------------------------------------------------
 
-        if field.include?('/')
-          base, step = field.split('/')
-          step = step.to_i
-          start_vals = base == '*' ? (min..max).to_a : expand_field(base, min, max)
-          return start_vals.select { |v| (v - start_vals.first) % step == 0 }
-        end
+      # Expand one cron field to a sorted array of integers.
+      def expand_field(value, range)
+        return range.to_a if value == '*'
 
-        if field.include?(',')
-          return field.split(',').flat_map { |f| expand_field(f.strip, min, max) }.sort.uniq
-        end
-
-        if field.include?('-')
-          start_val, end_val = field.split('-').map { |v| normalize_value(v, '') || v.to_i }
-          return (start_val..end_val).to_a
-        end
-
-        [normalize_value(field, '') || field.to_i]
-      end
-
-      def matches_cron?(time, minutes, hours, doms, months, dows)
-        return false unless minutes.include?(time.min)
-        return false unless hours.include?(time.hour)
-        return false unless months.include?(time.month)
-
-        # Day matching: either day of month OR day of week must match
-        # (unless both are specified as specific values)
-        dom_match = doms.include?(time.day)
-        dow_match = dows.include?(time.wday)
-
-        dom_match || dow_match
-      end
-
-      def build_description(minute, hour, dom, month, dow)
-        parts = []
-
-        # Time part
-        time_desc = describe_time(minute, hour)
-        parts << time_desc if time_desc
-
-        # Day of month part
-        if dom != '*'
-          parts << "on day #{describe_field(dom)} of the month"
-        end
-
-        # Month part
-        if month != '*'
-          month_names = expand_field(month, 1, 12).map { |m| Date::MONTHNAMES[m] }
-          parts << "in #{month_names.join(', ')}"
-        end
-
-        # Day of week part
-        if dow != '*'
-          day_names = expand_field(dow, 0, 6).map { |d| Date::DAYNAMES[d] }
-          if day_names == %w[Monday Tuesday Wednesday Thursday Friday]
-            parts << "on weekdays"
-          elsif day_names == %w[Sunday Saturday]
-            parts << "on weekends"
+        result = []
+        value.split(',').each do |part|
+          if part.include?('/')
+            base_str, step_str = part.split('/')
+            step = step_str.to_i
+            raise ArgumentError, "Step must be >= 1, got #{step}" if step < 1
+            base_set = base_str == '*' ? range.to_a : expand_range_part(base_str, range)
+            result.concat(base_set.each_with_index.filter_map { |v, i| v if (i % step).zero? })
+          elsif part.include?('-')
+            a, b = part.split('-').map(&:to_i)
+            unless range_with_sunday(range).cover?(a) && range_with_sunday(range).cover?(b)
+              raise ArgumentError, "Range #{part} is out of bounds for #{range}"
+            end
+            result.concat((a..b).to_a)
           else
-            parts << "on #{day_names.join(', ')}"
+            v = part.to_i
+            unless range_with_sunday(range).cover?(v)
+              raise ArgumentError, "Value #{v} is out of range #{range}"
+            end
+            result << v
           end
         end
 
-        parts.empty? ? "Every minute" : parts.join(', ')
+        result.uniq.sort
       end
 
-      def describe_time(minute, hour)
-        if minute == '*' && hour == '*'
-          return nil # Every minute, handled by default
+      def expand_range_part(str, range)
+        if str.include?('-')
+          a, b = str.split('-').map(&:to_i)
+          (a..b).to_a
+        else
+          v = str.to_i
+          (v..range.last).to_a
         end
-
-        if minute == '*'
-          hours = expand_field(hour, 0, 23)
-          return "Every minute during hour(s) #{hours.join(', ')}"
-        end
-
-        if hour == '*'
-          minutes = expand_field(minute, 0, 59)
-          if minute.include?('/')
-            return "Every #{minute.split('/').last} minutes"
-          end
-          return "At minute #{minutes.join(', ')} of every hour"
-        end
-
-        hours = expand_field(hour, 0, 23)
-        minutes = expand_field(minute, 0, 59)
-
-        times = hours.flat_map do |h|
-          minutes.map { |m| format('%02d:%02d', h, m) }
-        end
-
-        "At #{times.join(', ')}"
       end
 
-      def describe_field(field)
-        return 'every' if field == '*'
+      # Allow weekday 7 (Sunday alias)
+      def range_with_sunday(range)
+        range == FIELD_RANGES['weekday'] ? (0..7) : range
+      end
 
-        if field.include?('/')
-          base, step = field.split('/')
-          return "every #{step}#{base == '*' ? '' : " starting at #{base}"}"
-        end
+      # -------------------------------------------------------------------------
+      # Human-readable explanation
+      # -------------------------------------------------------------------------
 
-        field
+      def explain(parts)
+        min, hour, day, month, weekday = parts
+        segments = []
+
+        segments << if min == '*'           then 'every minute'
+                    elsif min.start_with?('*/') then "every #{min[2..]} minutes"
+                    else                         "at minute #{min}"
+                    end
+
+        segments << if hour == '*'            then 'of every hour'
+                    elsif hour.start_with?('*/') then "every #{hour[2..]} hours"
+                    else                           "at #{fmt_hour(hour)}"
+                    end
+
+        segments << "on day #{day} of the month"  unless day == '*'
+        segments << "in #{fmt_month(month)}"       unless month == '*'
+        segments << "on #{fmt_weekday(weekday)}"   unless weekday == '*'
+
+        segments.join(', ')
+      end
+
+      def fmt_hour(h)
+        return h if h.match?(/[,\-\/]/)
+        n    = h.to_i
+        disp = n == 0 ? 12 : (n > 12 ? n - 12 : n)
+        ampm = n < 12 ? 'AM' : 'PM'
+        "#{disp}:00 #{ampm}"
+      end
+
+      def fmt_month(m)
+        return m if m.match?(/[,\-\/]/)
+        MONTH_NAMES[m.to_i - 1] || m
+      end
+
+      def fmt_weekday(w)
+        return 'weekdays (Mon–Fri)' if w == '1-5'
+        return w if w.match?(/[,\/]/)
+        return w if w.include?('-')
+        DAY_NAMES[w.to_i % 7] || w
+      end
+
+      # -------------------------------------------------------------------------
+      # Helpers
+      # -------------------------------------------------------------------------
+
+      def require_expr!(expr)
+        raise ArgumentError, "expression is required for this action" if expr.nil? || expr.strip.empty?
+      end
+
+      def split_expr(expr)
+        parts = expr.strip.split(/\s+/)
+        raise ArgumentError, "Cron expression must have 5 fields, got #{parts.size}" unless parts.size == 5
+        parts
       end
     end
   end

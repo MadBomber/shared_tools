@@ -1,48 +1,32 @@
 # frozen_string_literal: true
 
-require 'ruby_llm/tool'
 require 'time'
+require_relative '../../shared_tools'
 
 module SharedTools
   module Tools
-    # A tool that returns the current date, time, and timezone information.
-    # Useful for AI assistants that need to know the current time context.
+    # Returns the current date, time, and timezone from the local system.
     #
     # @example
     #   tool = SharedTools::Tools::CurrentDateTimeTool.new
-    #   result = tool.execute
-    #   puts result[:date]      # "2025-12-17"
-    #   puts result[:time]      # "13:45:30"
-    #   puts result[:timezone]  # "America/Chicago"
-    class CurrentDateTimeTool < RubyLLM::Tool
-      def self.name = 'current_date_time'
+    #   tool.execute                    # full output
+    #   tool.execute(format: 'date')    # date fields only
+    class CurrentDateTimeTool < ::RubyLLM::Tool
+      def self.name = 'current_date_time_tool'
 
-      description <<~'DESCRIPTION'
-        Returns the current date, time, and timezone information from the system.
-        This tool provides accurate temporal context for AI assistants that need
-        to reason about time-sensitive information or schedule-related queries.
+      description <<~DESC
+        Returns the current date, time, timezone, and calendar metadata from the system clock.
 
-        The tool returns:
-        - Current date in ISO 8601 format (YYYY-MM-DD)
-        - Current time in 24-hour format (HH:MM:SS)
-        - Current timezone name and UTC offset
-        - Unix timestamp for precise time calculations
-        - Day of week and week number for scheduling context
-
-        Example usage:
-          tool = SharedTools::Tools::CurrentDateTimeTool.new
-          result = tool.execute
-          puts "Today is #{result[:day_of_week]}, #{result[:date]}"
-          puts "Current time: #{result[:time]} #{result[:timezone]}"
-      DESCRIPTION
+        Supported formats:
+        - 'full'    (default) — all fields: date, time, timezone, ISO 8601, unix timestamp, DST flag
+        - 'date'    — year, month, day, day_of_week, week_of_year, quarter, ordinal_day
+        - 'time'    — hour, minute, second, timezone, utc_offset
+        - 'iso8601' — iso8601, iso8601_utc, unix_timestamp
+      DESC
 
       params do
-        string :format, description: <<~DESC.strip, required: false
-          Output format preference. Options:
-          - 'full' (default): Returns all date/time information
-          - 'date_only': Returns only date-related fields
-          - 'time_only': Returns only time-related fields
-          - 'iso8601': Returns a single ISO 8601 formatted datetime string
+        string :format, required: false, description: <<~DESC.strip
+          Output format. Options: 'full' (default), 'date', 'time', 'iso8601'.
         DESC
       end
 
@@ -51,103 +35,53 @@ module SharedTools
         @logger = logger || RubyLLM.logger
       end
 
-      # Execute the date/time query
-      #
-      # @param format [String] Output format ('full', 'date_only', 'time_only', 'iso8601')
-      # @return [Hash] Current date/time information
+      # @param format [String] output format
+      # @return [Hash] date/time information
       def execute(format: 'full')
-        @logger.info("DateTimeTool#execute format=#{format.inspect}")
+        @logger.info("CurrentDateTimeTool#execute format=#{format}")
 
         now = Time.now
+        utc = now.utc
+
+        date_info = {
+          year:            now.year,
+          month:           now.month,
+          day:             now.day,
+          day_of_week:     now.strftime('%A'),
+          day_of_week_num: now.wday,
+          week_of_year:    now.strftime('%U').to_i,
+          quarter:         ((now.month - 1) / 3) + 1,
+          ordinal_day:     now.yday
+        }
+
+        time_info = {
+          hour:             now.hour,
+          minute:           now.min,
+          second:           now.sec,
+          timezone:         now.zone,
+          utc_offset:       now.strftime('%z'),
+          utc_offset_hours: (now.utc_offset / 3600.0).round(2)
+        }
+
+        iso_info = {
+          iso8601:       now.iso8601,
+          iso8601_utc:   utc.iso8601,
+          unix_timestamp: now.to_i
+        }
 
         case format.to_s.downcase
-        when 'date_only'
-          date_only_response(now)
-        when 'time_only'
-          time_only_response(now)
+        when 'date'
+          { success: true }.merge(date_info)
+        when 'time'
+          { success: true }.merge(time_info)
         when 'iso8601'
-          iso8601_response(now)
+          { success: true }.merge(iso_info)
         else
-          full_response(now)
+          { success: true, dst: now.dst? }
+            .merge(date_info)
+            .merge(time_info)
+            .merge(iso_info)
         end
-      end
-
-      private
-
-      # Full response with all date/time information
-      def full_response(now)
-        {
-          success:       true,
-          date:          now.strftime('%Y-%m-%d'),
-          time:          now.strftime('%H:%M:%S'),
-          datetime:      now.iso8601,
-          timezone:      now.zone,
-          timezone_name: timezone_name(now),
-          utc_offset:    formatted_utc_offset(now),
-          unix_timestamp: now.to_i,
-          day_of_week:   now.strftime('%A'),
-          day_of_year:   now.yday,
-          week_number:   now.strftime('%V').to_i,
-          is_dst:        now.dst?,
-          quarter:       ((now.month - 1) / 3) + 1
-        }
-      end
-
-      # Date-only response
-      def date_only_response(now)
-        {
-          success:     true,
-          date:        now.strftime('%Y-%m-%d'),
-          year:        now.year,
-          month:       now.month,
-          month_name:  now.strftime('%B'),
-          day:         now.day,
-          day_of_week: now.strftime('%A'),
-          day_of_year: now.yday,
-          week_number: now.strftime('%V').to_i,
-          quarter:     ((now.month - 1) / 3) + 1
-        }
-      end
-
-      # Time-only response
-      def time_only_response(now)
-        {
-          success:        true,
-          time:           now.strftime('%H:%M:%S'),
-          time_12h:       now.strftime('%I:%M:%S %p'),
-          hour:           now.hour,
-          minute:         now.min,
-          second:         now.sec,
-          timezone:       now.zone,
-          timezone_name:  timezone_name(now),
-          utc_offset:     formatted_utc_offset(now),
-          unix_timestamp: now.to_i,
-          is_dst:         now.dst?
-        }
-      end
-
-      # ISO 8601 formatted response
-      def iso8601_response(now)
-        {
-          success:  true,
-          datetime: now.iso8601,
-          utc:      now.utc.iso8601
-        }
-      end
-
-      # Get the IANA timezone name if available
-      def timezone_name(time)
-        # Try to get IANA timezone from TZ environment variable
-        ENV['TZ'] || time.zone
-      end
-
-      # Format UTC offset as "+HH:MM" or "-HH:MM"
-      def formatted_utc_offset(time)
-        offset_seconds = time.utc_offset
-        sign = offset_seconds >= 0 ? '+' : '-'
-        hours, remainder = offset_seconds.abs.divmod(3600)
-        minutes = remainder / 60
-        format('%s%02d:%02d', sign, hours, minutes)
       end
     end
   end

@@ -28,13 +28,22 @@ module SharedTools
           Each analysis type requires specific data formats and optional parameters.
         DESC
 
-        string :data_source, description: <<~DESC.strip, required: true
+        string :data_source, description: <<~DESC.strip, required: false
           Data source specification for analysis. Can be:
           - File path: Relative or absolute path to CSV, JSON, Excel, or Parquet files
           - Database query: SQL SELECT statement for database-sourced data
           - API endpoint: HTTP URL for REST API data sources
           The tool automatically detects the format and applies appropriate parsing.
           Examples: './sales_data.csv', 'SELECT * FROM transactions', 'https://api.company.com/data'
+          Either data_source or data must be provided.
+        DESC
+
+        string :data, description: <<~DESC.strip, required: false
+          Inline data to analyse, provided directly as a JSON string. Accepted formats:
+          - Array of hashes: '[{"month":"Jan","value":42},{"month":"Feb","value":45}]'
+          - Pipe-delimited table string: "Col A | Col B\n1 | 2\n3 | 4"
+          - Comma-separated numbers (single series): "42,45,51,48,55" — parsed as [{value: n}]
+          Either data or data_source must be provided.
         DESC
 
         object :parameters, description: <<~DESC.strip, required: false do
@@ -82,11 +91,18 @@ module SharedTools
         @logger = logger || RubyLLM.logger
       end
 
-      def execute(analysis_type:, data_source:, **parameters)
+      def execute(analysis_type:, data_source: nil, data: nil, **parameters)
         analysis_start = Time.now
 
         begin
-          @logger.info("DataScienceKit#execute analysis_type=#{analysis_type} data_source=#{data_source}")
+          if data_source.nil? && data.nil?
+            return {
+              success: false,
+              error: "Either data_source or data must be provided."
+            }
+          end
+
+          @logger.info("DataScienceKit#execute analysis_type=#{analysis_type}")
 
           # Validate analysis type
           unless VALID_ANALYSIS_TYPES.include?(analysis_type)
@@ -99,21 +115,21 @@ module SharedTools
           end
 
           # Load and validate data
-          data = load_data(data_source)
-          validate_data_for_analysis(data, analysis_type, parameters)
+          loaded_data = data ? parse_inline_data(data) : load_data(data_source)
+          validate_data_for_analysis(loaded_data, analysis_type, parameters)
 
           # Perform analysis
           result = case analysis_type
           when "statistical_summary"
-            generate_statistical_summary(data, parameters)
+            generate_statistical_summary(loaded_data, parameters)
           when "correlation_analysis"
-            perform_correlation_analysis(data, parameters)
+            perform_correlation_analysis(loaded_data, parameters)
           when "time_series"
-            analyze_time_series(data, parameters)
+            analyze_time_series(loaded_data, parameters)
           when "clustering"
-            perform_clustering(data, parameters)
+            perform_clustering(loaded_data, parameters)
           when "prediction"
-            generate_predictions(data, parameters)
+            generate_predictions(loaded_data, parameters)
           end
 
           analysis_duration = (Time.now - analysis_start).round(3)
@@ -123,7 +139,7 @@ module SharedTools
             success: true,
             analysis_type: analysis_type,
             result: result,
-            data_summary: summarize_data(data),
+            data_summary: summarize_data(loaded_data),
             analyzed_at: Time.now.iso8601,
             duration_seconds: analysis_duration
           }
@@ -133,8 +149,7 @@ module SharedTools
             success: false,
             error: e.message,
             error_type: e.class.name,
-            analysis_type: analysis_type,
-            data_source: data_source
+            analysis_type: analysis_type
           }
         end
       end
@@ -187,6 +202,41 @@ module SharedTools
           @logger.warn("Using sample data for file type")
           generate_sample_data(20)
         end
+      end
+
+      def parse_inline_data(raw)
+        raw = raw.strip
+        # JSON array or object
+        if raw.start_with?('{', '[')
+          begin
+            return JSON.parse(raw)
+          rescue JSON::ParserError
+          end
+        end
+        lines = raw.lines.map(&:strip).reject(&:empty?)
+        # Pipe-delimited table
+        if lines.first&.include?('|')
+          headers = lines.first.split('|').map(&:strip).reject(&:empty?)
+          data_lines = lines.drop(1).reject { |l| l.match?(/^\|?[-:\s|]+$/) }
+          return data_lines.map do |line|
+            values = line.split('|').map(&:strip).reject(&:empty?)
+            headers.zip(values).to_h
+          end
+        end
+        # CSV header row
+        if lines.size > 1 && lines.first.include?(',') && lines.first.match?(/[a-zA-Z]/)
+          headers = lines.first.split(',').map(&:strip)
+          return lines.drop(1).map do |line|
+            values = line.split(',').map(&:strip)
+            headers.zip(values).to_h
+          end
+        end
+        # Comma-separated numbers — single series
+        if lines.size == 1 && lines.first.match?(/^[\d.,\s]+$/)
+          return lines.first.split(',').map { |v| { "value" => v.strip.to_f } }
+        end
+        # Plain lines
+        lines.map { |l| { "value" => l } }
       end
 
       # Generate sample data for testing
