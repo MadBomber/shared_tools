@@ -25,6 +25,7 @@ SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/incomplete")  # Empty/in
 Dir.glob("#{__dir__}/shared_tools/*_tool.rb").each { |f| SharedToolsLoader.ignore(f) }
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/data_science_kit.rb")
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/database.rb")
+SharedToolsLoader.ignore("#{__dir__}/shared_tools/utilities.rb")  # Reopens SharedTools, not SharedTools::Utilities
 
 SharedToolsLoader.setup
 
@@ -66,3 +67,5 @@ module SharedTools
     end
   end
 end
+
+require_relative "shared_tools/utilities"
