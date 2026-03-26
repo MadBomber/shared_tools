@@ -621,6 +621,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mcp-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Clients
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCP Clients">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#remote-http-api-key-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote HTTP (API key only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brew-installed-auto-installs-via-homebrew" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brew-installed (auto-installs via Homebrew)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npx-auto-download-nodejs-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        npx Auto-download (Node.js required)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#guides" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2022,6 +2072,95 @@
 <li><strong><a href="tools/">Docker ComposeRunTool</a></strong> - Docker container command execution</li>
 <li><strong><a href="tools/">ErrorHandlingTool</a></strong> - Reference implementation for error handling patterns</li>
 </ul>
+<h2 id="mcp-clients">MCP Clients<a class="headerlink" href="#mcp-clients" title="Permanent link">&para;</a></h2>
+<p>SharedTools bundles MCP (Model Context Protocol) clients that connect AI agents to
+external services. Each client is opt-in — require only the ones you need.</p>
+<h3 id="remote-http-api-key-only">Remote HTTP (API key only)<a class="headerlink" href="#remote-http-api-key-only" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Client</th>
+<th>Env var</th>
+<th>Provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>require 'shared_tools/mcp/tavily_client'</code></td>
+<td><code>TAVILY_API_KEY</code></td>
+<td>Web search, news, research, URL extraction</td>
+</tr>
+</tbody>
+</table>
+<h3 id="brew-installed-auto-installs-via-homebrew">Brew-installed (auto-installs via Homebrew)<a class="headerlink" href="#brew-installed-auto-installs-via-homebrew" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Client</th>
+<th>Env var</th>
+<th>Provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>require 'shared_tools/mcp/github_client'</code></td>
+<td><code>GITHUB_PERSONAL_ACCESS_TOKEN</code></td>
+<td>Repos, issues, PRs, code search</td>
+</tr>
+<tr>
+<td><code>require 'shared_tools/mcp/notion_client'</code></td>
+<td><code>NOTION_TOKEN</code></td>
+<td>Pages, databases, search, content CRUD</td>
+</tr>
+<tr>
+<td><code>require 'shared_tools/mcp/slack_client'</code></td>
+<td><code>SLACK_MCP_XOXP_TOKEN</code></td>
+<td>Channels, messages, threads, user info</td>
+</tr>
+<tr>
+<td><code>require 'shared_tools/mcp/hugging_face_client'</code></td>
+<td><code>HF_TOKEN</code></td>
+<td>Models, datasets, Spaces, model cards</td>
+</tr>
+</tbody>
+</table>
+<h3 id="npx-auto-download-nodejs-required">npx Auto-download (Node.js required)<a class="headerlink" href="#npx-auto-download-nodejs-required" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Client</th>
+<th>Provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>require 'shared_tools/mcp/memory_client'</code></td>
+<td>Persistent knowledge graph</td>
+</tr>
+<tr>
+<td><code>require 'shared_tools/mcp/sequential_thinking_client'</code></td>
+<td>Chain-of-thought reasoning</td>
+</tr>
+<tr>
+<td><code>require 'shared_tools/mcp/chart_client'</code></td>
+<td>Chart and visualisation generation</td>
+</tr>
+<tr>
+<td><code>require 'shared_tools/mcp/brave_search_client'</code></td>
+<td>Web and news search (<code>BRAVE_API_KEY</code>)</td>
+</tr>
+</tbody>
+</table>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Load all available clients at once (skips any whose env vars are missing)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools/mcp&#39;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Or load a specific client</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools/mcp/notion_client&#39;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">RubyLLM</span><span class="o">::</span><span class="no">MCP</span><span class="o">.</span><span class="n">clients</span><span class="o">[</span><span class="s2">&quot;notion&quot;</span><span class="o">]</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">chat</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">RubyLLM</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">with_tools</span><span class="p">(</span><span class="o">*</span><span class="n">client</span><span class="o">.</span><span class="n">tools</span><span class="p">)</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">chat</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="s2">&quot;Find my project planning pages and summarise what&#39;s in them&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>See <a href="https://github.com/madbomber/shared_tools/blob/main/lib/shared_tools/mcp/README.md">MCP Clients README</a> for full configuration details.</p>
 <h2 id="guides">Guides<a class="headerlink" href="#guides" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong><a href="guides/authorization/">Authorization System</a></strong> - Control when operations require approval</li>
