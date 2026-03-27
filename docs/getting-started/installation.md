@@ -114,7 +114,7 @@ gem 'ruby_llm-mcp', '>= 0.7.0'   # Add to Gemfile
 |-----------|---------------|
 | Remote HTTP (Tavily) | Only an API key — no binaries |
 | Brew-installed (GitHub, Notion, Slack, Hugging Face) | Homebrew — binaries are auto-installed on first use |
-| npx (Memory, Sequential Thinking, Chart, Brave Search) | Node.js / npx — packages are auto-downloaded on first use |
+| npx (Memory, Sequential Thinking, Chart, Brave Search, Playwright) | Node.js / npx — packages are auto-downloaded on first use |
 
 See [MCP Clients README](https://github.com/madbomber/shared_tools/blob/main/lib/shared_tools/mcp/README.md) for full configuration details.
 

@@ -39,6 +39,7 @@ The npm package is downloaded automatically on first use. The only prerequisite 
 | `sequential_thinking_client.rb` | `"sequential-thinking"` | Node.js | Structured chain-of-thought reasoning |
 | `chart_client.rb` | `"chart"` | Node.js | Chart and visualisation generation (AntV) |
 | `brave_search_client.rb` | `"brave-search"` | Node.js + `BRAVE_API_KEY` | Web and news search |
+| `playwright_client.rb` | `"playwright"` | Node.js | Browser automation: navigate, click, fill, screenshot, extract |
 
 ---
 

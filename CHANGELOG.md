@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### [0.4.2] - 2026-03-27
+
+#### MCP Clients
+- Added Playwright MCP client (`mcp/playwright_client.rb`) — browser automation via `@executeautomation/playwright-mcp-server` (npx auto-download, no pre-installation required)
+- Added demo script: `examples/mcp/playwright_demo.rb`
+
 ## Released
 
 ### [0.4.1] - 2026-03-26

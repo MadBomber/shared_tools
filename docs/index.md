@@ -139,6 +139,7 @@ external services. Each client is opt-in — require only the ones you need.
 | `require 'shared_tools/mcp/sequential_thinking_client'` | Chain-of-thought reasoning |
 | `require 'shared_tools/mcp/chart_client'` | Chart and visualisation generation |
 | `require 'shared_tools/mcp/brave_search_client'` | Web and news search (`BRAVE_API_KEY`) |
+| `require 'shared_tools/mcp/playwright_client'` | Browser automation: navigate, click, fill, screenshot, extract |
 
 ```ruby
 # Load all available clients at once (skips any whose env vars are missing)

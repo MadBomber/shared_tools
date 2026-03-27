@@ -437,6 +437,7 @@ SharedTools bundles [Model Context Protocol](https://modelcontextprotocol.io) cl
 | `require 'shared_tools/mcp/sequential_thinking_client'` | Chain-of-thought reasoning |
 | `require 'shared_tools/mcp/chart_client'` | Chart and visualisation generation |
 | `require 'shared_tools/mcp/brave_search_client'` | Web and news search (`BRAVE_API_KEY`) |
+| `require 'shared_tools/mcp/playwright_client'` | Browser automation: navigate, click, fill, screenshot, extract |
 
 ```ruby
 # Load all available clients at once (skips any whose env vars are missing)
@@ -523,6 +524,7 @@ bundle exec ruby -I examples examples/doc_tool_demo.rb
 | `mcp/sequential_thinking_demo.rb` | Chain-of-thought reasoning |
 | `mcp/chart_demo.rb` | Chart generation |
 | `mcp/brave_search_demo.rb` | Brave web search |
+| `mcp/playwright_demo.rb` | Browser automation via Playwright |
 | `notification_tool_demo.rb` | Desktop notifications, alerts, TTS |
 | `system_info_tool_demo.rb` | System info |
 | `weather_tool_demo.rb` | Weather + local forecast |
