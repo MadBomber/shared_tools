@@ -5,10 +5,11 @@
 # Provides browser automation via Playwright: navigate pages, click elements,
 # fill forms, take screenshots, extract text/HTML, and interact with web apps.
 #
+# Uses the official @playwright/mcp package from the Playwright team.
+#
 # Prerequisites:
 #   - Node.js and npx (https://nodejs.org)
-#   The @executeautomation/playwright-mcp-server package is downloaded
-#   automatically on first use via `npx -y`.
+#   The @playwright/mcp package is downloaded automatically on first use via `npx -y`.
 #
 # Configuration:
 #   No environment variables required.
@@ -27,7 +28,7 @@ RubyLLM::MCP.add_client(
   transport_type: :stdio,
   config: {
     command: "npx",
-    args:    ["-y", "@executeautomation/playwright-mcp-server"],
+    args:    ["-y", "@playwright/mcp"],
     env:     {},
   },
 )

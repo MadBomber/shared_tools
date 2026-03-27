@@ -5,7 +5,7 @@
 #
 # Browser automation via Playwright — navigate pages, click elements,
 # fill forms, take screenshots, and extract content from web apps.
-# Requires Node.js/npx (package auto-downloads on first use).
+# Uses the official @playwright/mcp package (auto-downloads on first use).
 #
 # Prerequisites:
 #   Node.js / npx   — https://nodejs.org
