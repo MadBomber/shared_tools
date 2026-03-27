@@ -6,6 +6,7 @@
 
 #### MCP Clients
 - Added Playwright MCP client (`mcp/playwright_client.rb`) — browser automation via the official `@playwright/mcp` package (npx auto-download, no pre-installation required)
+- Added `mcp/tool_schema_patch.rb` — strips `$schema` from MCP tool input schemas before API serialization; fixes `BadRequestError` from Claude's API when MCP servers annotate schemas with JSON Schema Draft 2020-12 meta-fields
 - Added demo script: `examples/mcp/playwright_demo.rb`
 
 ## Released

@@ -22,6 +22,7 @@
 # Compatible with ruby_llm-mcp >= 0.7.0
 
 require "ruby_llm/mcp"
+require_relative "tool_schema_patch"
 
 RubyLLM::MCP.add_client(
   name: "playwright",
