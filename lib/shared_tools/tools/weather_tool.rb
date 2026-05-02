@@ -1,11 +1,21 @@
 # weather_tool.rb - API integration example
 require 'ruby_llm/tool'
-require 'openweathermap'
+
+OPENWEATHERMAP_AVAILABLE = begin
+  require 'openweathermap'
+  true
+rescue LoadError, Gem::LoadError
+  false
+end
 
 module SharedTools
   module Tools
     class WeatherTool < RubyLLM::Tool
       def self.name = 'weather_tool'
+
+      def available?
+        OPENWEATHERMAP_AVAILABLE
+      end
 
       description <<~'DESCRIPTION'
         Retrieve comprehensive current weather information for any city worldwide using the OpenWeatherMap API.

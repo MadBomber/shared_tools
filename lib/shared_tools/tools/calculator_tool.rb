@@ -1,11 +1,21 @@
 # calculator_tool.rb - Safe mathematical calculator
 require 'ruby_llm/tool'
-require 'dentaku'
+
+DENTAKU_AVAILABLE = begin
+  require 'dentaku'
+  true
+rescue LoadError, Gem::LoadError
+  false
+end
 
 module SharedTools
   module Tools
     class CalculatorTool < RubyLLM::Tool
       def self.name = 'calculator'
+
+      def available?
+        DENTAKU_AVAILABLE
+      end
 
       description <<~'DESCRIPTION'
         Perform advanced mathematical calculations with comprehensive error handling and validation.

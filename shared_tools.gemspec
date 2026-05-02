@@ -31,24 +31,31 @@ Gem::Specification.new do |spec|
 
   spec.require_paths = ["lib"]
 
-  # Dependencies
+  # Core runtime dependencies
   spec.add_dependency "ruby_llm"
   spec.add_dependency "ruby_llm-mcp"
   spec.add_dependency "zeitwerk"
   spec.add_dependency "nokogiri"
-  spec.add_dependency "dentaku"
-  spec.add_dependency "sequel"
-  spec.add_dependency "openweathermap"
 
-  # Development dependencies
+  # Ruby 4.x ships bigdecimal-4.x as a default gem. Pin it explicitly so that
+  # transitive deps (e.g. dentaku) cannot re-activate an older installed 3.x
+  # version after 4.x is already active, which raises Gem::LoadError.
+  if RUBY_VERSION >= "4.0"
+    spec.add_dependency "bigdecimal", ">= 4.0"
+  end
 
-  # Optional tool dependencies - install as needed
-  spec.add_development_dependency "pdf-reader"        # For Doc/PDF tools
-  spec.add_development_dependency "docx"             # For Doc/DOCX tools
-  spec.add_development_dependency "roo"              # For Doc/spreadsheet tools (xlsx, xls, ods, csv)
-  spec.add_development_dependency "sqlite3"           # For Database examples
-  spec.add_development_dependency "ferrum"            # For Browser tools (Chrome DevTools Protocol, no chromedriver needed)
-  spec.add_development_dependency "macos"             # For Computer tools (macOS only)
+  # Optional tool dependencies - install separately if you need these tools.
+  # Each tool guards its require with begin/rescue LoadError so that a missing
+  # gem makes the individual tool unavailable rather than crashing all of shared_tools.
+  spec.add_development_dependency "dentaku"          # For CalculatorTool
+  spec.add_development_dependency "sequel"           # For DatabaseQueryTool
+  spec.add_development_dependency "openweathermap"   # For WeatherTool
+  spec.add_development_dependency "pdf-reader"       # For Doc::PdfReaderTool
+  spec.add_development_dependency "docx"            # For Doc::DocxReaderTool
+  spec.add_development_dependency "roo"             # For Doc::SpreadsheetReaderTool
+  spec.add_development_dependency "sqlite3"          # For Database tools
+  spec.add_development_dependency "ferrum"           # For Browser tools
+  spec.add_development_dependency "macos"            # For Computer tools (macOS only)
 
   # For SharedTools development
   spec.add_development_dependency "bundler"

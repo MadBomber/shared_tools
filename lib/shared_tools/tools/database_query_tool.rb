@@ -1,11 +1,21 @@
 # database_query_tool.rb - Safe database query execution
 require 'ruby_llm/tool'
-require 'sequel'
+
+SEQUEL_AVAILABLE = begin
+  require 'sequel'
+  true
+rescue LoadError, Gem::LoadError
+  false
+end
 
 module SharedTools
   module Tools
     class DatabaseQueryTool < RubyLLM::Tool
       def self.name = 'database_query'
+
+      def available?
+        SEQUEL_AVAILABLE
+      end
 
       description <<~'DESCRIPTION'
         Execute safe, read-only database queries with automatic connection management and security controls.
