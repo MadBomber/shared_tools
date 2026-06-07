@@ -122,4 +122,35 @@ class ShellEvalToolTest < Minitest::Test
     assert_equal 0, result[:exit_status]
     assert_includes result[:stdout], "Hello! @#$%"
   end
+
+  def test_executes_in_workdir
+    Dir.mktmpdir do |dir|
+      File.write(File.join(dir, "sentinel.txt"), "found")
+      result = @tool.execute(command: "ls", workdir: dir)
+
+      assert_equal 0, result[:exit_status]
+      assert_includes result[:stdout], "sentinel.txt"
+    end
+  end
+
+  def test_workdir_not_found_returns_error
+    result = @tool.execute(command: "ls", workdir: "/nonexistent_dir_xyz_abc")
+
+    assert result.key?(:error)
+    assert_includes result[:error], "not found"
+  end
+
+  def test_truncates_long_stdout
+    limit = SharedTools::Tools::Eval::ShellEvalTool::STDOUT_MAX
+    result = @tool.execute(command: "ruby -e \"print 'x' * #{limit + 100}\"")
+
+    assert result[:stdout].include?("[truncated]")
+    assert result[:stdout].length <= limit + "[truncated]".length + 1
+  end
+
+  def test_does_not_truncate_short_stdout
+    result = @tool.execute(command: "echo 'short'")
+
+    refute_includes result[:stdout], "[truncated]"
+  end
 end

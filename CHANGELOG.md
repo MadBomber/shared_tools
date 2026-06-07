@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### [0.4.4] - 2026-06-06
+
+#### Tools
+- Added `SearchCodebaseTool` (`tools/search_codebase_tool.rb`) — read-only codebase search using ripgrep (`rg`) with grep fallback; supports `path`, `extension`, and `max_results` parameters; returns matches with file path and line number; no authorization prompt required
+- Enhanced `ShellEvalTool`: added optional `workdir` parameter to set the working directory for command execution; validates the directory exists before running
+- Enhanced `ShellEvalTool`: output is now truncated at 5000 bytes (stdout) and 2000 bytes (stderr) to prevent oversized tool responses; truncated output is marked with `[truncated]`
+- Moved `require "open3"` to the top of `ShellEvalTool` instead of inline inside `execute`
+
+#### Tests
+- Added `test/shared_tools/tools/search_codebase_tool_test.rb` — 16 tests covering search, extension filtering, `max_results` capping, truncation flag, error cases, and tool-key reporting
+- Added 4 tests to `test/shared_tools/tools/eval/shell_eval_tool_test.rb` covering `workdir` execution, missing-directory error, stdout truncation, and non-truncation of short output
+
 ### [0.4.2] - 2026-03-27
 
 #### MCP Clients

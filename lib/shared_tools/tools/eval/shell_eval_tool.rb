@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "open3"
 
 module SharedTools
   module Tools
@@ -7,13 +8,18 @@ module SharedTools
       # @example
       #   tool = SharedTools::Tools::Eval::ShellEvalTool.new
       #   tool.execute(command: "ls -la")
+      #   tool.execute(command: "ls -la", workdir: "/tmp")
       class ShellEvalTool < ::RubyLLM::Tool
+        STDOUT_MAX = 5000
+        STDERR_MAX = 2000
+
         def self.name = 'eval_shell'
 
         description "Execute a shell command safely and return the result."
 
         params do
           string :command, description: "The shell command to execute"
+          string :workdir, description: "Working directory for the command (default: current directory)", required: false
         end
 
         # @param logger [Logger] optional logger
@@ -22,9 +28,10 @@ module SharedTools
         end
 
         # @param command [String] shell command to execute
+        # @param workdir [String, nil] working directory for the command
         #
         # @return [Hash] execution result
-        def execute(command:)
+        def execute(command:, workdir: nil)
           @logger.info("Requesting permission to execute command: '#{command}'")
 
           if command.strip.empty?
@@ -33,7 +40,12 @@ module SharedTools
             return { error: error_msg }
           end
 
-          # Show user the command and ask for confirmation
+          if workdir
+            unless File.directory?(workdir)
+              return { error: "Working directory not found: #{workdir}" }
+            end
+          end
+
           allowed = SharedTools.execute?(tool: self.class.to_s, stuff: command)
 
           unless allowed
@@ -43,9 +55,11 @@ module SharedTools
 
           @logger.info("Executing command: '#{command}'")
 
-          # Use Open3 for safer command execution with proper error handling
-          require "open3"
-          stdout, stderr, status = Open3.capture3(command)
+          opts = workdir ? { chdir: workdir } : {}
+          stdout, stderr, status = Open3.capture3(command, **opts)
+
+          stdout = truncate(stdout, STDOUT_MAX)
+          stderr = truncate(stderr, STDERR_MAX)
 
           if status.success?
             @logger.debug("Command execution completed successfully with #{stdout.bytesize} bytes of output")
@@ -57,6 +71,13 @@ module SharedTools
         rescue => e
           @logger.error("Command execution failed: #{e.message}")
           { error: e.message }
+        end
+
+        private
+
+        def truncate(str, max)
+          return str if str.length <= max
+          str.slice(0, max) + "\n[truncated]"
         end
       end
     end
