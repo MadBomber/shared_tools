@@ -6,10 +6,14 @@
 - Added Git tools, ported from `ruby_llm-toolbox`: `SharedTools::Tools::Git::StatusTool`, `DiffTool`, `LogTool`, `ShowTool`, `BlameTool`, `BranchTool`, and `GrepTool` (read-only), plus `AddTool`, `CommitTool`, and `CheckoutTool` (mutating, require `SharedTools.execute?` authorization). All shell out to `git` with `core.fsmonitor` disabled and `--no-ext-diff --no-textconv`, so an untrusted checkout can't turn a read into command execution; refs are validated against option injection and paths are confined to `repo_root`. Also added `SharedTools::Tools::GitTool`, a facade dispatching on `action`.
 - Added `SharedTools::Tools::JsonQueryTool`, `YamlQueryTool`, and `TomlQueryTool` — query JSON/YAML/TOML (from a file or inline string) with a dot/bracket path expression (`users[0].name`, `services[].image`), or pretty-print with no query. YAML uses `safe_load`; TOML is parsed with a new dependency-free `SharedTools::TomlParser`, also ported from `ruby_llm-toolbox`. Path traversal is shared via a new `SharedTools::DataPath` module.
 - Added `SharedTools::Tools::CsvReadTool` (read-only) and `SharedTools::Tools::CsvWriteTool` (mutating, requires authorization).
+- Added `SharedTools::Tools::DiffTool`, ported from `ruby_llm-toolbox` — compares two in-memory blocks of text and returns a readable unified diff, via a new dependency-free `SharedTools::TextDiff` module. Read-only, no filesystem access.
+- Added `SharedTools::Tools::MultiEditTool` — applies several find/replace edits to one file atomically; each edit's `old_string` must match exactly once (or `replace_all`) or the whole batch is rejected and nothing is written. Mutating, requires `SharedTools.execute?` authorization.
+- Added `SharedTools::Tools::ApplyPatchTool` — applies a unified diff via `git apply`, validated with `--check` first; every touched path is confined to `root`. Set `check: true` for a dry run. Mutating, requires authorization.
 
 #### Tests
 - Added `test/shared_tools/tools/git/*_tool_test.rb` (10 files) and `test/shared_tools/tools/git_tool_test.rb` covering all git tools, including ref-injection and path-jail rejection.
 - Added `test/shared_tools/tools/{json,yaml,toml,csv}_*_tool_test.rb` covering the structured-data tools.
+- Added `test/shared_tools/tools/{diff,multi_edit,apply_patch}_tool_test.rb` covering the file-editing tools, including atomicity-on-failure and path-jail rejection.
 - Added `init_git_repo` / `git_commit_all` test helpers to `test/test_helper.rb`.
 
 ### [0.4.4] - 2026-06-06

@@ -16,7 +16,7 @@ SharedTools is a comprehensive collection of production-ready tools designed for
 
 ### Key Features
 
-- 🔧 **25+ Production Tools** — Browser automation, file operations, git, structured data (JSON/YAML/TOML/CSV), database queries, code evaluation, document processing, DNS and WHOIS lookups, IP geolocation, data science, weather data, workflow management, system utilities, notifications, and more
+- 🔧 **28+ Production Tools** — Browser automation, file operations and editing (diff/multi-edit/patch), git, structured data (JSON/YAML/TOML/CSV), database queries, code evaluation, document processing, DNS and WHOIS lookups, IP geolocation, data science, weather data, workflow management, system utilities, notifications, and more
 - 🔒 **Human-in-the-Loop Authorization** — Built-in safety system for sensitive operations
 - 🎯 **Facade Pattern** — Simplified interfaces with complex capabilities under the hood
 - 🔌 **Pluggable Drivers** — Swap implementations for testing or different backends
@@ -117,6 +117,31 @@ content = disk.execute(action: "file_read", path: "./report.txt")
 ```
 
 [📖 Full Disk Documentation](https://madbomber.github.io/shared_tools/tools/disk/)
+
+---
+
+### ✂️ File Editing Tools
+
+Precise, deterministic text editing that complements `DiskTool` and `GitTool` — an alternative to `Disk::FileReplaceTool`'s single global replace for coding-agent workflows.
+
+- **`DiffTool`** — compares two in-memory blocks of text and returns a readable unified diff. Read-only, no filesystem access.
+- **`MultiEditTool`** — applies several find/replace edits to one file atomically. Each edit's `old_string` must match exactly once (add context or set `replace_all`) or the whole batch is rejected and nothing is written. Requires authorization.
+- **`ApplyPatchTool`** — applies a unified diff (as produced by `git diff`, `DiffTool`, or `diff -u`) via `git apply`, validating with `--check` first. Every touched path is confined to `root`. Set `check: true` for a dry run. Requires authorization.
+
+```ruby
+diff = SharedTools::Tools::DiffTool.new
+diff.execute(old: old_text, new: new_text)
+
+multi_edit = SharedTools::Tools::MultiEditTool.new(root: "./my-project")
+multi_edit.execute(path: "lib/foo.rb", edits: [
+  { old_string: "def bar", new_string: "def baz" },
+  { old_string: "BAR", new_string: "BAZ", replace_all: true }
+])
+
+apply_patch = SharedTools::Tools::ApplyPatchTool.new(root: "./my-project")
+apply_patch.execute(patch: unified_diff_text, check: true) # dry run
+apply_patch.execute(patch: unified_diff_text)
+```
 
 ---
 
