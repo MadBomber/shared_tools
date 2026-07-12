@@ -16,7 +16,7 @@ SharedTools is a comprehensive collection of production-ready tools designed for
 
 ### Key Features
 
-- 🔧 **30+ Production Tools** — Browser automation, file discovery and editing (glob/tree/diff/multi-edit/patch), git, structured data (JSON/YAML/TOML/CSV), database queries, code evaluation, document processing, DNS and WHOIS lookups, IP geolocation, data science, weather data, workflow management, system utilities, notifications, and more
+- 🔧 **45+ Production Tools** — Browser automation, file discovery and editing (glob/tree/diff/multi-edit/patch/replace), git, structured data (JSON/YAML/TOML/CSV), Ruby dev tooling (gem/bundle/lint/parse), background process management, guarded HTTP (fetch/request/download), database queries, code evaluation, document processing, DNS and WHOIS lookups, IP geolocation, data science, weather data, workflow management, system utilities, notifications, and more
 - 🔒 **Human-in-the-Loop Authorization** — Built-in safety system for sensitive operations
 - 🎯 **Facade Pattern** — Simplified interfaces with complex capabilities under the hood
 - 🔌 **Pluggable Drivers** — Swap implementations for testing or different backends
@@ -151,6 +151,7 @@ Precise, deterministic text editing that complements `DiskTool` and `GitTool` �
 - **`DiffTool`** — compares two in-memory blocks of text and returns a readable unified diff. Read-only, no filesystem access.
 - **`MultiEditTool`** — applies several find/replace edits to one file atomically. Each edit's `old_string` must match exactly once (add context or set `replace_all`) or the whole batch is rejected and nothing is written. Requires authorization.
 - **`ApplyPatchTool`** — applies a unified diff (as produced by `git diff`, `DiffTool`, or `diff -u`) via `git apply`, validating with `--check` first. Every touched path is confined to `root`. Set `check: true` for a dry run. Requires authorization.
+- **`ReplaceInFilesTool`** — batch find/replace across every file in `root` matching a glob (default `**/*`). Literal by default; set `regex: true` for a pattern with `\1`-style backreferences. ReDoS-guarded, skips binary files and ignored directories. Set `dry_run: true` to preview without writing. Requires authorization (dry runs don't).
 
 ```ruby
 diff = SharedTools::Tools::DiffTool.new
@@ -165,6 +166,9 @@ multi_edit.execute(path: "lib/foo.rb", edits: [
 apply_patch = SharedTools::Tools::ApplyPatchTool.new(root: "./my-project")
 apply_patch.execute(patch: unified_diff_text, check: true) # dry run
 apply_patch.execute(patch: unified_diff_text)
+
+replace = SharedTools::Tools::ReplaceInFilesTool.new(root: "./my-project")
+replace.execute(pattern: "OldClassName", replacement: "NewClassName", glob: "**/*.rb")
 ```
 
 ---
@@ -185,6 +189,76 @@ git.execute(action: "commit", message: "Fix the thing", all: true)
 ```
 
 Each action is also available as a standalone tool, e.g. `SharedTools::Tools::Git::StatusTool`, `SharedTools::Tools::Git::DiffTool`, `SharedTools::Tools::Git::CommitTool`.
+
+---
+
+### 💎 Ruby Dev Tools
+
+Tooling for working on a Ruby project: gem metadata, Bundler, linting, and structural code navigation.
+
+- **`GemTool`** — read-only RubyGems.org metadata lookup (`info`, `version`, `dependencies`, `search`). No authorization needed.
+- **`BundleTool`** — runs Bundler (`install`, `update`, `outdated`, `check`, `lock`, `add`) in a project. Requires a Gemfile and authorization.
+- **`LintTool`** — runs RuboCop or Standard, auto-detected (Standard if `.standard.yml` is present) or forced explicitly. Uses `bundle exec` when a Gemfile exists. Offenses are a normal result, not an error; `autocorrect: true` rewrites files in place. Requires authorization.
+- **`ParseRubyTool`** — outlines a Ruby file's structure (classes, modules, methods, constants with line numbers) via Prism (Ruby 3.3+) or the Ripper stdlib fallback — parses, never executes. Filter with `query`/`kind` to locate a specific definition. Read-only.
+
+```ruby
+gem = SharedTools::Tools::GemTool.new
+gem.execute(name: "ruby_llm", action: "version")
+
+bundle = SharedTools::Tools::BundleTool.new(root: "./my-project")
+bundle.execute(action: "add", gem: "rack")
+
+lint = SharedTools::Tools::LintTool.new(root: "./my-project")
+lint.execute(path: "lib/foo.rb", autocorrect: true)
+
+parse = SharedTools::Tools::ParseRubyTool.new
+parse.execute(path: "./lib/foo.rb")
+parse.execute(path: "./lib/foo.rb", kind: "method", query: "initialize")
+```
+
+---
+
+### ⚙️ Process Management Tools
+
+Start, monitor, and stop long-running background processes (dev servers, watchers, log tails) without blocking the caller.
+
+- **`ProcessStartTool`** — starts a command as a background process and returns its id immediately. The executable must be on `allowed_commands` (empty by default — nothing is allowed until configured); argv only, no shell. Runs in its own process group. Requires authorization.
+- **`ProcessListTool`** — lists background processes: id, status, pid, age, command. Read-only.
+- **`ProcessOutputTool`** — reads new stdout/stderr since the last read (poll it to follow output), plus status and exit code. Read-only.
+- **`ProcessKillTool`** — SIGTERM the process group, escalating to SIGKILL if it doesn't exit, then returns final output. Always available with no authorization prompt, so a runaway process can always be stopped.
+
+```ruby
+start = SharedTools::Tools::ProcessStartTool.new(allowed_commands: ["rackup"])
+started = start.execute(command: "rackup", args: ["-p", "9292"], name: "web server")
+id = started[/proc_\d+/]
+
+output = SharedTools::Tools::ProcessOutputTool.new
+output.execute(id: id) # poll this in a loop to stream output
+
+SharedTools::Tools::ProcessListTool.new.execute
+SharedTools::Tools::ProcessKillTool.new.execute(id: id)
+```
+
+---
+
+### 🌐 Network Tools
+
+Guarded HTTP — every request and redirect hop is checked against SSRF (server-side request forgery): only http/https, no embedded credentials, and the resolved IP is rejected (and the connection pinned to it) if it's private, loopback, link-local, cloud-metadata, or otherwise reserved.
+
+- **`WebFetchTool`** — fetches a URL and returns readable text (HTML is stripped to text). Read-only, no authorization needed.
+- **`HttpRequestTool`** — a general HTTP client returning status, key headers, and body. GET/HEAD need no authorization; POST/PUT/PATCH/DELETE require it.
+- **`DownloadFileTool`** — downloads a URL to a file within `root`, size-capped. Requires authorization.
+
+```ruby
+fetch = SharedTools::Tools::WebFetchTool.new
+fetch.execute(url: "https://example.com")
+
+request = SharedTools::Tools::HttpRequestTool.new
+request.execute(url: "https://api.example.com/items", method: "POST", body: '{"name":"x"}')
+
+download = SharedTools::Tools::DownloadFileTool.new(root: "./downloads")
+download.execute(url: "https://example.com/release.zip", path: "release.zip")
+```
 
 ---
 
@@ -227,6 +301,39 @@ output = eval_tool.execute(language: "shell", code: "ls -la")
 ```
 
 [📖 Full Eval Documentation](https://madbomber.github.io/shared_tools/tools/eval/)
+
+---
+
+### 🖥️ Bash & Test Runner Tools
+
+- **`BashTool`** — runs ONE allowlisted executable with arguments. Deliberately not a shell: no pipes, redirects, globs, or variable expansion, so OS command injection has no surface to exploit. `allowed_commands` is empty by default — nothing runs until configured. Requires authorization.
+- **`RunTestsTool`** — runs a Ruby project's test suite (RSpec or Minitest, auto-detected). A failing suite is a normal result, not a tool error. Requires authorization.
+- **`PythonTestsTool`** — runs a Python project's tests (pytest or unittest). Requires authorization.
+
+```ruby
+bash = SharedTools::Tools::BashTool.new(allowed_commands: ["ls", "cat"])
+bash.execute(command: "ls", args: ["-la"])
+
+tests = SharedTools::Tools::RunTestsTool.new(root: "./my-project")
+tests.execute(path: "spec/models/user_spec.rb")
+
+py_tests = SharedTools::Tools::PythonTestsTool.new(root: "./my-project")
+py_tests.execute(framework: "unittest")
+```
+
+---
+
+### ✅ Task Tracking
+
+**`TodoWriteTool`** maintains a task list for multi-step work. Each call replaces the whole list and renders it back; state lives on the tool instance for the duration of a chat session. No authorization needed.
+
+```ruby
+todo = SharedTools::Tools::TodoWriteTool.new
+todo.execute(todos: [
+  { content: "Write the tool", status: "completed" },
+  { content: "Write the tests", status: "in_progress" }
+])
+```
 
 ---
 
