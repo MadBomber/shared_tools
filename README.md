@@ -16,7 +16,7 @@ SharedTools is a comprehensive collection of production-ready tools designed for
 
 ### Key Features
 
-- 🔧 **21+ Production Tools** — Browser automation, file operations, database queries, code evaluation, document processing, DNS and WHOIS lookups, IP geolocation, data science, weather data, workflow management, system utilities, notifications, and more
+- 🔧 **25+ Production Tools** — Browser automation, file operations, git, structured data (JSON/YAML/TOML/CSV), database queries, code evaluation, document processing, DNS and WHOIS lookups, IP geolocation, data science, weather data, workflow management, system utilities, notifications, and more
 - 🔒 **Human-in-the-Loop Authorization** — Built-in safety system for sensitive operations
 - 🎯 **Facade Pattern** — Simplified interfaces with complex capabilities under the hood
 - 🔌 **Pluggable Drivers** — Swap implementations for testing or different backends
@@ -120,6 +120,25 @@ content = disk.execute(action: "file_read", path: "./report.txt")
 
 ---
 
+### 🔀 Git Tools
+
+Read a repository's history and working-tree state, and make basic mutating changes. Read-only actions (`status`, `diff`, `log`, `show`, `blame`, `branch`, `grep`) require no authorization; mutating actions (`add`, `commit`, `checkout`) require user authorization. External diff drivers, textconv filters, and `core.fsmonitor` are disabled so an untrusted checkout can't turn a read into command execution.
+
+**Actions:** `status`, `diff`, `log`, `show`, `blame`, `branch`, `grep`, `add`, `commit`, `checkout`
+
+```ruby
+git = SharedTools::Tools::GitTool.new(repo_root: "./my-project")
+git.execute(action: "status")
+git.execute(action: "diff", staged: true)
+git.execute(action: "log", count: 10, path: "lib/foo.rb")
+git.execute(action: "blame", path: "lib/foo.rb", start_line: 10, end_line: 20)
+git.execute(action: "commit", message: "Fix the thing", all: true)
+```
+
+Each action is also available as a standalone tool, e.g. `SharedTools::Tools::Git::StatusTool`, `SharedTools::Tools::Git::DiffTool`, `SharedTools::Tools::Git::CommitTool`.
+
+---
+
 ### 🗄️ Database Tools
 
 Execute SQL operations on databases.
@@ -205,6 +224,31 @@ dns.execute(action: "ip_location", host: "8.8.8.8")  # geolocate any IP
 ```
 
 [📖 Full DNS Documentation](https://madbomber.github.io/shared_tools/tools/dns_tool/)
+
+---
+
+### 🧩 Structured Data Tools
+
+Query and edit JSON, YAML, TOML, and CSV without writing a parser. Each query tool accepts either a file path or an inline string, and supports a dot/bracket path expression to extract a value (`users[0].name`, `services[].image`, `dependencies.serde.version`) — omit the query to pretty-print the whole document. YAML is loaded with `safe_load` (no arbitrary object deserialization) and TOML is parsed with a small dependency-free parser.
+
+```ruby
+json = SharedTools::Tools::JsonQueryTool.new
+json.execute(path: "./config.json", query: "servers[0].host")
+
+yaml = SharedTools::Tools::YamlQueryTool.new
+yaml.execute(path: "./docker-compose.yml", query: "services[].image")
+
+toml = SharedTools::Tools::TomlQueryTool.new
+toml.execute(path: "./Cargo.toml", query: "dependencies.serde.version")
+
+csv_read = SharedTools::Tools::CsvReadTool.new
+csv_read.execute(path: "./sales.csv", limit: 20)
+
+csv_write = SharedTools::Tools::CsvWriteTool.new
+csv_write.execute(path: "./out.csv", headers: ["name", "age"], rows: [["Alice", "30"]])
+```
+
+`CsvWriteTool` is mutating and requires user authorization (see [Authorization System](#authorization-system)); the query tools and `CsvReadTool` are read-only.
 
 ---
 
@@ -595,6 +639,8 @@ This gem is available as open source under the terms of the [MIT License](LICENS
 ## Special Thanks
 
 This gem was originally inspired by Kevin Sylvestre's [omniai-tools](https://github.com/ksylvest/omniai-tools) gem. SharedTools has since evolved to focus exclusively on RubyLLM support with enhanced features and comprehensive documentation.
+
+Also checkout the wonderful ruby gem [ruby_llm-toolbox](https://rubygems.org/gems/ruby_llm-toolbox)
 
 ## Links
 

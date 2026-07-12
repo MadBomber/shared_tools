@@ -38,5 +38,24 @@ module Minitest
     def with_stdin_input(char)
       STDIN.stub(:getch, char) { yield }
     end
+
+    # Initialize an empty git repo at +dir+ with a deterministic identity, so
+    # commits work without relying on the host's global git config.
+    def init_git_repo(dir)
+      Dir.chdir(dir) do
+        system("git", "init", "-q", "-b", "main", out: File::NULL, err: File::NULL)
+        system("git", "config", "user.email", "test@example.com", out: File::NULL)
+        system("git", "config", "user.name", "Test User", out: File::NULL)
+        system("git", "config", "commit.gpgsign", "false", out: File::NULL)
+      end
+    end
+
+    # Stage and commit everything in +dir+ (a git repo) with +message+.
+    def git_commit_all(dir, message)
+      Dir.chdir(dir) do
+        system("git", "add", "-A", out: File::NULL, err: File::NULL)
+        system("git", "commit", "-q", "-m", message, out: File::NULL, err: File::NULL)
+      end
+    end
   end
 end
