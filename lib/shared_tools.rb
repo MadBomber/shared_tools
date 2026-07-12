@@ -19,7 +19,6 @@ SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/docker.rb")
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/eval.rb")
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/git.rb")
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/notification.rb")
-SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/version.rb")  # Defines VERSION constant, not Version class
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/incomplete")  # Empty/incomplete tools directory
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/enabler.rb") # Experimental; defines Tools::Enabler not SharedTools::Tools::Enabler
 
