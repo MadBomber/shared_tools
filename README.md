@@ -16,7 +16,7 @@ SharedTools is a comprehensive collection of production-ready tools designed for
 
 ### Key Features
 
-- 🔧 **28+ Production Tools** — Browser automation, file operations and editing (diff/multi-edit/patch), git, structured data (JSON/YAML/TOML/CSV), database queries, code evaluation, document processing, DNS and WHOIS lookups, IP geolocation, data science, weather data, workflow management, system utilities, notifications, and more
+- 🔧 **30+ Production Tools** — Browser automation, file discovery and editing (glob/tree/diff/multi-edit/patch), git, structured data (JSON/YAML/TOML/CSV), database queries, code evaluation, document processing, DNS and WHOIS lookups, IP geolocation, data science, weather data, workflow management, system utilities, notifications, and more
 - 🔒 **Human-in-the-Loop Authorization** — Built-in safety system for sensitive operations
 - 🎯 **Facade Pattern** — Simplified interfaces with complex capabilities under the hood
 - 🔌 **Pluggable Drivers** — Swap implementations for testing or different backends
@@ -117,6 +117,30 @@ content = disk.execute(action: "file_read", path: "./report.txt")
 ```
 
 [📖 Full Disk Documentation](https://madbomber.github.io/shared_tools/tools/disk/)
+
+---
+
+### 🔍 File Discovery Tools
+
+Find files and content without shelling out to `rg`/`grep`/`find`. Pure Ruby, no external binary dependency.
+
+- **`GlobTool`** — finds files matching a glob pattern (`**/*.rb`, `app/models/*.rb`), returns sorted paths relative to `base`.
+- **`TreeTool`** — renders a depth-limited directory tree, skipping `.git`/`node_modules`/hidden entries by default.
+- **`SearchCodebaseTool`** — searches file contents for a regular expression, returning `path:line: text` hits (or context blocks with `context`/`before`/`after`). ReDoS-guarded with a per-match regex timeout, and caps results at `max_results` (default 50, max 500).
+
+```ruby
+glob = SharedTools::Tools::GlobTool.new
+glob.execute(pattern: "**/*.rb", base: "./lib")
+
+tree = SharedTools::Tools::TreeTool.new
+tree.execute(path: "./lib", max_depth: 2)
+
+search = SharedTools::Tools::SearchCodebaseTool.new
+search.execute(pattern: "def execute", glob: "*.rb")
+search.execute(pattern: "TODO", context: 2) # 2 lines of context around each match
+```
+
+> **Note:** `SearchCodebaseTool`'s implementation changed from shelling out to `rg`/`grep` to a pure-Ruby, ReDoS-guarded scanner. The `term:` and `extension:` params were renamed to `pattern:` (a regex) and `glob:` (a filename glob, e.g. `"*.rb"` instead of `"rb"`); `max_results:` is unchanged. The `tool:` result key now always reports `"ruby"`.
 
 ---
 

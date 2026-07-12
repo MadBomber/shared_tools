@@ -9,11 +9,15 @@
 - Added `SharedTools::Tools::DiffTool`, ported from `ruby_llm-toolbox` — compares two in-memory blocks of text and returns a readable unified diff, via a new dependency-free `SharedTools::TextDiff` module. Read-only, no filesystem access.
 - Added `SharedTools::Tools::MultiEditTool` — applies several find/replace edits to one file atomically; each edit's `old_string` must match exactly once (or `replace_all`) or the whole batch is rejected and nothing is written. Mutating, requires `SharedTools.execute?` authorization.
 - Added `SharedTools::Tools::ApplyPatchTool` — applies a unified diff via `git apply`, validated with `--check` first; every touched path is confined to `root`. Set `check: true` for a dry run. Mutating, requires authorization.
+- Added `SharedTools::Tools::GlobTool`, ported from `ruby_llm-toolbox` — finds files matching a glob pattern (`**/*.rb`), returns sorted paths relative to `base`. Read-only, in-process.
+- Added `SharedTools::Tools::TreeTool`, ported from `ruby_llm-toolbox` — renders a depth-limited directory tree, skipping `.git`/`node_modules`/hidden entries by default. Read-only, in-process.
+- **Breaking:** Replaced `SharedTools::Tools::SearchCodebaseTool`'s implementation with a pure-Ruby scanner ported from `ruby_llm-toolbox`'s `grep_files`, dropping the `rg`/`grep` shell-out dependency entirely. The regex is compiled with a per-match timeout so a malicious pattern can't hang the process (ReDoS guard), and `context`/`before`/`after` params add grep-style context lines around matches. **Param changes:** `term:` → `pattern:` (already treated as a regex by `rg`/`grep`, now explicit and validated), `extension:` → `glob:` (a filename glob like `"*.rb"` instead of a bare extension like `"rb"`). `max_results:` is unchanged. `result[:tool]` now always reports `"ruby"` instead of `"rg"`/`"grep"`.
 
 #### Tests
 - Added `test/shared_tools/tools/git/*_tool_test.rb` (10 files) and `test/shared_tools/tools/git_tool_test.rb` covering all git tools, including ref-injection and path-jail rejection.
 - Added `test/shared_tools/tools/{json,yaml,toml,csv}_*_tool_test.rb` covering the structured-data tools.
 - Added `test/shared_tools/tools/{diff,multi_edit,apply_patch}_tool_test.rb` covering the file-editing tools, including atomicity-on-failure and path-jail rejection.
+- Added `test/shared_tools/tools/{glob,tree}_tool_test.rb` and rewrote `test/shared_tools/tools/search_codebase_tool_test.rb` for the new `pattern:`/`glob:` params, context blocks, and regex-error handling.
 - Added `init_git_repo` / `git_commit_all` test helpers to `test/test_helper.rb`.
 
 ### [0.4.4] - 2026-06-06
