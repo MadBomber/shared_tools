@@ -19,7 +19,7 @@ module SharedTools
       description "Stop a background process (started with process_start) and return any final " \
                   "output. Terminates the whole process group, escalating to SIGKILL if needed."
 
-      params do
+      parameters do
         string :id, description: "The process id to kill (e.g. 'proc_1')."
       end
 

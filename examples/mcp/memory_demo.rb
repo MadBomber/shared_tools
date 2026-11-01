@@ -22,12 +22,13 @@ title "Memory MCP Client Demo"
 
 begin
   require 'shared_tools/mcp/memory_client'
+  SharedTools::MCP::Memory.verify!
 rescue LoadError => e
   puts "unable to load the client: #{e.message}"
   exit
 end
 
-client = RubyLLM::MCP.clients['memory']
+client = SharedTools::MCP::Memory.new
 @chat  = new_chat.with_tools(*client.tools)
 
 title "Store Facts", char: '-'

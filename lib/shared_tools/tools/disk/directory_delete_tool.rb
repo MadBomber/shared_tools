@@ -13,7 +13,7 @@ module SharedTools
 
         description "Deletes a directory."
 
-        params do
+        parameters do
           string :path, description: "a path to the directory (e.g. `./foo/bar`)"
         end
 

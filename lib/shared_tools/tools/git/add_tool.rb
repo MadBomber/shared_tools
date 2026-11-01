@@ -20,7 +20,7 @@ module SharedTools
         description "Stage changes in the repository. Pass specific paths, or set all to stage " \
                     "every change (git add -A)."
 
-        params do
+        parameters do
           array   :paths, of: :string, description: "Paths to stage, relative to the repo root.", required: false
           boolean :all,   description: "Stage all changes (git add -A) instead of specific paths. Default false.", required: false
         end

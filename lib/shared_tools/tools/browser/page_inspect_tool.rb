@@ -17,7 +17,7 @@ module SharedTools
 
         description "A browser automation tool for viewing the full HTML of the current page."
 
-        params do
+        parameters do
           boolean :summarize, description: "If true, returns a summary instead of full HTML", required: false
         end
 

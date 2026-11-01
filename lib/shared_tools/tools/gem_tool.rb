@@ -32,7 +32,7 @@ module SharedTools
                   "version (latest version), dependencies (runtime deps), search (find gems by " \
                   "query). For 'search', pass the query as name."
 
-      params do
+      parameters do
         string :name,   description: "Gem name, or — for action 'search' — the search query."
         string :action, description: "One of: info, version, dependencies, search. Default info.", required: false
       end

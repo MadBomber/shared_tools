@@ -20,7 +20,7 @@ module SharedTools
                   "is a row of cell values, written as strings), with an optional headers array " \
                   "written as the first line. Overwrites an existing file."
 
-      params do
+      parameters do
         string :path, description: "Destination CSV path."
         array  :rows, description: "Array of rows; each row is an array of cell values (as strings)." do
           array of: :string

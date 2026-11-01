@@ -57,7 +57,7 @@ module SharedTools
             ]
       TEXT
 
-      params do
+      parameters do
         array :statements, of: :string, description: "A list of SQL statements to run sequentially (e.g. ['SELECT * FROM users', 'INSERT INTO ...'])"
       end
 

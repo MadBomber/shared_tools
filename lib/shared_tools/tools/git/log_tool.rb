@@ -22,7 +22,7 @@ module SharedTools
         description "Show recent git commit history for the repository (hash, date, author, " \
                     "subject). Optionally limit the count or scope to a path. Read-only."
 
-        params do
+        parameters do
           integer :count, description: "Number of commits to show (default #{DEFAULT_COUNT}, max #{MAX_COUNT}).", required: false
           string  :path,  description: "Limit history to commits touching this path, relative to the repo root. Optional.", required: false
         end

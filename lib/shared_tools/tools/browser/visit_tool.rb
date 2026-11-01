@@ -12,7 +12,7 @@ module SharedTools
 
         description "A browser automation tool for navigating to a specific URL."
 
-        params do
+        parameters do
           string :url, description: "A URL (e.g. https://news.ycombinator.com)."
         end
 

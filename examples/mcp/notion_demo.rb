@@ -21,12 +21,13 @@ title "Notion MCP Client Demo"
 
 begin
   require 'shared_tools/mcp/notion_client'
+  SharedTools::MCP::Notion.verify!.install_packages!
 rescue LoadError => e
   puts "unable to load the client: #{e.message}"
   exit
 end
 
-client = RubyLLM::MCP.clients['notion']
+client = SharedTools::MCP::Notion.new
 @chat  = new_chat.with_tools(*client.tools)
 
 title "Search Pages", char: '-'

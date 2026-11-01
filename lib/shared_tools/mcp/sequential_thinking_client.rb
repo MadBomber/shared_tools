@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # shared_tools/mcp/sequential_thinking_client.rb
 #
 # MCP Sequential Thinking Server — npx auto-download (no pre-installation required)
@@ -9,25 +11,26 @@
 # Prerequisites:
 #   - Node.js and npx (https://nodejs.org)
 #   The @modelcontextprotocol/server-sequential-thinking package is downloaded
-#   automatically on first use via `npx -y`.
+#   automatically the first time the server is started, via `npx -y`.
 #
 # No API key required.
 #
 # Usage:
 #   require 'shared_tools/mcp/sequential_thinking_client'
-#   client = RubyLLM::MCP.clients["sequential-thinking"]
-#   chat = RubyLLM.chat.with_tools(*client.tools)
+#   chat  = RubyLLM.chat.with_mcp(SharedTools::MCP::SequentialThinking)
+#   robot = RobotLab.build(name: "thinker", mcp: [SharedTools::MCP::SequentialThinking])
 #
-# Compatible with ruby_llm-mcp >= 0.7.0
+# Requires ruby_llm >= 2.1 (built-in RubyLLM::MCP). Nothing starts until the
+# server's tools are first requested.
 
-require "ruby_llm/mcp"
+require_relative "client_support"
 
-RubyLLM::MCP.add_client(
-  name: "sequential-thinking",
-  transport_type: :stdio,
-  config: {
-    command: "npx",
-    args:    ["-y", "@modelcontextprotocol/server-sequential-thinking"],
-    env:     {},
-  },
-)
+module SharedTools
+  module MCP
+    class SequentialThinking < ::RubyLLM::MCP
+      extend ClientSupport
+
+      command "npx", "-y", "@modelcontextprotocol/server-sequential-thinking"
+    end
+  end
+end

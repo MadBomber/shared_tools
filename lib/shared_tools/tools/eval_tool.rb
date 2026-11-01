@@ -58,7 +58,7 @@ module SharedTools
           {"action": "#{Action::SHELL}", "command": "uname -a"}
       TEXT
 
-      params do
+      parameters do
         string :action, description: <<~TEXT.strip
           The evaluation action to perform. Options:
           * `#{Action::RUBY}`: Execute Ruby code

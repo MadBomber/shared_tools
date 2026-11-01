@@ -25,7 +25,7 @@ module SharedTools
         - 'clear' — Empty the clipboard
       DESC
 
-      params do
+      parameters do
         string :action, description: "Action to perform: 'read', 'write', or 'clear'"
         string :text, required: false, description: "Text to write. Required only for the 'write' action."
       end

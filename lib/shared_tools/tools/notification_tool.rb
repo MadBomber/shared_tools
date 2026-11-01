@@ -26,7 +26,7 @@ module SharedTools
         On Linux uses notify-send, zenity (or terminal fallback), and espeak-ng/espeak.
       DESC
 
-      params do
+      parameters do
         string :action, description: <<~TEXT.strip
           The notification action to perform:
           * `notify` — Non-blocking desktop banner notification.

@@ -27,7 +27,7 @@ module SharedTools
                   "(spec/ or .rspec) or Minitest (test/ via rake), or set framework explicitly. " \
                   "Optionally scope to a path. Uses `bundle exec` when a Gemfile exists."
 
-      params do
+      parameters do
         string :path,      description: "Limit the run to this spec/test file or directory, relative to root. Optional.", required: false
         string :framework, description: "Force the framework: rspec or minitest. Default: auto-detect.", required: false
       end

@@ -27,7 +27,7 @@ module SharedTools
                   "path or an inline yaml string. Loaded safely (no object deserialization). Path " \
                   "syntax: keys separated by dots, [n] for array index, [] to map over an array."
 
-      params do
+      parameters do
         string :path,  description: "YAML file to read. Provide this or yaml.", required: false
         string :yaml,  description: "Inline YAML string. Provide this or path.", required: false
         string :query, description: "Path expression to extract, e.g. 'services[0].image'. Omit to pretty-print. Optional.", required: false

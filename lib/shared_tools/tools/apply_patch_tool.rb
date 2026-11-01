@@ -29,7 +29,7 @@ module SharedTools
                   "would not apply cleanly. Set check: true for a dry run only. Requires git to be " \
                   "installed; root does not need to be a git repository."
 
-      params do
+      parameters do
         string  :patch, description: "The unified diff text to apply."
         boolean :check, description: "Validate only (dry run); do not write changes. Default false.", required: false
       end

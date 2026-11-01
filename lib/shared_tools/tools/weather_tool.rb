@@ -31,7 +31,7 @@ module SharedTools
           puts "Temperature: #{result[:current][:temperature]}°C"
       DESCRIPTION
 
-      params do
+      parameters do
         string :city, description: <<~DESC.strip
           Name of the city for weather lookup. Can include city name only (e.g., 'London')
           or city with country code for better accuracy (e.g., 'London,UK' or 'Paris,FR').

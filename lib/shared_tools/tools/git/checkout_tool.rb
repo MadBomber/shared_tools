@@ -22,7 +22,7 @@ module SharedTools
         description "Switch to a branch/commit in the repository, or create a new branch with " \
                     "create: true. Note this can change the working tree."
 
-        params do
+        parameters do
           string  :ref,    description: "Branch, tag, or commit to switch to (or the new branch name when create is true)."
           boolean :create, description: "Create a new branch named ref before switching to it (git checkout -b). Default false.", required: false
         end

@@ -86,7 +86,7 @@ module SharedTools
           {"action": "#{Action::SCREENSHOT}"}
       TEXT
 
-      params do
+      parameters do
         string :action, description: <<~TEXT.strip
           The browser action to perform. Options:
           * `#{Action::VISIT}`: Navigate to a website

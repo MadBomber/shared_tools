@@ -28,7 +28,7 @@ module SharedTools
                   "regular expression (replacement may use \\1 backreferences). Set dry_run true to " \
                   "preview without writing. Skips binary files and ignored directories."
 
-      params do
+      parameters do
         string  :pattern,     description: "Text (or regex if regex=true) to find."
         string  :replacement, description: "Replacement text. With regex=true, \\1 etc. refer to capture groups.", required: false
         string  :glob,        description: "Glob of files to search, relative to root. Default '**/*'.", required: false

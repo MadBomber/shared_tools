@@ -26,7 +26,7 @@ module SharedTools
                   "numbers), or locate definitions. Give a query to find definitions whose name " \
                   "matches, and/or a kind to filter. Parses in-process; does not run the code."
 
-      params do
+      parameters do
         string :path,  description: "Ruby file to outline."
         string :query, description: "Only show definitions whose (qualified) name matches this, case-insensitive. Optional.", required: false
         string :kind,  description: "Filter to a kind: class, module, method, or constant. Optional.", required: false

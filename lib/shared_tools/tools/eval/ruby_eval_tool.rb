@@ -20,7 +20,7 @@ module SharedTools
                       WARNING: This tool executes arbitrary Ruby code. Use with caution.
                     DESCRIPTION
 
-        params do
+        parameters do
           string :code, description: "The Ruby code to execute"
         end
 

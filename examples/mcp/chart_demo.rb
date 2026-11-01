@@ -19,12 +19,13 @@ title "Chart MCP Client Demo"
 
 begin
   require 'shared_tools/mcp/chart_client'
+  SharedTools::MCP::Chart.verify!
 rescue LoadError => e
   puts "unable to load the client: #{e.message}"
   exit
 end
 
-client = RubyLLM::MCP.clients['chart']
+client = SharedTools::MCP::Chart.new
 @chat  = new_chat.with_tools(*client.tools)
 
 title "Bar Chart", char: '-'

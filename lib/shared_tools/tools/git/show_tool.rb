@@ -21,7 +21,7 @@ module SharedTools
                     "(message and diff). With a path, shows that file's contents as of ref. Defaults " \
                     "to HEAD. Read-only."
 
-        params do
+        parameters do
           string :ref,  description: "Commit/branch/tag to show. Default HEAD.", required: false
           string :path, description: "If given, show this file's contents at ref instead of the commit. Optional.", required: false
         end

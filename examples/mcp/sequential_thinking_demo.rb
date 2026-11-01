@@ -20,12 +20,13 @@ title "Sequential Thinking MCP Client Demo"
 
 begin
   require 'shared_tools/mcp/sequential_thinking_client'
+  SharedTools::MCP::SequentialThinking.verify!
 rescue LoadError => e
   puts "unable to load the client: #{e.message}"
   exit
 end
 
-client = RubyLLM::MCP.clients['sequential-thinking']
+client = SharedTools::MCP::SequentialThinking.new
 @chat  = new_chat.with_tools(*client.tools)
 
 title "Cross-platform Design Problem", char: '-'

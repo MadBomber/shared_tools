@@ -21,7 +21,7 @@ module SharedTools
                       NOTE: Requires python3 to be available in the system PATH.
                     DESCRIPTION
 
-        params do
+        parameters do
           string :code, description: "The Python code to execute"
         end
 

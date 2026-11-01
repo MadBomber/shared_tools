@@ -17,7 +17,7 @@ module SharedTools
       description "Compare two blocks of text and return a readable line-by-line diff " \
                   "(removed lines prefixed -, added lines prefixed +). In-process."
 
-      params do
+      parameters do
         string :old,       description: "The original text."
         string :new,       description: "The changed text."
         string :old_label, description: "Label for the original side. Default 'old'.", required: false

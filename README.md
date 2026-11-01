@@ -640,14 +640,16 @@ SharedTools bundles [Model Context Protocol](https://modelcontextprotocol.io) cl
 | `require 'shared_tools/mcp/playwright_client'` | Browser automation: navigate, click, fill, screenshot, extract |
 
 ```ruby
-# Load all available clients at once (skips any whose env vars are missing)
-require 'shared_tools/mcp'
-
-# Or load a specific client
+# Each client is a RubyLLM::MCP subclass (ruby_llm >= 2.1). Defining it starts
+# nothing; the server is launched/connected when its tools are first requested.
 require 'shared_tools/mcp/notion_client'
-client = RubyLLM::MCP.clients["notion"]
-chat   = RubyLLM.chat.with_tools(*client.tools)
+chat = RubyLLM.chat.with_mcp(SharedTools::MCP::Notion)
 chat.ask("Find my project planning pages and summarise what's in them")
+
+# Load every definition; .available skips those whose env vars are missing
+require 'shared_tools/mcp'
+chat  = RubyLLM.chat.with_mcp(*SharedTools::MCP.available)
+robot = RobotLab.build(name: "helper", mcp: SharedTools::MCP.available)
 ```
 
 See [MCP Clients README](lib/shared_tools/mcp/README.md) for full configuration details.

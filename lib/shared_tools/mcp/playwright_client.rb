@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 # shared_tools/mcp/playwright_client.rb
 #
-# Playwright MCP Server Client — npx auto-download (no pre-installation required)
+# Playwright MCP Server — npx auto-download (no pre-installation required)
 #
 # Provides browser automation via Playwright: navigate pages, click elements,
 # fill forms, take screenshots, extract text/HTML, and interact with web apps.
@@ -9,26 +11,28 @@
 #
 # Prerequisites:
 #   - Node.js and npx (https://nodejs.org)
-#   The @playwright/mcp package is downloaded automatically on first use via `npx -y`.
+#   The @playwright/mcp package is downloaded automatically the first time the
+#   server is started, via `npx -y`.
 #
 # Configuration:
 #   No environment variables required.
 #
 # Usage:
 #   require 'shared_tools/mcp/playwright_client'
-#   client = RubyLLM::MCP.clients["playwright"]
-#   chat = RubyLLM.chat.with_tools(*client.tools)
+#   chat  = RubyLLM.chat.with_mcp(SharedTools::MCP::Playwright)
+#   robot = RobotLab.build(name: "browser", mcp: [SharedTools::MCP::Playwright])
 #
-# Compatible with ruby_llm-mcp >= 0.7.0
+# Requires ruby_llm >= 2.1 (built-in RubyLLM::MCP). Nothing starts until the
+# server's tools are first requested.
 
-require "ruby_llm/mcp"
+require_relative "client_support"
 
-RubyLLM::MCP.add_client(
-  name: "playwright",
-  transport_type: :stdio,
-  config: {
-    command: "npx",
-    args:    ["-y", "@playwright/mcp"],
-    env:     {},
-  },
-)
+module SharedTools
+  module MCP
+    class Playwright < ::RubyLLM::MCP
+      extend ClientSupport
+
+      command "npx", "-y", "@playwright/mcp"
+    end
+  end
+end

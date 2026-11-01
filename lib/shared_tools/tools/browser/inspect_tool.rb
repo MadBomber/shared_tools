@@ -17,7 +17,7 @@ module SharedTools
 
         description "A browser automation tool for finding UI elements by their text content."
 
-        params do
+        parameters do
           string :text_content, description: "Search for elements containing this text"
           string :selector, description: "Optional CSS selector to further filter results", required: false
           integer :context_size, description: "Number of parent elements to include for context", required: false

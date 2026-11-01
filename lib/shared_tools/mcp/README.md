@@ -1,58 +1,66 @@
 # SharedTools MCP Clients
 
-MCP (Model Context Protocol) clients that require **no pre-installed binaries**.
-Uses `ruby_llm-mcp` >= 0.7.0 and RubyLLM >= 1.9.0.
+MCP (Model Context Protocol) server definitions. Each one is a `RubyLLM::MCP` subclass
+under `SharedTools::MCP`, using the MCP client built into RubyLLM >= 2.1 (the separate
+`ruby_llm-mcp` gem is no longer used and cannot be loaded alongside it).
+
+Requiring a definition has no side effects: no process is started, nothing is downloaded
+or installed, and no connection is made until a chat or robot first asks for the tools.
 
 ---
 
 ## Two Approaches
 
-### Remote HTTP — `:streamable` transport
+### Remote HTTP — Streamable HTTP (`url`)
 
 Connects to a cloud-hosted MCP endpoint. The user needs only an API key — no Node.js,
 no local binary, nothing to install.
 
-| File | Client name | Requires | Provides |
+| File | Class (`name`) | Requires | Provides |
 |------|-------------|----------|----------|
-| `tavily_client.rb` | `"tavily"` | `TAVILY_API_KEY` | AI-optimized web search, news, research |
+| `tavily_client.rb` | `Tavily` (`tavily`) | `TAVILY_API_KEY` | AI-optimized web search, news, research |
 
-### Brew-installed binary — `:stdio` transport
+### Local binary — stdio (`command`)
 
-The binary is installed automatically via Homebrew if not already present.
-Requires **Homebrew** (`https://brew.sh`).
+The binary must be on `PATH`. Call `Klass.install_packages!` (e.g.
+`SharedTools::MCP::GitHub.install_packages!`) to install it via Homebrew/apt/dnf.
 
-| File | Client name | Requires | Provides |
+| File | Class (`name`) | Requires | Provides |
 |------|-------------|----------|----------|
-| `github_client.rb` | `"github"` | `GITHUB_PERSONAL_ACCESS_TOKEN` | Repositories, issues, PRs, code search |
-| `notion_client.rb` | `"notion"` | `NOTION_TOKEN` | Pages, databases, search, content CRUD |
-| `slack_client.rb` | `"slack"` | `SLACK_MCP_XOXP_TOKEN` or `SLACK_MCP_XOXB_TOKEN` | Channels, messages, threads, user info |
-| `hugging_face_client.rb` | `"hugging-face"` | `HF_TOKEN` | Models, datasets, Spaces, model cards |
+| `github_client.rb` | `GitHub` (`github`) | `GITHUB_PERSONAL_ACCESS_TOKEN` | Repositories, issues, PRs, code search |
+| `notion_client.rb` | `Notion` (`notion`) | `NOTION_TOKEN` | Pages, databases, search, content CRUD |
+| `slack_client.rb` | `Slack` (`slack`) | `SLACK_MCP_XOXP_TOKEN` or `SLACK_MCP_XOXB_TOKEN` | Channels, messages, threads, user info |
+| `hugging_face_client.rb` | `HuggingFace` (`hugging_face`) | `HF_TOKEN` | Models, datasets, Spaces, model cards |
 
-### npx Auto-download — `:stdio` transport via `npx -y`
+### npx Auto-download — stdio via `npx -y`
 
 The npm package is downloaded automatically on first use. The only prerequisite is
 **Node.js / npx** being installed on the machine.
 
-| File | Client name | Requires | Provides |
+| File | Class (`name`) | Requires | Provides |
 |------|-------------|----------|----------|
-| `memory_client.rb` | `"memory"` | Node.js | Persistent knowledge graph across conversations |
-| `sequential_thinking_client.rb` | `"sequential-thinking"` | Node.js | Structured chain-of-thought reasoning |
-| `chart_client.rb` | `"chart"` | Node.js | Chart and visualisation generation (AntV) |
-| `brave_search_client.rb` | `"brave-search"` | Node.js + `BRAVE_API_KEY` | Web and news search |
-| `playwright_client.rb` | `"playwright"` | Node.js | Browser automation: navigate, click, fill, screenshot, extract |
+| `memory_client.rb` | `Memory` (`memory`) | Node.js | Persistent knowledge graph across conversations |
+| `sequential_thinking_client.rb` | `SequentialThinking` (`sequential_thinking`) | Node.js | Structured chain-of-thought reasoning |
+| `chart_client.rb` | `Chart` (`chart`) | Node.js | Chart and visualisation generation (AntV) |
+| `brave_search_client.rb` | `BraveSearch` (`brave_search`) | Node.js + `BRAVE_API_KEY` | Web and news search |
+| `playwright_client.rb` | `Playwright` (`playwright`) | Node.js | Browser automation: navigate, click, fill, screenshot, extract |
 
 ---
 
 ## Usage
 
-Require the client file to register it, then attach its tools to a chat:
+Require the client file, then hand the class (or an instance) to a chat or a robot:
 
 ```ruby
 require 'shared_tools/mcp/tavily_client'
 
-client = RubyLLM::MCP.clients["tavily"]
-chat   = RubyLLM.chat.with_tools(*client.tools)
+chat = RubyLLM.chat.with_mcp(SharedTools::MCP::Tavily)
 chat.ask("Search for the latest Ruby 3.4 release notes")
+
+robot = RobotLab.build(name: "researcher", mcp: [SharedTools::MCP::Tavily])
+
+# Or use the tools directly
+chat = RubyLLM.chat.with_tools(*SharedTools::MCP::Tavily.new.tools)
 ```
 
 Multiple clients can be combined:
@@ -61,9 +69,13 @@ Multiple clients can be combined:
 require 'shared_tools/mcp/memory_client'
 require 'shared_tools/mcp/sequential_thinking_client'
 
-tools = %w[memory sequential-thinking].flat_map { |n| RubyLLM::MCP.clients[n].tools }
-chat  = RubyLLM.chat.with_tools(*tools)
+chat = RubyLLM.chat.with_mcp(SharedTools::MCP::Memory, SharedTools::MCP::SequentialThinking)
 ```
+
+`require 'shared_tools/mcp'` loads every definition and records which ones have their
+environment variables set (`SharedTools.mcp_status`). `SharedTools::MCP.available` returns
+those classes; `Klass.available?`, `Klass.missing_envars` and `Klass.verify!` check one.
+Environment variables are read when the server process starts, not when the class loads.
 
 ---
 

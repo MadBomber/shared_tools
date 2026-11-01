@@ -18,7 +18,7 @@ module SharedTools
 
         description "Read the text of any set of pages from a PDF document."
 
-        params do
+        parameters do
           string :page_numbers, description: 'Comma-separated page numbers (first page: 1). (e.g. "12, 14, 15")'
           string :doc_path, description: "Path to the PDF document."
         end

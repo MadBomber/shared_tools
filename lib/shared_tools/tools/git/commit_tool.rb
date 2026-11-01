@@ -21,7 +21,7 @@ module SharedTools
         description "Commit staged changes in the repository with a message. Set all to also " \
                     "stage modified/deleted tracked files first (git commit -a). Does not push."
 
-        params do
+        parameters do
           string  :message, description: "Commit message."
           boolean :all,     description: "Stage modified/deleted tracked files before committing (git commit -a). Default false.", required: false
         end

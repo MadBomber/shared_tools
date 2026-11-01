@@ -44,7 +44,7 @@ module SharedTools
         Action::FILE_REPLACE,
       ].freeze
 
-      params do
+      parameters do
         string :action, description: <<~TEXT.strip
           Options:
           * `#{Action::DIRECTORY_CREATE}`: creates a directory at a specific `path`

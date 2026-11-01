@@ -27,7 +27,7 @@ module SharedTools
 
         SUPPORTED_FORMATS = %w[.csv .xlsx .ods .xlsm].freeze
 
-        params do
+        parameters do
           string :doc_path, description: <<~DESC.strip
             Path to the spreadsheet file. Supported formats:
             - .csv  — Comma-separated values (plain text, no gem beyond roo required)

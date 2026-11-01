@@ -85,7 +85,7 @@ module SharedTools
           {"action": "#{Action::SPREADSHEET_READ}", "doc_path": "./report.xlsx", "row_range": "2-50", "headers": false}
       TEXT
 
-      params do
+      parameters do
         string :action, description: <<~TEXT.strip
           The document action to perform. Options:
           * `#{Action::TEXT_READ}`: Read a plain text file

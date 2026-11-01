@@ -33,7 +33,7 @@ module SharedTools
                            'every weekday', 'first day of every month at midnight'
       DESC
 
-      params do
+      parameters do
         string  :action,      description: "Action: 'parse', 'validate', 'next_times', 'generate'"
         string  :expression,  required: false, description: "5-field cron expression. Required for parse, validate, next_times."
         integer :count,       required: false, description: "Number of next execution times. Default: 5."

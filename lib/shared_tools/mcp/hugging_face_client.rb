@@ -1,43 +1,43 @@
+# frozen_string_literal: true
+
 # shared_tools/mcp/hugging_face_client.rb
 #
-# Hugging Face MCP Server Client — requires brew installation
+# Hugging Face MCP Server — local binary over stdio
 #
 # Provides access to the Hugging Face Hub: search and inspect models,
 # datasets, and Spaces; read model cards; run inference; browse
 # trending repositories.
 #
 # Prerequisites:
-#   - Homebrew (https://brew.sh)
+#   - The hf-mcp-server binary on PATH. Install it with
+#     SharedTools::MCP::HuggingFace.install_packages! (Homebrew/apt/dnf) or by hand.
 #   - A Hugging Face user access token (free)
 #     Create one at https://huggingface.co/settings/tokens
-#   The hf-mcp-server binary is installed automatically via brew if missing.
 #
 # Configuration:
 #   export HF_TOKEN=hf_your_access_token_here
 #
 # Usage:
 #   require 'shared_tools/mcp/hugging_face_client'
-#   client = RubyLLM::MCP.clients["hugging-face"]
-#   chat = RubyLLM.chat.with_tools(*client.tools)
+#   chat  = RubyLLM.chat.with_mcp(SharedTools::MCP::HuggingFace)
+#   robot = RobotLab.build(name: "ml", mcp: [SharedTools::MCP::HuggingFace])
 #
-# Compatible with ruby_llm-mcp >= 0.7.0
+# Requires ruby_llm >= 2.1 (built-in RubyLLM::MCP). Nothing starts until the
+# server's tools are first requested.
 
-require_relative "../utilities"
+require_relative "client_support"
 
-SharedTools.verify_envars("HF_TOKEN")
-SharedTools.package_install("hf-mcp-server")
+module SharedTools
+  module MCP
+    class HuggingFace < ::RubyLLM::MCP
+      extend ClientSupport
 
-require "ruby_llm/mcp"
+      requires_envars   "HF_TOKEN"
+      requires_packages "hf-mcp-server"
 
-RubyLLM::MCP.add_client(
-  name: "hugging-face",
-  transport_type: :stdio,
-  config: {
-    command: "hf-mcp-server",
-    args:    [],
-    env:     {
-      "TRANSPORT"        => "stdio",
-      "DEFAULT_HF_TOKEN" => ENV.fetch("HF_TOKEN", ""),
-    },
-  },
-)
+      command "hf-mcp-server"
+      env "TRANSPORT"        => "stdio",
+          "DEFAULT_HF_TOKEN" => env_from("HF_TOKEN")
+    end
+  end
+end

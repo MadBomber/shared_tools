@@ -30,7 +30,7 @@ module SharedTools
                   "No shell is involved: no pipes, redirects, globs, or variable expansion. " \
                   "Put the program name in `command` and each argument as its own element of `args`."
 
-      params do
+      parameters do
         string :command, description: "Executable name (must be on the allowlist). No path, no shell characters."
         array  :args,    of: :string, description: "Arguments passed verbatim to the program, one per element. Optional.", required: false
       end

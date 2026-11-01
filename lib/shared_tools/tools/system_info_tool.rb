@@ -26,7 +26,7 @@ module SharedTools
         - 'all'     (default) — All of the above combined
       DESC
 
-      params do
+      parameters do
         string :category, required: false, description: <<~DESC.strip
           Info category. Options: 'os', 'cpu', 'memory', 'disk', 'network', 'ruby', 'all' (default).
         DESC

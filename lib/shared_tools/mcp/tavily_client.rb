@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # shared_tools/mcp/tavily_client.rb
 #
-# Tavily MCP Server Client — Remote HTTP (no local installation required)
+# Tavily MCP Server — Remote Streamable HTTP (no local installation required)
 #
-# Connects directly to Tavily's hosted MCP endpoint via Streamable HTTP transport.
+# Connects directly to Tavily's hosted MCP endpoint.
 # No npx, no Node.js, no local binary required — only a Tavily API key.
 #
 # Provides:
@@ -16,26 +18,24 @@
 #
 # Usage:
 #   require 'shared_tools/mcp/tavily_client'
-#   client = RubyLLM::MCP.clients["tavily"]
-#   chat = RubyLLM.chat.with_tools(*client.tools)
+#   chat  = RubyLLM.chat.with_mcp(SharedTools::MCP::Tavily)
+#   robot = RobotLab.build(name: "researcher", mcp: [SharedTools::MCP::Tavily])
 #
-# Compatible with ruby_llm-mcp >= 0.7.0
+# Requires ruby_llm >= 2.1 (built-in RubyLLM::MCP). No request is made until
+# the server's tools are first requested.
 
-require_relative "../utilities"
-require_relative "streamable_http_patch"
+require_relative "client_support"
 
-SharedTools.verify_envars("TAVILY_API_KEY")
+module SharedTools
+  module MCP
+    class Tavily < ::RubyLLM::MCP
+      extend ClientSupport
 
-RubyLLM::MCP.add_client(
-  name:            "tavily",
-  transport_type:  :streamable,
-  request_timeout: 30_000,
-  config: {
-    url:     "https://mcp.tavily.com/mcp/",
-    version: :http1,
-    headers: {
-      "Authorization" => "Bearer #{ENV.fetch('TAVILY_API_KEY', '')}",
-      "Accept"        => "application/json, text/event-stream",
-    },
-  },
-)
+      requires_envars "TAVILY_API_KEY"
+
+      url "https://mcp.tavily.com/mcp/"
+      bearer_token { ENV.fetch("TAVILY_API_KEY", "") }
+      timeout 30
+    end
+  end
+end

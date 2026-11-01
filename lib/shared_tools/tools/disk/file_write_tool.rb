@@ -13,7 +13,7 @@ module SharedTools
 
         description "Writes the contents of a file."
 
-        params do
+        parameters do
           string :path, description: "a path for the file (e.g. `./main.rb`)"
           string :text, description: "the text to write to the file (e.g. `puts 'Hello World'`)"
         end

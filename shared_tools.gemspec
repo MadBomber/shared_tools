@@ -32,8 +32,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Core runtime dependencies
-  spec.add_dependency "ruby_llm"
-  spec.add_dependency "ruby_llm-mcp"
+  spec.add_dependency "ruby_llm", ">= 2.1.1", "< 3"
   spec.add_dependency "zeitwerk"
   spec.add_dependency "nokogiri"
 

@@ -22,7 +22,7 @@ module SharedTools
                     "returning file:line: matches. Optionally restrict to a path, ignore case, or treat " \
                     "the pattern as a fixed string instead of a regex."
 
-        params do
+        parameters do
           string  :pattern,     description: "The pattern to search for (a basic regex unless fixed is true)."
           string  :path,        description: "Restrict the search to this file or directory, relative to the repo root. Optional.", required: false
           boolean :ignore_case, description: "Case-insensitive search. Default false.", required: false

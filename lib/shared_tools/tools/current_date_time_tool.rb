@@ -24,7 +24,7 @@ module SharedTools
         - 'iso8601' — iso8601, iso8601_utc, unix_timestamp
       DESC
 
-      params do
+      parameters do
         string :format, required: false, description: <<~DESC.strip
           Output format. Options: 'full' (default), 'date', 'time', 'iso8601'.
         DESC

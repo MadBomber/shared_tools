@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # shared_tools/mcp/chart_client.rb
 #
 # AntV Chart MCP Server — npx auto-download (no pre-installation required)
@@ -7,26 +9,27 @@
 #
 # Prerequisites:
 #   - Node.js and npx (https://nodejs.org)
-#   The @antv/mcp-server-chart package is downloaded automatically on first use
-#   via `npx -y`.
+#   The @antv/mcp-server-chart package is downloaded automatically the first
+#   time the server is started, via `npx -y`.
 #
 # No API key required.
 #
 # Usage:
 #   require 'shared_tools/mcp/chart_client'
-#   client = RubyLLM::MCP.clients["chart"]
-#   chat = RubyLLM.chat.with_tools(*client.tools)
+#   chat  = RubyLLM.chat.with_mcp(SharedTools::MCP::Chart)
+#   robot = RobotLab.build(name: "analyst", mcp: [SharedTools::MCP::Chart])
 #
-# Compatible with ruby_llm-mcp >= 0.7.0
+# Requires ruby_llm >= 2.1 (built-in RubyLLM::MCP). Nothing starts until the
+# server's tools are first requested.
 
-require "ruby_llm/mcp"
+require_relative "client_support"
 
-RubyLLM::MCP.add_client(
-  name: "chart",
-  transport_type: :stdio,
-  config: {
-    command: "npx",
-    args:    ["-y", "@antv/mcp-server-chart"],
-    env:     {},
-  },
-)
+module SharedTools
+  module MCP
+    class Chart < ::RubyLLM::MCP
+      extend ClientSupport
+
+      command "npx", "-y", "@antv/mcp-server-chart"
+    end
+  end
+end

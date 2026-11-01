@@ -17,7 +17,7 @@ module SharedTools
         from initial data loading through final insights. Handles CSV, JSON, and text data formats.
       DESCRIPTION
 
-      params do
+      parameters do
         string :data_source, description: <<~DESC.strip, required: false
           Primary data source to analyze. Can be either a local file path or a web URL.
           For files: Use relative or absolute paths to CSV, JSON, XML, or text files.

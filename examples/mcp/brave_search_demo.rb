@@ -19,12 +19,13 @@ title "Brave Search MCP Client Demo"
 
 begin
   require 'shared_tools/mcp/brave_search_client'
+  SharedTools::MCP::BraveSearch.verify!
 rescue LoadError => e
   puts "unable to load the client: #{e.message}"
   exit
 end
 
-client = RubyLLM::MCP.clients['brave-search']
+client = SharedTools::MCP::BraveSearch.new
 @chat  = new_chat.with_tools(*client.tools)
 
 title "Web Search", char: '-'

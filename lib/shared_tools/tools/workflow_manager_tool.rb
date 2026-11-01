@@ -27,7 +27,7 @@ module SharedTools
         All workflow state is persisted to disk and can survive process restarts.
       DESCRIPTION
 
-      params do
+      parameters do
         string :action, description: <<~DESC.strip
           Workflow management action to perform:
           - 'start': Initialize a new workflow with initial data and return workflow ID

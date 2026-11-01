@@ -70,7 +70,7 @@ module SharedTools
         ScrollDirection::RIGHT,
       ].freeze
 
-      params do
+      parameters do
         string :action, description: <<~TEXT.strip
           Options:
           * `#{Action::KEY}`: Press a single key / combination of keys on the keyboard:

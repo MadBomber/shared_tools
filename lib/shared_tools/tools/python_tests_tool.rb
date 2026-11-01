@@ -28,7 +28,7 @@ module SharedTools
                   "default, or unittest (python -m unittest discover) when framework is unittest. " \
                   "Optionally scope to a path."
 
-      params do
+      parameters do
         string :path,      description: "Limit the run to this test file or directory, relative to root. Optional.", required: false
         string :framework, description: "pytest (default) or unittest.", required: false
       end

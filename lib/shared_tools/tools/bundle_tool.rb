@@ -27,7 +27,7 @@ module SharedTools
                   "For 'add' provide a gem name; for 'update' a gem name is optional (omit to update " \
                   "all). Requires a Gemfile."
 
-      params do
+      parameters do
         string :action, description: "One of: install, update, outdated, check, lock, add."
         string :gem,    description: "Gem name — required for 'add', optional for 'update'.", required: false
       end

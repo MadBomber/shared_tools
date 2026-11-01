@@ -17,7 +17,7 @@ module SharedTools
 
         description "Execute a shell command safely and return the result."
 
-        params do
+        parameters do
           string :command, description: "The shell command to execute"
           string :workdir, description: "Working directory for the command (default: current directory)", required: false
         end

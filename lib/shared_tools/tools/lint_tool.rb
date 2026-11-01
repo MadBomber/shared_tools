@@ -26,7 +26,7 @@ module SharedTools
                   "is present, else RuboCop) or set linter explicitly. Optionally scope to a path and " \
                   "apply safe autocorrections. Uses `bundle exec` when a Gemfile exists."
 
-      params do
+      parameters do
         string  :path,        description: "Limit linting to this path, relative to root. Optional.", required: false
         string  :linter,      description: "Force the linter: rubocop or standard. Default: auto-detect.", required: false
         boolean :autocorrect, description: "Apply safe autocorrections, rewriting files in place. Default false.", required: false

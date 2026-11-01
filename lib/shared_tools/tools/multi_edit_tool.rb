@@ -29,7 +29,7 @@ module SharedTools
                   "an array of objects with old_string, new_string, and optional replace_all. Edits " \
                   "run in order; if any fails to apply cleanly, no changes are written."
 
-      params do
+      parameters do
         string :path, description: "File to edit, relative to root."
         array  :edits, description: "Array of edits, applied in order." do
           object do

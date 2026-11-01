@@ -17,7 +17,7 @@ module SharedTools
 
         description "A browser automation tool for finding and inspecting elements by CSS selector."
 
-        params do
+        parameters do
           string :selector, description: "CSS selector to target specific elements"
           integer :context_size, description: "Number of parent elements to include for context", required: false
         end

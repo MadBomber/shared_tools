@@ -11,7 +11,7 @@ module SharedTools
 
         description "Take a screenshot of the current browser page and save it to a file."
 
-        params do
+        parameters do
           string :path, required: false,
                         description: "File path to save the screenshot (e.g. 'screenshot.png'). " \
                                      "Defaults to a timestamped name in the current directory."

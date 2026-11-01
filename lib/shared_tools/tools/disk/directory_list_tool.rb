@@ -13,7 +13,7 @@ module SharedTools
 
         description "Summarizes the contents (files and directories) of a directory."
 
-        params do
+        parameters do
           string :path, description: "a path to the directory (e.g. `./foo/bar`)", required: false
         end
 

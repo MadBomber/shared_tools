@@ -15,7 +15,7 @@ module SharedTools
 
         description "A browser automation tool for clicking any clickable element."
 
-        params do
+        parameters do
           string :selector, description: <<~TEXT.strip
             A CSS selector to locate or interact with an element on the page:
 

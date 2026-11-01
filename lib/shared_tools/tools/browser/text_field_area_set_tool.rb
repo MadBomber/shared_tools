@@ -12,7 +12,7 @@ module SharedTools
 
         description "A browser automation tool for clicking a specific link."
 
-        params do
+        parameters do
           string :selector, description: "The ID / name of the text field / area to interact with."
           string :text, description: "The text to set."
         end

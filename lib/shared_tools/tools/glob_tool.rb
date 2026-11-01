@@ -22,7 +22,7 @@ module SharedTools
       description "Find files matching a glob pattern within a directory (e.g. '**/*.rb', " \
                   "'app/models/*.rb'). Returns matching paths, sorted, relative to base."
 
-      params do
+      parameters do
         string :pattern, description: "Glob pattern such as '**/*.rb', evaluated relative to base."
         string :base,    description: "Directory to glob from. Defaults to the current directory.", required: false
       end

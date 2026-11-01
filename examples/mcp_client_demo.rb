@@ -63,8 +63,9 @@ end
 def load_client(require_path, client_name, &check)
   return false unless check.nil? || check.call
   require require_path
-  client = RubyLLM::MCP.clients[client_name]
-  return false if client.nil?
+  klass = SharedTools::MCP.clients.find { |c| c.default_name == client_name }
+  return false if klass.nil? || !klass.available?
+  client = klass.new
   puts "  Loaded '#{client_name}' — #{client.tools.count} tools: #{client.tools.map(&:name).join(', ')}"
   true
 rescue => e
@@ -101,13 +102,13 @@ else
   memory_loaded = load_client('shared_tools/mcp/memory_client', 'memory')
 
   puts "\nSequential Thinking (chain-of-thought reasoning):"
-  thinking_loaded = load_client('shared_tools/mcp/sequential_thinking_client', 'sequential-thinking')
+  thinking_loaded = load_client('shared_tools/mcp/sequential_thinking_client', 'sequential_thinking')
 
   puts "\nChart generation (AntV):"
   chart_loaded = load_client('shared_tools/mcp/chart_client', 'chart')
 
   puts "\nBrave Search (web + news):"
-  brave_loaded = load_client('shared_tools/mcp/brave_search_client', 'brave-search') { ENV['BRAVE_API_KEY'] && !ENV['BRAVE_API_KEY'].empty? }
+  brave_loaded = load_client('shared_tools/mcp/brave_search_client', 'brave_search') { ENV['BRAVE_API_KEY'] && !ENV['BRAVE_API_KEY'].empty? }
   puts "  Skipped — set BRAVE_API_KEY to enable" unless brave_loaded
 end
 
@@ -115,8 +116,8 @@ end
 title "LLM Chat with Loaded MCP Tools", char: '-'
 # ---------------------------------------------------------------------------
 
-all_tools = %w[tavily memory sequential-thinking chart brave-search].filter_map do |name|
-  RubyLLM::MCP.clients[name]&.tools
+all_tools = %w[tavily memory sequential_thinking chart brave_search].filter_map do |name|
+  SharedTools::MCP.clients.find { |c| c.default_name == name && c.available? }&.new&.tools
 rescue
   nil
 end.flatten

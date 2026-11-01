@@ -25,7 +25,7 @@ module SharedTools
                   "path or an inline json string. Path syntax: keys separated by dots, [n] for " \
                   "array index, [] to map over an array (e.g. users[].name)."
 
-      params do
+      parameters do
         string :path,  description: "JSON file to read. Provide this or json.", required: false
         string :json,  description: "Inline JSON string. Provide this or path.", required: false
         string :query, description: "Path expression to extract, e.g. 'users[0].name'. Omit to pretty-print. Optional.", required: false

@@ -19,12 +19,13 @@ title "Playwright MCP Client Demo"
 
 begin
   require 'shared_tools/mcp/playwright_client'
+  SharedTools::MCP::Playwright.verify!
 rescue LoadError => e
   puts "unable to load the client: #{e.message}"
   exit
 end
 
-client = RubyLLM::MCP.clients['playwright']
+client = SharedTools::MCP::Playwright.new
 
 title "Page Navigation & Text Extraction", char: '-'
 begin

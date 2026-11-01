@@ -20,12 +20,13 @@ title "GitHub MCP Client Demo"
 
 begin
   require 'shared_tools/mcp/github_client'
+  SharedTools::MCP::GitHub.verify!.install_packages!
 rescue LoadError => e
   puts "unable to load the client: #{e.message}"
   exit
 end
 
-client = RubyLLM::MCP.clients['github']
+client = SharedTools::MCP::GitHub.new
 @chat  = new_chat.with_tools(*client.tools)
 
 title "Repository Info", char: '-'

@@ -17,7 +17,7 @@ module SharedTools
         recommendations and statistical significance testing where applicable.
       DESCRIPTION
 
-      params do
+      parameters do
         string :analysis_type, description: <<~DESC.strip, required: true
           Type of data science analysis to perform:
           - 'statistical_summary': Descriptive statistics, distributions, outlier detection

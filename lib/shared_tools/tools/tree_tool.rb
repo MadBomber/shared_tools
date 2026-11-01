@@ -24,7 +24,7 @@ module SharedTools
                   "trailing slash. Skips ignored directories (node_modules, .git, ...) and hidden " \
                   "entries unless show_hidden is set."
 
-      params do
+      parameters do
         integer :max_depth,   description: "How many levels deep to descend (default #{DEFAULT_DEPTH}).", required: false
         string  :path,        description: "Directory to start from. Defaults to the current directory.", required: false
         boolean :show_hidden, description: "Include dot-files and dot-directories. Default false.", required: false

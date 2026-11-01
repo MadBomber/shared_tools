@@ -15,8 +15,8 @@ module SharedTools
     # MCP load tracking
     # ---------------------------------------------------------------------------
 
-    # Record the outcome of loading a single MCP client.
-    # Called by mcp.rb from within each loader thread.
+    # Record whether a single MCP server definition is usable (its required
+    # environment variables are set). Called by mcp.rb for each server class.
     #
     #   SharedTools.record_mcp_result("tavily")              # success
     #   SharedTools.record_mcp_result("notion", error: e)    # failure

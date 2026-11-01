@@ -41,7 +41,7 @@ module SharedTools
           puts "Found #{result[:row_count]} users"
       DESCRIPTION
 
-      params do
+      parameters do
         string :query, description: <<~DESC.strip
           SQL SELECT query to execute against the database. Only SELECT statements are permitted
           for security reasons - INSERT, UPDATE, DELETE, and DDL statements will be rejected.

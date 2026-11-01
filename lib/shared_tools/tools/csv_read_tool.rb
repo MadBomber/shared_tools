@@ -21,7 +21,7 @@ module SharedTools
       description "Read a CSV file and return its rows. By default the first row is treated as a " \
                   "header. Use limit to cap the number of data rows returned."
 
-      params do
+      parameters do
         string  :path,    description: "CSV file to read."
         boolean :headers, description: "Treat the first row as column headers. Default true.", required: false
         integer :limit,   description: "Maximum number of data rows to return (default #{DEFAULT_LIMIT}).", required: false

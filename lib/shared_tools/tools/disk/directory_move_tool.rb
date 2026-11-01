@@ -13,7 +13,7 @@ module SharedTools
 
         description "Moves a directory from one location to another."
 
-        params do
+        parameters do
           string :path, description: "a path (e.g. `./old`)"
           string :destination, description: "a path (e.g. `./new`)"
         end

@@ -22,7 +22,7 @@ module SharedTools
                   "content (HTML is converted to text). Follows redirects safely. Cannot reach " \
                   "private, loopback, or cloud-metadata addresses."
 
-      params do
+      parameters do
         string :url, description: "The http/https URL to fetch."
       end
 

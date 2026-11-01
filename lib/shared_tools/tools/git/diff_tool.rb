@@ -22,7 +22,7 @@ module SharedTools
                     "changes; set staged to show what's staged. Optionally scope to a path or diff " \
                     "against a ref. Read-only."
 
-        params do
+        parameters do
           boolean :staged, description: "Show staged changes (git diff --cached) instead of unstaged. Default false.", required: false
           string  :path,   description: "Limit the diff to this path, relative to the repo root. Optional.", required: false
           string  :ref,    description: "Diff against this commit/branch/tag instead of the index. Optional.", required: false

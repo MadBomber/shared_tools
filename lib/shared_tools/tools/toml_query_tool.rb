@@ -25,7 +25,7 @@ module SharedTools
                   "path or an inline toml string. Path syntax: keys separated by dots, [n] for " \
                   "array index, [] to map over an array (e.g. products[].name)."
 
-      params do
+      parameters do
         string :path,  description: "TOML file to read. Provide this or toml.", required: false
         string :toml,  description: "Inline TOML string. Provide this or path.", required: false
         string :query, description: "Path expression to extract, e.g. 'dependencies.serde.version'. Omit to pretty-print. Optional.", required: false

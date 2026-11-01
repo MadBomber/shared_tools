@@ -37,7 +37,7 @@ module SharedTools
                   "case-insensitively. Results are capped, ReDoS-guarded, and require no external " \
                   "search binary."
 
-      params do
+      parameters do
         string  :pattern,     description: "Regular expression to search for."
         string  :path,        description: "Directory to search in (default: current directory)", required: false
         string  :glob,        description: "Only search files whose basename matches this glob, e.g. '*.rb'. Optional.", required: false

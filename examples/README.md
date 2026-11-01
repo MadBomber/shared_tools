@@ -262,7 +262,7 @@ bundle exec ruby -I examples examples/notification_tool_demo.rb
 
 Model Context Protocol (MCP) client overview: loading multiple clients, using MCP tools in LLM conversations, and multi-client orchestration.
 
-**Requires:** `ruby_llm-mcp` gem
+**Requires:** ruby_llm >= 2.1 (built-in `RubyLLM::MCP`)
 
 ```bash
 bundle exec ruby -I examples examples/mcp_client_demo.rb

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # shared_tools/mcp/memory_client.rb
 #
 # MCP Memory Server — npx auto-download (no pre-installation required)
@@ -8,26 +10,29 @@
 # Prerequisites:
 #   - Node.js and npx (https://nodejs.org)
 #   The @modelcontextprotocol/server-memory package is downloaded automatically
-#   on first use via `npx -y`.
+#   the first time the server is started, via `npx -y`.
 #
 # Configuration (all optional):
-#   export MEMORY_FILE_PATH=/path/to/memory.jsonl   # default: memory.jsonl in cwd
+#   export MEMORY_FILE_PATH=/path/to/memory.jsonl   # default: the server's own default
 #
 # Usage:
 #   require 'shared_tools/mcp/memory_client'
-#   client = RubyLLM::MCP.clients["memory"]
-#   chat = RubyLLM.chat.with_tools(*client.tools)
+#   chat  = RubyLLM.chat.with_mcp(SharedTools::MCP::Memory)
+#   robot = RobotLab.build(name: "assistant", mcp: [SharedTools::MCP::Memory])
 #
-# Compatible with ruby_llm-mcp >= 0.7.0
+# Requires ruby_llm >= 2.1 (built-in RubyLLM::MCP). Nothing starts until the
+# server's tools are first requested.
 
-require "ruby_llm/mcp"
+require_relative "client_support"
 
-RubyLLM::MCP.add_client(
-  name: "memory",
-  transport_type: :stdio,
-  config: {
-    command: "npx",
-    args:    ["-y", "@modelcontextprotocol/server-memory"],
-    env:     ENV['MEMORY_FILE_PATH'] ? { "MEMORY_FILE_PATH" => ENV['MEMORY_FILE_PATH'] } : {},
-  },
-)
+module SharedTools
+  module MCP
+    class Memory < ::RubyLLM::MCP
+      extend ClientSupport
+
+      command "npx", "-y", "@modelcontextprotocol/server-memory"
+      # An unset MEMORY_FILE_PATH resolves to "", which the server treats as unset.
+      env "MEMORY_FILE_PATH" => env_from("MEMORY_FILE_PATH")
+    end
+  end
+end

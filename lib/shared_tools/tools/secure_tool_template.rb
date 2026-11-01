@@ -28,7 +28,7 @@ module SharedTools
         sensitive systems, handle user data, or perform privileged operations.
       DESCRIPTION
 
-      params do
+      parameters do
         string :user_input, description: <<~DESC.strip
           User-provided input string that will be processed with comprehensive security validation.
           The input undergoes multiple security checks:

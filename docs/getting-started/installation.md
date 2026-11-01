@@ -104,16 +104,17 @@ apt-get install python3
 
 ## MCP Clients
 
-SharedTools bundles optional MCP (Model Context Protocol) clients. Each is opt-in via an extra require:
+SharedTools bundles optional MCP (Model Context Protocol) server definitions. Each is opt-in via an extra require and is a `RubyLLM::MCP` subclass, so it uses the MCP client built into ruby_llm >= 2.1 (the separate `ruby_llm-mcp` gem is no longer used):
 
 ```ruby
-gem 'ruby_llm-mcp', '>= 0.7.0'   # Add to Gemfile
+require 'shared_tools/mcp/github_client'
+chat = RubyLLM.chat.with_mcp(SharedTools::MCP::GitHub)
 ```
 
 | Transport | What's needed |
 |-----------|---------------|
 | Remote HTTP (Tavily) | Only an API key — no binaries |
-| Brew-installed (GitHub, Notion, Slack, Hugging Face) | Homebrew — binaries are auto-installed on first use |
+| Brew-installed (GitHub, Notion, Slack, Hugging Face) | The binary on PATH — `SharedTools::MCP::GitHub.install_packages!` (etc.) installs it via Homebrew/apt/dnf |
 | npx (Memory, Sequential Thinking, Chart, Brave Search, Playwright) | Node.js / npx — packages are auto-downloaded on first use |
 
 See [MCP Clients README](https://github.com/madbomber/shared_tools/blob/main/lib/shared_tools/mcp/README.md) for full configuration details.

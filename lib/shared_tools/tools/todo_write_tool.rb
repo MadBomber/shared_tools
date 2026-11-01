@@ -27,7 +27,7 @@ module SharedTools
                   "replaces the previous list. Each todo has a content string and a status of " \
                   "pending, in_progress, or completed."
 
-      params do
+      parameters do
         array :todos, description: "The full task list, replacing the previous one." do
           object do
             string :content, description: "The task description."

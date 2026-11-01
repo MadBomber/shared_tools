@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 # shared_tools/mcp/slack_client.rb
 #
-# Slack MCP Server Client — requires brew installation
+# Slack MCP Server — local binary over stdio
 #
 # Provides Slack workspace access: read channels, messages, and threads,
 # search message history, list users, and (optionally) post messages.
 #
 # Prerequisites:
-#   - Homebrew (https://brew.sh)
+#   - The slack-mcp-server binary on PATH. Install it with
+#     SharedTools::MCP::Slack.install_packages! (Homebrew/apt/dnf) or by hand.
 #   - A Slack token — at least one of the following must be set:
 #       SLACK_MCP_XOXP_TOKEN — user OAuth token (xoxp-...) — full access
 #       SLACK_MCP_XOXB_TOKEN — bot token (xoxb-...) — limited to invited channels, no search
-#   The slack-mcp-server binary is installed automatically via brew if missing.
 #
 # Configuration:
 #   export SLACK_MCP_XOXP_TOKEN=xoxp-your-user-token   # recommended
@@ -23,32 +25,35 @@
 #
 # Usage:
 #   require 'shared_tools/mcp/slack_client'
-#   client = RubyLLM::MCP.clients["slack"]
-#   chat = RubyLLM.chat.with_tools(*client.tools)
+#   chat  = RubyLLM.chat.with_mcp(SharedTools::MCP::Slack)
+#   robot = RobotLab.build(name: "slacker", mcp: [SharedTools::MCP::Slack])
 #
-# Compatible with ruby_llm-mcp >= 0.7.0
+# Requires ruby_llm >= 2.1 (built-in RubyLLM::MCP). Nothing starts until the
+# server's tools are first requested. Variables are read when the server
+# process starts; unset ones are passed as "", which the server treats as unset.
 
-require_relative "../utilities"
+require_relative "client_support"
 
-xoxp = ENV.fetch("SLACK_MCP_XOXP_TOKEN", "")
-xoxb = ENV.fetch("SLACK_MCP_XOXB_TOKEN", "")
-raise LoadError, "SLACK_MCP_XOXP_TOKEN or SLACK_MCP_XOXB_TOKEN must be set" if xoxp.empty? && xoxb.empty?
+module SharedTools
+  module MCP
+    class Slack < ::RubyLLM::MCP
+      extend ClientSupport
 
-SharedTools.package_install("slack-mcp-server")
+      TOKEN_ENVARS = %w[SLACK_MCP_XOXP_TOKEN SLACK_MCP_XOXB_TOKEN].freeze
 
-require "ruby_llm/mcp"
+      requires_packages "slack-mcp-server"
 
-slack_env = {}
-slack_env["SLACK_MCP_XOXP_TOKEN"] = xoxp unless xoxp.empty?
-slack_env["SLACK_MCP_XOXB_TOKEN"] = xoxb unless xoxb.empty?
-slack_env["SLACK_MCP_ADD_MESSAGE_TOOL"] = ENV["SLACK_MCP_ADD_MESSAGE_TOOL"] if ENV["SLACK_MCP_ADD_MESSAGE_TOOL"]
+      command "slack-mcp-server"
+      env "SLACK_MCP_XOXP_TOKEN"       => env_from("SLACK_MCP_XOXP_TOKEN"),
+          "SLACK_MCP_XOXB_TOKEN"       => env_from("SLACK_MCP_XOXB_TOKEN"),
+          "SLACK_MCP_ADD_MESSAGE_TOOL" => env_from("SLACK_MCP_ADD_MESSAGE_TOOL")
 
-RubyLLM::MCP.add_client(
-  name: "slack",
-  transport_type: :stdio,
-  config: {
-    command: "slack-mcp-server",
-    args:    [],
-    env:     slack_env,
-  },
-)
+      # Either token is enough, so this replaces the all-of requires_envars check.
+      def self.missing_envars
+        return [] if TOKEN_ENVARS.any? { |name| !ENV.fetch(name, "").empty? }
+
+        ["SLACK_MCP_XOXP_TOKEN or SLACK_MCP_XOXB_TOKEN"]
+      end
+    end
+  end
+end

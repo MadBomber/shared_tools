@@ -26,7 +26,7 @@ module SharedTools
                   "size-capped. Use for fetching an asset or release to disk (web_fetch returns text " \
                   "instead). Overwrites an existing file."
 
-      params do
+      parameters do
         string :url,  description: "The http/https URL to download."
         string :path, description: "Destination path, relative to root."
       end

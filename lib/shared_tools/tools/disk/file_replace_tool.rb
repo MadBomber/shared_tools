@@ -17,7 +17,7 @@ module SharedTools
 
         description "Replaces a specific string in a file (old_text => new_text)."
 
-        params do
+        parameters do
           string :old_text, description: "the old text (e.g. `puts 'ABC'`)"
           string :new_text, description: "the new text (e.g. `puts 'DEF'`)"
           string :path, description: "a path (e.g. `./main.rb`)"

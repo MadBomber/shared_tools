@@ -19,7 +19,7 @@ module SharedTools
         description "Show git blame for a file in the repository: which commit, author, and date " \
                     "last touched each line. Optionally limit to a line range. Read-only."
 
-        params do
+        parameters do
           string  :path,        description: "File to blame, relative to the repo root."
           integer :start_line,  description: "First line of the range to blame. Optional.", required: false
           integer :end_line,    description: "Last line of the range to blame. Optional.", required: false

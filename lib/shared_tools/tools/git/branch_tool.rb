@@ -20,7 +20,7 @@ module SharedTools
         description "List the branches of the repository, with the current branch marked (*) and " \
                     "each branch's tip commit. Set all true to include remote-tracking branches. Read-only."
 
-        params do
+        parameters do
           boolean :all, description: "Include remote-tracking branches. Default false (local only).", required: false
         end
 

@@ -44,7 +44,7 @@ module SharedTools
           puts "Result: #{result[:result]}" # 3.3333
       DESCRIPTION
 
-      params do
+      parameters do
         string :expression, description: <<~DESC.strip
           Mathematical expression to evaluate using standard arithmetic operators and parentheses.
           Supported operations include: addition (+), subtraction (-), multiplication (*),

@@ -13,7 +13,7 @@ module SharedTools
 
         description "Deletes a file."
 
-        params do
+        parameters do
           string :path, description: "a path to the file (e.g. `./README.md`)"
         end
 

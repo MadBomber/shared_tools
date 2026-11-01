@@ -20,7 +20,7 @@ module SharedTools
                   "since the last read, along with its status and exit code if it has finished. Poll " \
                   "this to follow a process's output."
 
-      params do
+      parameters do
         string :id, description: "The process id returned by process_start (e.g. 'proc_1')."
       end
 

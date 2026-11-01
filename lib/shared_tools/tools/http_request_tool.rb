@@ -27,7 +27,7 @@ module SharedTools
                   "body. GET and HEAD are available by default; POST/PUT/PATCH/DELETE require user " \
                   "authorization. Cannot reach private, loopback, or cloud-metadata addresses."
 
-      params do
+      parameters do
         string :url,     description: "The http/https URL to request."
         string :method,  description: "HTTP method: GET (default), HEAD, POST, PUT, PATCH, DELETE.", required: false
         object :headers, description: "Optional request headers as a JSON object of name/value strings.", required: false do

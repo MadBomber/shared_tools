@@ -48,7 +48,7 @@ module SharedTools
         Action::CHECKOUT,
       ].freeze
 
-      params do
+      parameters do
         string  :action,      description: "The git operation to perform. One of: #{ACTIONS.join(', ')}"
         boolean :staged,      description: "For `#{Action::DIFF}`: show staged changes instead of unstaged.", required: false
         string  :path,        description: "A file or directory path, relative to the repo root. Used by #{Action::DIFF}, #{Action::LOG}, #{Action::SHOW}, #{Action::BLAME}, #{Action::GREP}.", required: false

@@ -13,7 +13,7 @@ module SharedTools
 
         description "Read the full contents of a plain text file."
 
-        params do
+        parameters do
           string :doc_path, description: "Path to the text file to read."
         end
 

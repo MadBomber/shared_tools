@@ -20,7 +20,7 @@ module SharedTools
 
         description "Read the text content of a Microsoft Word (.docx) document."
 
-        params do
+        parameters do
           string :doc_path, description: "Path to the .docx file."
 
           string :paragraph_range, description: <<~DESC.strip, required: false

@@ -13,7 +13,7 @@ module SharedTools
 
         description "Runs a command via Docker with arguments on the project (e.g. `rspec spec/main_spec.rb`)."
 
-        params do
+        parameters do
           string :service, description: "The service to run the command on (e.g. `app`).", required: false
           string :command, description: "The command to run (e.g. `rspec`)."
           array :args, of: :string, description: "The arguments for the command.", required: false

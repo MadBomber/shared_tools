@@ -24,8 +24,8 @@ module Tools
     description <<~DESCRIPTION
       Enables a tool based on the request.
     DESCRIPTION
-    param :tool, desc: 'Tool name to enable'
-    # param :params, desc: 'JSON formatted parameters'
+    parameter :tool, description: 'Tool name to enable'
+    # parameter :params, description: 'JSON formatted parameters', required: false
 
     def initialize(agent)
       @agent = agent

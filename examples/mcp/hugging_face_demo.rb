@@ -20,12 +20,13 @@ title "Hugging Face MCP Client Demo"
 
 begin
   require 'shared_tools/mcp/hugging_face_client'
+  SharedTools::MCP::HuggingFace.verify!.install_packages!
 rescue LoadError => e
   puts "unable to load the client: #{e.message}"
   exit
 end
 
-client = RubyLLM::MCP.clients['hugging-face']
+client = SharedTools::MCP::HuggingFace.new
 @chat  = new_chat.with_tools(*client.tools)
 
 title "Trending Models", char: '-'

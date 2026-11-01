@@ -40,7 +40,7 @@ module SharedTools
         - 'whois'       — Query the WHOIS database for a domain name or IP address
       DESC
 
-      params do
+      parameters do
         string :action, description: <<~DESC.strip
           The DNS or network operation to perform. One of:
           - 'a'           — Look up IPv4 A records for a hostname. Returns the IPv4 addresses

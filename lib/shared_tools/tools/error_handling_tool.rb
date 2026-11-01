@@ -52,7 +52,7 @@ module SharedTools
           )
       DESCRIPTION
 
-      params do
+      parameters do
         string :operation, description: <<~DESC.strip
           The operation to perform. Options:
           - 'validate': Validate data structure and content

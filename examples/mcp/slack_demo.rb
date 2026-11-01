@@ -21,12 +21,13 @@ title "Slack MCP Client Demo"
 
 begin
   require 'shared_tools/mcp/slack_client'
+  SharedTools::MCP::Slack.verify!.install_packages!
 rescue LoadError => e
   puts "unable to load the client: #{e.message}"
   exit
 end
 
-client = RubyLLM::MCP.clients['slack']
+client = SharedTools::MCP::Slack.new
 @chat  = new_chat.with_tools(*client.tools)
 
 title "Channel Overview", char: '-'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # shared_tools/mcp/brave_search_client.rb
 #
 # Brave Search MCP Server — npx auto-download (no pre-installation required)
@@ -8,30 +10,30 @@
 #   - Node.js and npx (https://nodejs.org)
 #   - A Brave Search API key (free tier available at https://brave.com/search/api/)
 #   The @modelcontextprotocol/server-brave-search package is downloaded
-#   automatically on first use via `npx -y`.
+#   automatically the first time the server is started, via `npx -y`.
 #
 # Configuration:
 #   export BRAVE_API_KEY=your_api_key_here
 #
 # Usage:
 #   require 'shared_tools/mcp/brave_search_client'
-#   client = RubyLLM::MCP.clients["brave-search"]
-#   chat = RubyLLM.chat.with_tools(*client.tools)
+#   chat  = RubyLLM.chat.with_mcp(SharedTools::MCP::BraveSearch)
+#   robot = RobotLab.build(name: "researcher", mcp: [SharedTools::MCP::BraveSearch])
 #
-# Compatible with ruby_llm-mcp >= 0.7.0
+# Requires ruby_llm >= 2.1 (built-in RubyLLM::MCP). Nothing starts until the
+# server's tools are first requested.
 
-require_relative "../utilities"
+require_relative "client_support"
 
-SharedTools.verify_envars("BRAVE_API_KEY")
+module SharedTools
+  module MCP
+    class BraveSearch < ::RubyLLM::MCP
+      extend ClientSupport
 
-require "ruby_llm/mcp"
+      requires_envars "BRAVE_API_KEY"
 
-RubyLLM::MCP.add_client(
-  name: "brave-search",
-  transport_type: :stdio,
-  config: {
-    command: "npx",
-    args:    ["-y", "@modelcontextprotocol/server-brave-search"],
-    env:     { "BRAVE_API_KEY" => ENV.fetch("BRAVE_API_KEY", "") },
-  },
-)
+      command "npx", "-y", "@modelcontextprotocol/server-brave-search"
+      env "BRAVE_API_KEY" => env_from("BRAVE_API_KEY")
+    end
+  end
+end
