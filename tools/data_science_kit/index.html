@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/shared_tools.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1708,20 +1708,20 @@
 <h1 id="datasciencekit">DataScienceKit<a class="headerlink" href="#datasciencekit" title="Permanent link">&para;</a></h1>
 <p>Statistical analysis, correlation, time series analysis, clustering, and prediction — performed by the tool itself using real math, not simulated results.</p>
 <h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools&#39;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools/data_science_kit&#39;</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'shared_tools'</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'shared_tools/data_science_kit'</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">kit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">DataScienceKit</span><span class="o">.</span><span class="n">new</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Analyse a CSV file</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;statistical_summary&quot;</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./sales_data.csv&quot;</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"statistical_summary"</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">"./sales_data.csv"</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="p">)</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Pass data inline as a pipe-delimited table</span>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;correlation_analysis&quot;</span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"correlation_analysis"</span><span class="p">,</span>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="o">&lt;&lt;~</span><span class="dl">TABLE</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="sh">    | month | revenue | expenses |</span>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="sh">    | Jan   | 12400   | 8200     |</span>
@@ -1733,29 +1733,29 @@
 <h2 id="analysis-types">Analysis Types<a class="headerlink" href="#analysis-types" title="Permanent link">&para;</a></h2>
 <h3 id="statistical_summary">statistical_summary<a class="headerlink" href="#statistical_summary" title="Permanent link">&para;</a></h3>
 <p>Descriptive statistics: count, mean, median, standard deviation, min, max, and quartiles for every numeric column.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;statistical_summary&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./data.csv&quot;</span><span class="p">)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"statistical_summary"</span><span class="p">,</span><span class="w"> </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">"./data.csv"</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="correlation_analysis">correlation_analysis<a class="headerlink" href="#correlation_analysis" title="Permanent link">&para;</a></h3>
 <p>Pearson correlation coefficients between all pairs of numeric columns. Identifies which variables move together.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;correlation_analysis&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./data.csv&quot;</span><span class="p">)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"correlation_analysis"</span><span class="p">,</span><span class="w"> </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">"./data.csv"</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="time_series">time_series<a class="headerlink" href="#time_series" title="Permanent link">&para;</a></h3>
 <p>Trend detection, moving averages, and basic seasonality analysis. Requires a date/time column and a numeric value column.</p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;time_series&quot;</span><span class="p">,</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./monthly_revenue.csv&quot;</span><span class="p">,</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="ss">date_column</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;month&quot;</span><span class="p">,</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="ss">value_column</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;revenue&quot;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"time_series"</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">"./monthly_revenue.csv"</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="ss">date_column</span><span class="p">:</span><span class="w"> </span><span class="s2">"month"</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="ss">value_column</span><span class="p">:</span><span class="w"> </span><span class="s2">"revenue"</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="clustering">clustering<a class="headerlink" href="#clustering" title="Permanent link">&para;</a></h3>
 <p>K-means clustering to group similar records. Returns cluster assignments and centroids.</p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;clustering&quot;</span><span class="p">,</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./customers.csv&quot;</span><span class="p">,</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"clustering"</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">"./customers.csv"</span><span class="p">,</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="ss">n_clusters</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
 </span></code></pre></div>
@@ -1763,23 +1763,23 @@
 <h3 id="prediction">prediction<a class="headerlink" href="#prediction" title="Permanent link">&para;</a></h3>
 <p>Simple linear regression to predict a target column from one or more feature columns.</p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prediction&quot;</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./sales.csv&quot;</span><span class="p">,</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="ss">target_column</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;revenue&quot;</span><span class="p">,</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="ss">feature_columns</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;ad_spend&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;headcount&quot;</span><span class="o">]</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"prediction"</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">"./sales.csv"</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="ss">target_column</span><span class="p">:</span><span class="w"> </span><span class="s2">"revenue"</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="ss">feature_columns</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="s2">"ad_spend"</span><span class="p">,</span><span class="w"> </span><span class="s2">"headcount"</span><span class="o">]</span>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="data-sources">Data Sources<a class="headerlink" href="#data-sources" title="Permanent link">&para;</a></h2>
 <h3 id="file-based-data_source">File-based (<code>data_source</code>)<a class="headerlink" href="#file-based-data_source" title="Permanent link">&para;</a></h3>
 <p>Pass a path to a CSV or JSON file:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;statistical_summary&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./data.csv&quot;</span><span class="p">)</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;statistical_summary&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./records.json&quot;</span><span class="p">)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"statistical_summary"</span><span class="p">,</span><span class="w"> </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">"./data.csv"</span><span class="p">)</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"statistical_summary"</span><span class="p">,</span><span class="w"> </span><span class="ss">data_source</span><span class="p">:</span><span class="w"> </span><span class="s2">"./records.json"</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="inline-data-data">Inline data (<code>data</code>)<a class="headerlink" href="#inline-data-data" title="Permanent link">&para;</a></h3>
 <p>Pass raw data directly as a string. The tool parses these formats automatically:</p>
 <p><strong>Pipe-delimited table</strong> (easiest for LLMs to generate):</p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;statistical_summary&quot;</span><span class="p">,</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"statistical_summary"</span><span class="p">,</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="o">&lt;&lt;~</span><span class="dl">TABLE</span>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="sh">    | name    | score | age |</span>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="sh">    | Alice   | 88    | 29  |</span>
@@ -1790,32 +1790,32 @@
 </span></code></pre></div>
 <p><strong>CSV string:</strong></p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;statistical_summary&quot;</span><span class="p">,</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;name,score,age</span><span class="se">\n</span><span class="s2">Alice,88,29</span><span class="se">\n</span><span class="s2">Bob,72,34&quot;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"statistical_summary"</span><span class="p">,</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="s2">"name,score,age</span><span class="se">\n</span><span class="s2">Alice,88,29</span><span class="se">\n</span><span class="s2">Bob,72,34"</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">)</span>
 </span></code></pre></div>
 <p><strong>JSON array of objects:</strong></p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;statistical_summary&quot;</span><span class="p">,</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;[{&quot;name&quot;:&quot;Alice&quot;,&quot;score&quot;:88},{&quot;name&quot;:&quot;Bob&quot;,&quot;score&quot;:72}]&#39;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"statistical_summary"</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="s1">'[{"name":"Alice","score":88},{"name":"Bob","score":72}]'</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">)</span>
 </span></code></pre></div>
 <p><strong>Comma-separated numbers</strong> (for single-series analysis):</p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">kit</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;statistical_summary&quot;</span><span class="p">,</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;12, 45, 67, 23, 89, 34&quot;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="ss">analysis_type</span><span class="p">:</span><span class="w"> </span><span class="s2">"statistical_summary"</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="s2">"12, 45, 67, 23, 89, 34"</span>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="integration-with-llm-agents">Integration with LLM Agents<a class="headerlink" href="#integration-with-llm-agents" title="Permanent link">&para;</a></h2>
 <p>The inline <code>data</code> parameter makes DataScienceKit ideal for LLM agents — the model can embed the data directly in the tool call without needing to write a file first:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;ruby_llm&#39;</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools/data_science_kit&#39;</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'ruby_llm'</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'shared_tools/data_science_kit'</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">chat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">RubyLLM</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">with_tool</span><span class="p">(</span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">DataScienceKit</span><span class="o">.</span><span class="n">new</span><span class="p">)</span>
 </span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
 </span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">chat</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="o">&lt;&lt;~</span><span class="dl">PROMPT</span><span class="p">)</span>
 </span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="sh">  Analyse the following sales data and provide a statistical summary.</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="sh">  Pass the data using the inline &#39;data&#39; parameter as a pipe-delimited table.</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="sh">  Pass the data using the inline 'data' parameter as a pipe-delimited table.</span>
 </span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
 </span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="sh">  | quarter | revenue | units_sold | returns |</span>
 </span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="sh">  | Q1      | 124000  | 1240       | 38      |</span>
@@ -1922,10 +1922,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "header.autohide", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "header.autohide", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>

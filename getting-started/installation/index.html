@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/shared_tools.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -2012,8 +2012,8 @@
 </ul>
 <h2 id="basic-installation">Basic Installation<a class="headerlink" href="#basic-installation" title="Permanent link">&para;</a></h2>
 <p>Add SharedTools to your Gemfile:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;shared_tools&#39;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;ruby_llm&#39;</span><span class="w">  </span><span class="c1"># Required LLM framework</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'shared_tools'</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'ruby_llm'</span><span class="w">  </span><span class="c1"># Required LLM framework</span>
 </span></code></pre></div>
 <p>Then install:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bundle<span class="w"> </span>install
@@ -2035,7 +2035,7 @@
 <p>Depending on which tools you plan to use, you may need additional gems:</p>
 <h3 id="browser-automation">Browser Automation<a class="headerlink" href="#browser-automation" title="Permanent link">&para;</a></h3>
 <p>For the <code>BrowserTool</code>:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;watir&#39;</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'watir'</span>
 </span></code></pre></div>
 <p>Watir also requires a browser driver. Install ChromeDriver:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># macOS</span>
@@ -2046,14 +2046,14 @@
 </span></code></pre></div>
 <h3 id="database-operations">Database Operations<a class="headerlink" href="#database-operations" title="Permanent link">&para;</a></h3>
 <p>For the <code>DatabaseTool</code>:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;sqlite3&#39;</span><span class="w">   </span><span class="c1"># SQLite</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;pg&#39;</span><span class="w">        </span><span class="c1"># PostgreSQL</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'sqlite3'</span><span class="w">   </span><span class="c1"># SQLite</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'pg'</span><span class="w">        </span><span class="c1"># PostgreSQL</span>
 </span></code></pre></div>
 <h3 id="document-processing">Document Processing<a class="headerlink" href="#document-processing" title="Permanent link">&para;</a></h3>
 <p>For the <code>DocTool</code>:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;pdf-reader&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;~&gt; 2.0&#39;</span><span class="w">   </span><span class="c1"># PDF support</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;docx&#39;</span><span class="w">                    </span><span class="c1"># Microsoft Word (.docx) support</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;roo&#39;</span><span class="w">                     </span><span class="c1"># Spreadsheet support: CSV, XLSX, ODS, XLSM</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'pdf-reader'</span><span class="p">,</span><span class="w"> </span><span class="s1">'~&gt; 2.0'</span><span class="w">   </span><span class="c1"># PDF support</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'docx'</span><span class="w">                    </span><span class="c1"># Microsoft Word (.docx) support</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'roo'</span><span class="w">                     </span><span class="c1"># Spreadsheet support: CSV, XLSX, ODS, XLSM</span>
 </span></code></pre></div>
 <p>Install all three to support all document formats:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gem<span class="w"> </span>install<span class="w"> </span>pdf-reader<span class="w"> </span>docx<span class="w"> </span>roo
@@ -2073,8 +2073,9 @@
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>apt-get<span class="w"> </span>install<span class="w"> </span>python3
 </span></code></pre></div>
 <h2 id="mcp-clients">MCP Clients<a class="headerlink" href="#mcp-clients" title="Permanent link">&para;</a></h2>
-<p>SharedTools bundles optional MCP (Model Context Protocol) clients. Each is opt-in via an extra require:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;ruby_llm-mcp&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&gt;= 0.7.0&#39;</span><span class="w">   </span><span class="c1"># Add to Gemfile</span>
+<p>SharedTools bundles optional MCP (Model Context Protocol) server definitions. Each is opt-in via an extra require and is a <code>RubyLLM::MCP</code> subclass, so it uses the MCP client built into ruby_llm &gt;= 2.1 (the separate <code>ruby_llm-mcp</code> gem is no longer used):</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'shared_tools/mcp/github_client'</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">chat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">RubyLLM</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">with_mcp</span><span class="p">(</span><span class="no">SharedTools</span><span class="o">::</span><span class="no">MCP</span><span class="o">::</span><span class="no">GitHub</span><span class="p">)</span>
 </span></code></pre></div>
 <table>
 <thead>
@@ -2090,7 +2091,7 @@
 </tr>
 <tr>
 <td>Brew-installed (GitHub, Notion, Slack, Hugging Face)</td>
-<td>Homebrew — binaries are auto-installed on first use</td>
+<td>The binary on PATH — <code>SharedTools::MCP::GitHub.install_packages!</code> (etc.) installs it via Homebrew/apt/dnf</td>
 </tr>
 <tr>
 <td>npx (Memory, Sequential Thinking, Chart, Brave Search, Playwright)</td>
@@ -2102,20 +2103,20 @@
 <h2 id="complete-setup-example">Complete Setup Example<a class="headerlink" href="#complete-setup-example" title="Permanent link">&para;</a></h2>
 <p>For a full-featured installation with all optional dependencies:</p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Gemfile</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;shared_tools&#39;</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;ruby_llm&#39;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'shared_tools'</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'ruby_llm'</span>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Browser automation</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;watir&#39;</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'watir'</span>
 </span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
 </span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Database</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;sqlite3&#39;</span>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;pg&#39;</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'sqlite3'</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'pg'</span>
 </span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
 </span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Document processing</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;pdf-reader&#39;</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;docx&#39;</span>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="n">gem</span><span class="w"> </span><span class="s1">&#39;roo&#39;</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'pdf-reader'</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'docx'</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'roo'</span>
 </span></code></pre></div>
 <p>Then run:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>bundle<span class="w"> </span>install
@@ -2123,14 +2124,14 @@
 <h2 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h2>
 <p>Create a test script to verify SharedTools is installed correctly:</p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># test_install.rb</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools&#39;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'shared_tools'</span>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;SharedTools version: </span><span class="si">#{</span><span class="no">SharedTools</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;RubyLLM detected: </span><span class="si">#{</span><span class="n">defined?</span><span class="p">(</span><span class="no">RubyLLM</span><span class="o">::</span><span class="no">Tool</span><span class="p">)</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="s1">&#39;Yes&#39;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;No&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nb">puts</span><span class="w"> </span><span class="s2">"SharedTools version: </span><span class="si">#{</span><span class="no">SharedTools</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">"</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">puts</span><span class="w"> </span><span class="s2">"RubyLLM detected: </span><span class="si">#{</span><span class="n">defined?</span><span class="p">(</span><span class="no">RubyLLM</span><span class="o">::</span><span class="no">Tool</span><span class="p">)</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="s1">'Yes'</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">'No'</span><span class="si">}</span><span class="s2">"</span>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
 </span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Test basic tool initialization</span>
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="n">disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">DiskTool</span><span class="o">.</span><span class="n">new</span>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;DiskTool initialized successfully!&quot;</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="nb">puts</span><span class="w"> </span><span class="s2">"DiskTool initialized successfully!"</span>
 </span></code></pre></div>
 <p>Run it:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ruby<span class="w"> </span>test_install.rb
@@ -2251,10 +2252,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "header.autohide", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "header.autohide", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>

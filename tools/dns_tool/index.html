@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/shared_tools.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1708,74 +1708,74 @@
 <h1 id="dnstool">DnsTool<a class="headerlink" href="#dnstool" title="Permanent link">&para;</a></h1>
 <p>DNS resolution, WHOIS lookups, IP geolocation, and external IP detection — all via the standard library with no API key required.</p>
 <h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools&#39;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools/tools/dns_tool&#39;</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'shared_tools'</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'shared_tools/tools/dns_tool'</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">dns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">DnsTool</span><span class="o">.</span><span class="n">new</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># A record lookup</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example.com&quot;</span><span class="p">)</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"a"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"example.com"</span><span class="p">)</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Get my external IP address</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;external_ip&quot;</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"external_ip"</span><span class="p">)</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Geolocate an IP</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ip_location&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8.8.8.8&quot;</span><span class="p">)</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip_location"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"8.8.8.8"</span><span class="p">)</span>
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># WHOIS for a domain</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;whois&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ruby-lang.org&quot;</span><span class="p">)</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"whois"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"ruby-lang.org"</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="actions">Actions<a class="headerlink" href="#actions" title="Permanent link">&para;</a></h2>
 <h3 id="a">a<a class="headerlink" href="#a" title="Permanent link">&para;</a></h3>
 <p>Look up the IPv4 address (A record) for a hostname.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example.com&quot;</span><span class="p">)</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># =&gt; { host: &quot;example.com&quot;, addresses: [&quot;93.184.216.34&quot;], ttl: 3600 }</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"a"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"example.com"</span><span class="p">)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># =&gt; { host: "example.com", addresses: ["93.184.216.34"], ttl: 3600 }</span>
 </span></code></pre></div>
 <hr />
 <h3 id="aaaa">aaaa<a class="headerlink" href="#aaaa" title="Permanent link">&para;</a></h3>
 <p>Look up the IPv6 address (AAAA record) for a hostname.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;aaaa&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example.com&quot;</span><span class="p">)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaa"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"example.com"</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="mx">mx<a class="headerlink" href="#mx" title="Permanent link">&para;</a></h3>
 <p>Look up mail exchange (MX) records for a domain.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mx&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gmail.com&quot;</span><span class="p">)</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># =&gt; { host: &quot;gmail.com&quot;, records: [{ priority: 10, exchange: &quot;alt1.gmail-smtp-in.l.google.com&quot; }, ...] }</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"mx"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"gmail.com"</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># =&gt; { host: "gmail.com", records: [{ priority: 10, exchange: "alt1.gmail-smtp-in.l.google.com" }, ...] }</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ns">ns<a class="headerlink" href="#ns" title="Permanent link">&para;</a></h3>
 <p>Look up name server (NS) records for a domain.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ns&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ruby-lang.org&quot;</span><span class="p">)</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># =&gt; { host: &quot;ruby-lang.org&quot;, nameservers: [&quot;ns1.ruby-lang.org&quot;, ...] }</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"ns"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"ruby-lang.org"</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># =&gt; { host: "ruby-lang.org", nameservers: ["ns1.ruby-lang.org", ...] }</span>
 </span></code></pre></div>
 <hr />
 <h3 id="txt">txt<a class="headerlink" href="#txt" title="Permanent link">&para;</a></h3>
 <p>Look up TXT records (SPF, DKIM, domain verification tokens, etc.) for a domain.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;txt&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;github.com&quot;</span><span class="p">)</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># =&gt; { host: &quot;github.com&quot;, records: [&quot;v=spf1 ip4:...&quot;] }</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"txt"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"github.com"</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># =&gt; { host: "github.com", records: ["v=spf1 ip4:..."] }</span>
 </span></code></pre></div>
 <hr />
 <h3 id="cname">cname<a class="headerlink" href="#cname" title="Permanent link">&para;</a></h3>
 <p>Look up the canonical name (CNAME) for an alias.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cname&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;www.example.com&quot;</span><span class="p">)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"cname"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"www.example.com"</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="reverse">reverse<a class="headerlink" href="#reverse" title="Permanent link">&para;</a></h3>
 <p>Perform a reverse DNS lookup (PTR record) for an IP address.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;reverse&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8.8.8.8&quot;</span><span class="p">)</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># =&gt; { ip: &quot;8.8.8.8&quot;, hostname: &quot;dns.google&quot; }</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"reverse"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"8.8.8.8"</span><span class="p">)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># =&gt; { ip: "8.8.8.8", hostname: "dns.google" }</span>
 </span></code></pre></div>
 <hr />
 <h3 id="all">all<a class="headerlink" href="#all" title="Permanent link">&para;</a></h3>
 <p>Run all standard lookups (A, AAAA, MX, NS, TXT, CNAME) for a host in one call.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;all&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example.com&quot;</span><span class="p">)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"all"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"example.com"</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="external_ip">external_ip<a class="headerlink" href="#external_ip" title="Permanent link">&para;</a></h3>
 <p>Detect the machine's current public (external) IP address. No <code>host</code> parameter required.</p>
 <p>Uses a list of free public IP services and returns the first successful result.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;external_ip&quot;</span><span class="p">)</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># =&gt; { ip: &quot;203.0.113.42&quot;, source: &quot;https://api.ipify.org&quot; }</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"external_ip"</span><span class="p">)</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># =&gt; { ip: "203.0.113.42", source: "https://api.ipify.org" }</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ip_location">ip_location<a class="headerlink" href="#ip_location" title="Permanent link">&para;</a></h3>
@@ -1786,14 +1786,14 @@
 <li><code>host</code> <em>(optional)</em>: IP address to geolocate. If omitted, geolocates the machine's own external IP.</li>
 </ul>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Geolocate a specific IP</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ip_location&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8.8.8.8&quot;</span><span class="p">)</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># =&gt; { ip: &quot;8.8.8.8&quot;, city: &quot;Mountain View&quot;, region: &quot;California&quot;,</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1">#      country: &quot;United States&quot;, country_code: &quot;US&quot;, lat: 37.4056,</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1">#      lon: -122.0775, timezone: &quot;America/Los_Angeles&quot;,</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1">#      isp: &quot;Google LLC&quot;, org: &quot;Google Public DNS&quot;, asn: &quot;AS15169&quot; }</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip_location"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"8.8.8.8"</span><span class="p">)</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># =&gt; { ip: "8.8.8.8", city: "Mountain View", region: "California",</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1">#      country: "United States", country_code: "US", lat: 37.4056,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1">#      lon: -122.0775, timezone: "America/Los_Angeles",</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1">#      isp: "Google LLC", org: "Google Public DNS", asn: "AS15169" }</span>
 </span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Geolocate your own machine&#39;s IP</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ip_location&quot;</span><span class="p">)</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Geolocate your own machine's IP</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip_location"</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="whois">whois<a class="headerlink" href="#whois" title="Permanent link">&para;</a></h3>
@@ -1804,22 +1804,22 @@
 <li><code>host</code>: Domain name or IP address to look up</li>
 </ul>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># WHOIS for a domain</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;whois&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ruby-lang.org&quot;</span><span class="p">)</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># =&gt; { query: &quot;ruby-lang.org&quot;, registrar: &quot;...&quot;, created: &quot;...&quot;,</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">#      expires: &quot;...&quot;, updated: &quot;...&quot;, status: [...], nameservers: [...],</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1">#      raw: &quot;...&quot; }</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"whois"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"ruby-lang.org"</span><span class="p">)</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># =&gt; { query: "ruby-lang.org", registrar: "...", created: "...",</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">#      expires: "...", updated: "...", status: [...], nameservers: [...],</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1">#      raw: "..." }</span>
 </span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
 </span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># WHOIS for an IP address</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;whois&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.1.1.1&quot;</span><span class="p">)</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># =&gt; { query: &quot;1.1.1.1&quot;, organization: &quot;APNIC and Cloudflare DNS Resolver project&quot;,</span>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1">#      country: &quot;AU&quot;, raw: &quot;...&quot; }</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">dns</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"whois"</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.1.1.1"</span><span class="p">)</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># =&gt; { query: "1.1.1.1", organization: "APNIC and Cloudflare DNS Resolver project",</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1">#      country: "AU", raw: "..." }</span>
 </span></code></pre></div>
 <h2 id="integration-with-llm-agents">Integration with LLM Agents<a class="headerlink" href="#integration-with-llm-agents" title="Permanent link">&para;</a></h2>
 <p>DnsTool is especially useful when combined with WeatherTool and CurrentDateTimeTool for location-aware workflows:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;ruby_llm&#39;</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools/tools/dns_tool&#39;</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools/tools/weather_tool&#39;</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nb">require</span><span class="w"> </span><span class="s1">&#39;shared_tools/tools/current_date_time_tool&#39;</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'ruby_llm'</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'shared_tools/tools/dns_tool'</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'shared_tools/tools/weather_tool'</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nb">require</span><span class="w"> </span><span class="s1">'shared_tools/tools/current_date_time_tool'</span>
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="n">chat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">RubyLLM</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">with_tools</span><span class="p">(</span>
 </span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">DnsTool</span><span class="o">.</span><span class="n">new</span><span class="p">,</span>
@@ -1828,7 +1828,7 @@
 </span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="p">)</span>
 </span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
 </span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="n">chat</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="o">&lt;&lt;~</span><span class="dl">PROMPT</span><span class="p">)</span>
-</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="sh">  1. Use current_date_time_tool to get today&#39;s date and day of week.</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="sh">  1. Use current_date_time_tool to get today's date and day of week.</span>
 </span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="sh">  2. Use dns_tool (action: external_ip) to get my public IP.</span>
 </span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="sh">  3. Use dns_tool (action: ip_location) to find my city and country.</span>
 </span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="sh">  4. Use weather_tool to fetch current weather and a 3-day forecast for that city.</span>
@@ -1931,10 +1931,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "header.autohide", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "header.autohide", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>
