@@ -2612,8 +2612,8 @@
 <h3 id="tool-base-class-integration">Tool Base Class Integration<a class="headerlink" href="#tool-base-class-integration" title="Permanent link">&para;</a></h3>
 <p>All tools extend <code>RubyLLM::Tool</code>:</p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyTool</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">::</span><span class="no">RubyLLM</span><span class="o">::</span><span class="no">Tool</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="c1"># Class method for tool name</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my_tool'</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="c1"># Model-visible tool name (override ::tool_name, never ::name)</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my'</span>
 </span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="c1"># DSL for description</span>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="n">description</span><span class="w"> </span><span class="s2">"What this tool does"</span>
@@ -2637,7 +2637,7 @@
 <h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
 <h3 id="simple-tool-execution">Simple Tool Execution<a class="headerlink" href="#simple-tool-execution" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>1. LLM decides to use tool
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>   └─▶ tool_name: "disk_tool"
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>   └─▶ tool_name: "disk"
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>       parameters: {action: "file_read", path: "./file.txt"}
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
 </span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>2. RubyLLM routes to SharedTools::Tools::DiskTool
@@ -2797,7 +2797,7 @@
 <h3 id="adding-new-tools">Adding New Tools<a class="headerlink" href="#adding-new-tools" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Create class extending <code>RubyLLM::Tool</code></li>
-<li>Implement <code>self.name</code>, <code>description</code>, <code>param</code>s</li>
+<li>Implement <code>self.tool_name</code>, <code>description</code>, <code>param</code>s</li>
 <li>Implement <code>execute</code> method</li>
 <li>Add tests</li>
 <li>Zeitwerk handles loading</li>

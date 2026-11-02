@@ -2242,8 +2242,8 @@
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">module</span><span class="w"> </span><span class="nn">SharedTools</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="k">module</span><span class="w"> </span><span class="nn">Tools</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">MyTool</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">::</span><span class="no">RubyLLM</span><span class="o">::</span><span class="no">Tool</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="c1"># 1. Define tool name (as snake_case)</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my_tool'</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="c1"># 1. Define the model-visible tool name (snake_case)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my'</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="c1"># 2. Describe what the tool does</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="n">description</span><span class="w"> </span><span class="o">&lt;&lt;~</span><span class="dl">TEXT</span>
@@ -2527,15 +2527,20 @@
 </span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="vi">@logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Failed to execute: </span><span class="si">#{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="tool-naming-convention">Tool Naming Convention<a class="headerlink" href="#tool-naming-convention" title="Permanent link">&para;</a></h2>
-<p>The <code>name</code> class method should return a snake_case string:</p>
+<p>Override the <code>tool_name</code> class method to return a snake_case string. Do not
+override <code>self.name</code>: that is Ruby's <code>Class#name</code>, and replacing it garbles
+<code>inspect</code> output and constant-lookup error messages.</p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">BrowserTool</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">::</span><span class="no">RubyLLM</span><span class="o">::</span><span class="no">Tool</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'browser_tool'</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'browser'</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">end</span>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
 </span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyCustomTool</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">::</span><span class="no">RubyLLM</span><span class="o">::</span><span class="no">Tool</span>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my_custom_tool'</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">tool_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my_custom'</span>
 </span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="k">end</span>
 </span></code></pre></div>
+<p>Without an override, ruby_llm derives the name from the class name and drops a
+trailing <code>_tool</code> (<code>MyCustomTool</code> becomes <code>my_custom</code>). An override is used
+verbatim. SharedTools names follow the derived convention, with no <code>_tool</code> suffix.</p>
 <p>This name is used by:</p>
 <ul>
 <li>RubyLLM for tool registration</li>
