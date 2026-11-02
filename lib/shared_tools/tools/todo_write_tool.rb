@@ -21,7 +21,7 @@ module SharedTools
       STATUSES = %w[pending in_progress completed].freeze
       MARKS = { "pending" => "[ ]", "in_progress" => "[~]", "completed" => "[x]" }.freeze
 
-      def self.name = 'todo_write'
+      def self.tool_name = 'todo_write'
 
       description "Maintain a task list for multi-step work. Pass the full list of todos; each call " \
                   "replaces the previous list. Each todo has a content string and a status of " \

@@ -19,8 +19,8 @@ Every tool follows this basic structure:
 module SharedTools
   module Tools
     class MyTool < ::RubyLLM::Tool
-      # 1. Define tool name (as snake_case)
-      def self.name = 'my_tool'
+      # 1. Define the model-visible tool name (snake_case)
+      def self.tool_name = 'my'
 
       # 2. Describe what the tool does
       description <<~TEXT
@@ -356,17 +356,23 @@ Follow these conventions:
 
 ## Tool Naming Convention
 
-The `name` class method should return a snake_case string:
+Override the `tool_name` class method to return a snake_case string. Do not
+override `self.name`: that is Ruby's `Class#name`, and replacing it garbles
+`inspect` output and constant-lookup error messages.
 
 ```ruby
 class BrowserTool < ::RubyLLM::Tool
-  def self.name = 'browser_tool'
+  def self.tool_name = 'browser'
 end
 
 class MyCustomTool < ::RubyLLM::Tool
-  def self.name = 'my_custom_tool'
+  def self.tool_name = 'my_custom'
 end
 ```
+
+Without an override, ruby_llm derives the name from the class name and drops a
+trailing `_tool` (`MyCustomTool` becomes `my_custom`). An override is used
+verbatim. SharedTools names follow the derived convention, with no `_tool` suffix.
 
 This name is used by:
 

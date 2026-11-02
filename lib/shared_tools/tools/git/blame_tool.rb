@@ -14,7 +14,7 @@ module SharedTools
       class BlameTool < ::RubyLLM::Tool
         include Helpers
 
-        def self.name = 'git_blame'
+        def self.tool_name = 'git_blame'
 
         description "Show git blame for a file in the repository: which commit, author, and date " \
                     "last touched each line. Optionally limit to a line range. Read-only."

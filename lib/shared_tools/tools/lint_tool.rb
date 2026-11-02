@@ -20,7 +20,7 @@ module SharedTools
       LINTERS = %w[rubocop standard].freeze
       DEFAULT_TIMEOUT = 120
 
-      def self.name = 'lint'
+      def self.tool_name = 'lint'
 
       description "Lint a project with RuboCop or Standard. Auto-detects (Standard if .standard.yml " \
                   "is present, else RuboCop) or set linter explicitly. Optionally scope to a path and " \

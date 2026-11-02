@@ -16,7 +16,7 @@ module SharedTools
       class GrepTool < ::RubyLLM::Tool
         include Helpers
 
-        def self.name = 'git_grep'
+        def self.tool_name = 'git_grep'
 
         description "Search the tracked files of the repository for a pattern using git grep, " \
                     "returning file:line: matches. Optionally restrict to a path, ignore case, or treat " \

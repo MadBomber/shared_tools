@@ -21,7 +21,7 @@ module SharedTools
       FRAMEWORKS = %w[rspec minitest].freeze
       DEFAULT_TIMEOUT = 180
 
-      def self.name = 'run_tests'
+      def self.tool_name = 'run_tests'
 
       description "Run a Ruby project's test suite from root and report results. Auto-detects RSpec " \
                   "(spec/ or .rspec) or Minitest (test/ via rake), or set framework explicitly. " \

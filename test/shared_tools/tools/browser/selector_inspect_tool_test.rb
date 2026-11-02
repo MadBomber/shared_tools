@@ -39,7 +39,7 @@ class SelectorInspectToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'browser_selector_inspect', SharedTools::Tools::Browser::SelectorInspectTool.name
+    assert_equal 'browser_selector_inspect', SharedTools::Tools::Browser::SelectorInspectTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

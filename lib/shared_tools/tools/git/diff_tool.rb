@@ -16,7 +16,7 @@ module SharedTools
       class DiffTool < ::RubyLLM::Tool
         include Helpers
 
-        def self.name = 'git_diff'
+        def self.tool_name = 'git_diff'
 
         description "Show a unified git diff for the repository. By default shows unstaged " \
                     "changes; set staged to show what's staged. Optionally scope to a path or diff " \

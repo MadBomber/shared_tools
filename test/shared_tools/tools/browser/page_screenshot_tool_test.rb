@@ -25,7 +25,7 @@ class PageScreenshotToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'browser_page_screenshot', SharedTools::Tools::Browser::PageScreenshotTool.name
+    assert_equal 'browser_page_screenshot', SharedTools::Tools::Browser::PageScreenshotTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

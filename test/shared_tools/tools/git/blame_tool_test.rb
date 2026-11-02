@@ -17,7 +17,7 @@ class GitBlameToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "git_blame", SharedTools::Tools::Git::BlameTool.name
+    assert_equal "git_blame", SharedTools::Tools::Git::BlameTool.tool_name
   end
 
   def test_blames_every_line

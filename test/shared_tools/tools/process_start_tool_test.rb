@@ -14,7 +14,7 @@ class ProcessStartToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "process_start", SharedTools::Tools::ProcessStartTool.name
+    assert_equal "process_start", SharedTools::Tools::ProcessStartTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

@@ -9,7 +9,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Docker::ComposeRunTool.new
       #   tool.execute(service: "app", command: "rspec", args: ["spec/main_spec.rb"])
       class ComposeRunTool < ::RubyLLM::Tool
-        def self.name = 'docker_compose_run'
+        def self.tool_name = 'docker_compose_run'
 
         description "Runs a command via Docker with arguments on the project (e.g. `rspec spec/main_spec.rb`)."
 

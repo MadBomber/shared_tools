@@ -12,7 +12,7 @@ module SharedTools
     #   tool.execute                    # full output
     #   tool.execute(format: 'date')    # date fields only
     class CurrentDateTimeTool < ::RubyLLM::Tool
-      def self.name = 'current_date_time_tool'
+      def self.tool_name = 'current_date_time'
 
       description <<~DESC
         Returns the current date, time, timezone, and calendar metadata from the system clock.
@@ -41,7 +41,7 @@ module SharedTools
         @logger.info("CurrentDateTimeTool#execute format=#{format}")
 
         now = Time.now
-        utc = now.utc
+        utc = now.getutc # getutc returns a copy; Time#utc would convert now in place
 
         date_info = {
           year:            now.year,

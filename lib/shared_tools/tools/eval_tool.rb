@@ -6,7 +6,7 @@ module SharedTools
   module Tools
     # A tool for evaluating code in different programming languages
     class EvalTool < ::RubyLLM::Tool
-      def self.name = 'eval_tool'
+      def self.tool_name = 'eval'
 
       module Action
         RUBY = "ruby"

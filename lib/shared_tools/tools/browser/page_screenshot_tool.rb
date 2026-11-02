@@ -7,7 +7,7 @@ module SharedTools
       # Saves the screenshot to a file and returns the path — avoids injecting
       # large base64 blobs into the conversation context.
       class PageScreenshotTool < ::RubyLLM::Tool
-        def self.name = 'browser_page_screenshot'
+        def self.tool_name = 'browser_page_screenshot'
 
         description "Take a screenshot of the current browser page and save it to a file."
 

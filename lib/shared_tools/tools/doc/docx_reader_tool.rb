@@ -16,7 +16,7 @@ module SharedTools
       #   tool.execute(doc_path: "./report.docx")
       #   tool.execute(doc_path: "./report.docx", paragraph_range: "1-10")
       class DocxReaderTool < ::RubyLLM::Tool
-        def self.name = 'doc_docx_read'
+        def self.tool_name = 'doc_docx_read'
 
         description "Read the text content of a Microsoft Word (.docx) document."
 

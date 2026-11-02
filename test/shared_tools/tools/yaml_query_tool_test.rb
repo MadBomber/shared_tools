@@ -14,7 +14,7 @@ class YamlQueryToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "yaml_query", SharedTools::Tools::YamlQueryTool.name
+    assert_equal "yaml_query", SharedTools::Tools::YamlQueryTool.tool_name
   end
 
   def test_pretty_prints_when_no_query

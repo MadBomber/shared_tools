@@ -20,7 +20,7 @@ module SharedTools
     #   tool.execute(action: 'whois',       host: 'github.com')
     #   tool.execute(action: 'whois',       host: '8.8.8.8')
     class DnsTool < ::RubyLLM::Tool
-      def self.name = 'dns_tool'
+      def self.tool_name = 'dns'
 
       description <<~DESC
         Perform DNS lookups, reverse lookups, record queries, external IP detection,

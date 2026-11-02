@@ -20,7 +20,7 @@ module SharedTools
     class DownloadFileTool < ::RubyLLM::Tool
       include HttpHelpers
 
-      def self.name = 'download_file'
+      def self.tool_name = 'download_file'
 
       description "Download an http/https URL to a file within root. SSRF-protected and " \
                   "size-capped. Use for fetching an asset or release to disk (web_fetch returns text " \

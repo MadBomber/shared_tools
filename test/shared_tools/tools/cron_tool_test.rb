@@ -8,7 +8,7 @@ class CronToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'cron_tool', SharedTools::Tools::CronTool.name
+    assert_equal 'cron', SharedTools::Tools::CronTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

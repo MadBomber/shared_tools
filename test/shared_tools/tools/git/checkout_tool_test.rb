@@ -19,7 +19,7 @@ class GitCheckoutToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "git_checkout", SharedTools::Tools::Git::CheckoutTool.name
+    assert_equal "git_checkout", SharedTools::Tools::Git::CheckoutTool.tool_name
   end
 
   def test_creates_and_switches_to_new_branch

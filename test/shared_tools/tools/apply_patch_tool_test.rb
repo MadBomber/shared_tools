@@ -28,7 +28,7 @@ class ApplyPatchToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "apply_patch", SharedTools::Tools::ApplyPatchTool.name
+    assert_equal "apply_patch", SharedTools::Tools::ApplyPatchTool.tool_name
   end
 
   def test_applies_patch

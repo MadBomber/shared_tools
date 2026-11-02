@@ -19,7 +19,7 @@ module SharedTools
     class TomlQueryTool < ::RubyLLM::Tool
       MAX_BYTES = 5 * 1024 * 1024
 
-      def self.name = 'toml_query'
+      def self.tool_name = 'toml_query'
 
       description "Query TOML with a path expression, or pretty-print it. Provide either a file " \
                   "path or an inline toml string. Path syntax: keys separated by dots, [n] for " \

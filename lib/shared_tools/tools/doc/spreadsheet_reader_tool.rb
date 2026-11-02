@@ -21,7 +21,7 @@ module SharedTools
       # @example Read a row range from a worksheet
       #   tool.execute(doc_path: "./report.xlsx", sheet: "Summary", row_range: "2-50")
       class SpreadsheetReaderTool < ::RubyLLM::Tool
-        def self.name = 'doc_spreadsheet_read'
+        def self.tool_name = 'doc_spreadsheet_read'
 
         description "Read tabular data from spreadsheet files (CSV, XLSX, ODS, and other formats)."
 

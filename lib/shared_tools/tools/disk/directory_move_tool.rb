@@ -9,7 +9,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Disk::DirectoryMoveTool.new(root: "./project")
       #   tool.execute(path: "./foo", destination: "./bar")
       class DirectoryMoveTool < ::RubyLLM::Tool
-        def self.name = 'disk_directory_move'
+        def self.tool_name = 'disk_directory_move'
 
         description "Moves a directory from one location to another."
 

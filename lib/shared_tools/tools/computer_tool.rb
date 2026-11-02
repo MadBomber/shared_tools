@@ -11,7 +11,7 @@ module SharedTools
     #   computer.execute(action: 'mouse_position')
     #   computer.execute(action: 'type', text: 'Hello')
     class ComputerTool < ::RubyLLM::Tool
-      def self.name = 'computer_tool' 
+      def self.tool_name = 'computer'
       description "A tool for interacting with a computer."
 
       module Action

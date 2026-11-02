@@ -13,7 +13,7 @@ class ComposeRunToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'docker_compose_run', SharedTools::Tools::Docker::ComposeRunTool.name
+    assert_equal 'docker_compose_run', SharedTools::Tools::Docker::ComposeRunTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

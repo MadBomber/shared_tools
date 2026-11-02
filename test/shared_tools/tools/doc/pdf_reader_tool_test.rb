@@ -12,7 +12,7 @@ class PdfReaderToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'doc_pdf_read', SharedTools::Tools::Doc::PdfReaderTool.name
+    assert_equal 'doc_pdf_read', SharedTools::Tools::Doc::PdfReaderTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

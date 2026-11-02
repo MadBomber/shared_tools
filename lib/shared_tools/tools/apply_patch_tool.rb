@@ -22,7 +22,7 @@ module SharedTools
     class ApplyPatchTool < ::RubyLLM::Tool
       GIT_ENV = { "GIT_PAGER" => "cat", "GIT_TERMINAL_PROMPT" => "0" }.freeze
 
-      def self.name = 'apply_patch'
+      def self.tool_name = 'apply_patch'
 
       description "Apply a unified diff to files under root (as produced by `git diff` / `diff -u`). " \
                   "Validates the patch first and reports the affected files; nothing is written if it " \

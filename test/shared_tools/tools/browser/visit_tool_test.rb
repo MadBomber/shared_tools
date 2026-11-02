@@ -27,7 +27,7 @@ class VisitToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'browser_visit', SharedTools::Tools::Browser::VisitTool.name
+    assert_equal 'browser_visit', SharedTools::Tools::Browser::VisitTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

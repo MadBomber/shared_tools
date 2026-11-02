@@ -9,7 +9,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Eval::RubyEvalTool.new
       #   tool.execute(code: "puts 'Hello'; 2 + 2")
       class RubyEvalTool < ::RubyLLM::Tool
-        def self.name = 'eval_ruby'
+        def self.tool_name = 'eval_ruby'
 
         description <<~DESCRIPTION
                       Execute Ruby source code safely and return the result.

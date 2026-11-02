@@ -65,7 +65,7 @@ The facade tool provides the public interface:
 module SharedTools
   module Tools
     class BrowserTool < ::RubyLLM::Tool
-      def self.name = 'browser_tool'
+      def self.tool_name = 'browser'
 
       # Define action constants
       module Action

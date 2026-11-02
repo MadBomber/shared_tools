@@ -12,7 +12,7 @@ module SharedTools
       #     destination: "./README.md",
       #   )
       class FileMoveTool < ::RubyLLM::Tool
-        def self.name = 'disk_file_move'
+        def self.tool_name = 'disk_file_move'
 
         description "Moves a file."
 

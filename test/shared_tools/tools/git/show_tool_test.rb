@@ -17,7 +17,7 @@ class GitShowToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "git_show", SharedTools::Tools::Git::ShowTool.name
+    assert_equal "git_show", SharedTools::Tools::Git::ShowTool.tool_name
   end
 
   def test_shows_head_commit_by_default

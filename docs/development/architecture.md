@@ -272,8 +272,8 @@ All tools extend `RubyLLM::Tool`:
 
 ```ruby
 class MyTool < ::RubyLLM::Tool
-  # Class method for tool name
-  def self.name = 'my_tool'
+  # Model-visible tool name (override ::tool_name, never ::name)
+  def self.tool_name = 'my'
 
   # DSL for description
   description "What this tool does"
@@ -301,7 +301,7 @@ end
 
 ```
 1. LLM decides to use tool
-   └─▶ tool_name: "disk_tool"
+   └─▶ tool_name: "disk"
        parameters: {action: "file_read", path: "./file.txt"}
 
 2. RubyLLM routes to SharedTools::Tools::DiskTool
@@ -496,7 +496,7 @@ SharedTools.execute?(
 ### Adding New Tools
 
 1. Create class extending `RubyLLM::Tool`
-2. Implement `self.name`, `description`, `param`s
+2. Implement `self.tool_name`, `description`, `param`s
 3. Implement `execute` method
 4. Add tests
 5. Zeitwerk handles loading

@@ -9,7 +9,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Disk::FileCreateTool.new(root: "./project")
       #   tool.execute(path: "./README.md")
       class FileCreateTool < ::RubyLLM::Tool
-        def self.name = 'disk_file_create'
+        def self.tool_name = 'disk_file_create'
 
         description "Creates a file."
 

@@ -15,7 +15,7 @@ class EvalToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'eval_tool', SharedTools::Tools::EvalTool.name
+    assert_equal 'eval', SharedTools::Tools::EvalTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

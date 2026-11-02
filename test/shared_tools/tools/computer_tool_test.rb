@@ -91,7 +91,7 @@ class ComputerToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'computer_tool', SharedTools::Tools::ComputerTool.name
+    assert_equal 'computer', SharedTools::Tools::ComputerTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

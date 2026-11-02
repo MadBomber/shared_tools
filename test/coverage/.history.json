@@ -1,0 +1,17 @@
+{
+  "simplecov_history": {
+    "format_version": 1,
+    "entries": [
+      {
+        "created_at": "2026-11-02T05:44:08Z",
+        "branch": "main",
+        "commit": "01203f653d9c1216ceb11695d6fd2c0c3a693703",
+        "totals": {
+          "line": 100.0
+        },
+        "groups": {},
+        "files": {}
+      }
+    ]
+  }
+}

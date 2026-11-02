@@ -12,7 +12,7 @@ module SharedTools
     #   tool = SharedTools::Tools::DiffTool.new
     #   tool.execute(old: "a\nb\n", new: "a\nc\n")
     class DiffTool < ::RubyLLM::Tool
-      def self.name = 'diff'
+      def self.tool_name = 'diff'
 
       description "Compare two blocks of text and return a readable line-by-line diff " \
                   "(removed lines prefixed -, added lines prefixed +). In-process."

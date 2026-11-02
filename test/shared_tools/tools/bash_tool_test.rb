@@ -13,7 +13,7 @@ class BashToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "bash", SharedTools::Tools::BashTool.name
+    assert_equal "bash", SharedTools::Tools::BashTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

@@ -13,7 +13,7 @@ module SharedTools
     #   tool = SharedTools::Tools::ProcessListTool.new
     #   tool.execute
     class ProcessListTool < ::RubyLLM::Tool
-      def self.name = 'process_list'
+      def self.tool_name = 'process_list'
 
       description "List background processes (started with process_start): id, status, pid, age, and " \
                   "command. Read-only."

@@ -16,7 +16,7 @@ module SharedTools
     class WebFetchTool < ::RubyLLM::Tool
       include HttpHelpers
 
-      def self.name = 'web_fetch'
+      def self.tool_name = 'web_fetch'
 
       description "Fetch a web page or text/JSON resource over http/https and return its readable " \
                   "content (HTML is converted to text). Follows redirects safely. Cannot reach " \

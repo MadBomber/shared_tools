@@ -8,7 +8,7 @@ class ErrorHandlingToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'error_handling_tool', SharedTools::Tools::ErrorHandlingTool.name
+    assert_equal 'error_handling', SharedTools::Tools::ErrorHandlingTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

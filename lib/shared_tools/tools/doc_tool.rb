@@ -6,7 +6,7 @@ module SharedTools
   module Tools
     # A tool for reading and processing documents
     class DocTool < ::RubyLLM::Tool
-      def self.name = 'doc_tool'
+      def self.tool_name = 'doc'
 
       module Action
         PDF_READ         = "pdf_read"

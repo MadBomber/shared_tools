@@ -5,7 +5,7 @@ require 'json'
 module SharedTools
   module Tools
     class DataScienceKit < RubyLLM::Tool
-      def self.name = "data_science_kit"
+      def self.tool_name = "data_science_kit"
 
       description <<~'DESCRIPTION'
         Comprehensive data science and analytics toolkit for performing statistical analysis,

@@ -24,7 +24,7 @@ module SharedTools
     class BashTool < ::RubyLLM::Tool
       DEFAULT_TIMEOUT = 30
 
-      def self.name = 'bash'
+      def self.tool_name = 'bash'
 
       description "Run a single ALLOWLISTED executable with arguments. " \
                   "No shell is involved: no pipes, redirects, globs, or variable expansion. " \

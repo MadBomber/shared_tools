@@ -14,7 +14,7 @@ class ProcessOutputToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "process_output", SharedTools::Tools::ProcessOutputTool.name
+    assert_equal "process_output", SharedTools::Tools::ProcessOutputTool.tool_name
   end
 
   def test_reads_stdout_from_a_running_process

@@ -14,7 +14,7 @@ module SharedTools
       class StatusTool < ::RubyLLM::Tool
         include Helpers
 
-        def self.name = 'git_status'
+        def self.tool_name = 'git_status'
 
         description "Show the git working-tree status of the repository: current branch and " \
                     "staged, unstaged, and untracked changes. Read-only."

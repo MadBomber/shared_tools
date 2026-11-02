@@ -13,7 +13,7 @@ class FileCreateToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'disk_file_create', SharedTools::Tools::Disk::FileCreateTool.name
+    assert_equal 'disk_file_create', SharedTools::Tools::Disk::FileCreateTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

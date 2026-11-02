@@ -115,9 +115,9 @@ class SharedToolsTest < Minitest::Test
 
   def test_tools_includes_known_tools
     result = SharedTools.tools
-    class_names = result.map(&:name)
-    assert_includes class_names, 'disk_tool'
-    assert_includes class_names, 'workflow_manager'
-    assert_includes class_names, 'dns_tool'
+    tool_names = result.map(&:tool_name)
+    assert_includes tool_names, 'disk'
+    assert_includes tool_names, 'workflow_manager'
+    assert_includes tool_names, 'dns'
   end
 end

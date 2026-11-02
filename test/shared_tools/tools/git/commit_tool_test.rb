@@ -19,7 +19,7 @@ class GitCommitToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "git_commit", SharedTools::Tools::Git::CommitTool.name
+    assert_equal "git_commit", SharedTools::Tools::Git::CommitTool.tool_name
   end
 
   def test_commits_staged_changes

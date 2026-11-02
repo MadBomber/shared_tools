@@ -15,7 +15,7 @@ class DownloadFileToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "download_file", SharedTools::Tools::DownloadFileTool.name
+    assert_equal "download_file", SharedTools::Tools::DownloadFileTool.tool_name
   end
 
   def test_downloads_a_file

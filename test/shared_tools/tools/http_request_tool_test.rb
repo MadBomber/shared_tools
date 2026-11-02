@@ -13,7 +13,7 @@ class HttpRequestToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "http_request", SharedTools::Tools::HttpRequestTool.name
+    assert_equal "http_request", SharedTools::Tools::HttpRequestTool.tool_name
   end
 
   def test_get_request

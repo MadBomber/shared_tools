@@ -14,7 +14,7 @@ module SharedTools
     #   tool = SharedTools::Tools::ProcessOutputTool.new
     #   tool.execute(id: "proc_1")
     class ProcessOutputTool < ::RubyLLM::Tool
-      def self.name = 'process_output'
+      def self.tool_name = 'process_output'
 
       description "Read new stdout/stderr from a background process (started with process_start) " \
                   "since the last read, along with its status and exit code if it has finished. Poll " \

@@ -14,7 +14,7 @@ module SharedTools
     #   tool.execute(action: 'next_times', expression: '0 * * * *', count: 5)
     #   tool.execute(action: 'generate',   description: 'every day at 9am')
     class CronTool < ::RubyLLM::Tool
-      def self.name = 'cron_tool'
+      def self.tool_name = 'cron'
 
       description <<~DESC
         Parse, validate, explain, and generate cron expressions (standard 5-field format).

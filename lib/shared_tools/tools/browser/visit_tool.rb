@@ -8,7 +8,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Browser::VisitTool.new(driver:)
       #   tool.execute(to: "https://news.ycombinator.com")
       class VisitTool < ::RubyLLM::Tool
-        def self.name = 'browser_visit'
+        def self.tool_name = 'browser_visit'
 
         description "A browser automation tool for navigating to a specific URL."
 

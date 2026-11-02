@@ -18,7 +18,7 @@ class GlobToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "glob", SharedTools::Tools::GlobTool.name
+    assert_equal "glob", SharedTools::Tools::GlobTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

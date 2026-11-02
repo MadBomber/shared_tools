@@ -11,7 +11,7 @@ module SharedTools
     module Browser
       # A browser automation tool for viewing the full HTML of the page.
       class PageInspectTool < ::RubyLLM::Tool
-        def self.name = 'browser_page_inspect'
+        def self.tool_name = 'browser_page_inspect'
 
         include InspectUtils
 

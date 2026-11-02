@@ -14,7 +14,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Doc::PdfReaderTool.new
       #   tool.execute(doc_path: "./document.pdf", page_numbers: "1, 5, 10")
       class PdfReaderTool < ::RubyLLM::Tool
-        def self.name = 'doc_pdf_read'
+        def self.tool_name = 'doc_pdf_read'
 
         description "Read the text of any set of pages from a PDF document."
 

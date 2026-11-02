@@ -8,7 +8,7 @@ class SystemInfoToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'system_info_tool', SharedTools::Tools::SystemInfoTool.name
+    assert_equal 'system_info', SharedTools::Tools::SystemInfoTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

@@ -15,7 +15,7 @@ class PythonEvalToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'eval_python', SharedTools::Tools::Eval::PythonEvalTool.name
+    assert_equal 'eval_python', SharedTools::Tools::Eval::PythonEvalTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

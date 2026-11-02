@@ -15,7 +15,7 @@ module SharedTools
       class BranchTool < ::RubyLLM::Tool
         include Helpers
 
-        def self.name = 'git_branch'
+        def self.tool_name = 'git_branch'
 
         description "List the branches of the repository, with the current branch marked (*) and " \
                     "each branch's tip commit. Set all true to include remote-tracking branches. Read-only."

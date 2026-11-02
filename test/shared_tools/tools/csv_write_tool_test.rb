@@ -15,7 +15,7 @@ class CsvWriteToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "csv_write", SharedTools::Tools::CsvWriteTool.name
+    assert_equal "csv_write", SharedTools::Tools::CsvWriteTool.tool_name
   end
 
   def test_writes_rows_with_headers

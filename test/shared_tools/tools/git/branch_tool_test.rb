@@ -17,7 +17,7 @@ class GitBranchToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "git_branch", SharedTools::Tools::Git::BranchTool.name
+    assert_equal "git_branch", SharedTools::Tools::Git::BranchTool.tool_name
   end
 
   def test_lists_current_branch

@@ -10,7 +10,7 @@ module SharedTools
     #   tool = SharedTools::Tools::DatabaseTool.new(driver:)
     #   tool.execute(statements: ["SELECT * FROM people"])
     class DatabaseTool < ::RubyLLM::Tool
-      def self.name = 'database_tool' 
+      def self.tool_name = 'database'
       description <<~TEXT
         Executes SQL commands (INSERT / UPDATE / SELECT / etc) on a database.
 

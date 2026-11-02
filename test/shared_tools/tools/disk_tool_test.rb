@@ -15,7 +15,7 @@ class DiskToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'disk_tool', SharedTools::Tools::DiskTool.name
+    assert_equal 'disk', SharedTools::Tools::DiskTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

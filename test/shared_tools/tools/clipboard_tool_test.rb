@@ -8,7 +8,7 @@ class ClipboardToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'clipboard_tool', SharedTools::Tools::ClipboardTool.name
+    assert_equal 'clipboard', SharedTools::Tools::ClipboardTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

@@ -27,7 +27,7 @@ class DatabaseToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'database_tool', SharedTools::Tools::DatabaseTool.name
+    assert_equal 'database', SharedTools::Tools::DatabaseTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

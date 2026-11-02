@@ -17,7 +17,7 @@ module SharedTools
       class CheckoutTool < ::RubyLLM::Tool
         include Helpers
 
-        def self.name = 'git_checkout'
+        def self.tool_name = 'git_checkout'
 
         description "Switch to a branch/commit in the repository, or create a new branch with " \
                     "create: true. Note this can change the working tree."

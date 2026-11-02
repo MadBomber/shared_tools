@@ -19,7 +19,7 @@ class GitToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "git_tool", SharedTools::Tools::GitTool.name
+    assert_equal "git", SharedTools::Tools::GitTool.tool_name
   end
 
   def test_status_action

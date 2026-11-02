@@ -20,7 +20,7 @@ class TomlQueryToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "toml_query", SharedTools::Tools::TomlQueryTool.name
+    assert_equal "toml_query", SharedTools::Tools::TomlQueryTool.tool_name
   end
 
   def test_pretty_prints_when_no_query

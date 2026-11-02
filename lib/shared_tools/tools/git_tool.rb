@@ -14,7 +14,7 @@ module SharedTools
     #   git.execute(action: SharedTools::Tools::GitTool::Action::LOG, count: 5)
     #   git.execute(action: SharedTools::Tools::GitTool::Action::COMMIT, message: "Fix the thing")
     class GitTool < ::RubyLLM::Tool
-      def self.name = 'git_tool'
+      def self.tool_name = 'git'
 
       description <<~TEXT
         A tool for interacting with a git repository. Read-only actions (status, diff, log, show,

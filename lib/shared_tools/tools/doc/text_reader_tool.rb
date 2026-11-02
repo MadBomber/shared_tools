@@ -9,7 +9,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Doc::TextReaderTool.new
       #   tool.execute(doc_path: "./guide.txt")
       class TextReaderTool < ::RubyLLM::Tool
-        def self.name = 'doc_text_read'
+        def self.tool_name = 'doc_text_read'
 
         description "Read the full contents of a plain text file."
 

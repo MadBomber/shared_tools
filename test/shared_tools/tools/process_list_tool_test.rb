@@ -14,7 +14,7 @@ class ProcessListToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "process_list", SharedTools::Tools::ProcessListTool.name
+    assert_equal "process_list", SharedTools::Tools::ProcessListTool.tool_name
   end
 
   def test_reports_no_processes_when_empty

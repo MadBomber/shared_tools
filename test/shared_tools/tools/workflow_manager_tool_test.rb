@@ -17,7 +17,7 @@ class WorkflowManagerToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'workflow_manager', SharedTools::Tools::WorkflowManagerTool.name
+    assert_equal 'workflow_manager', SharedTools::Tools::WorkflowManagerTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

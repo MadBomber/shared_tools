@@ -47,6 +47,7 @@ Gem::Specification.new do |spec|
   # Each tool guards its require with begin/rescue LoadError so that a missing
   # gem makes the individual tool unavailable rather than crashing all of shared_tools.
   spec.add_development_dependency "dentaku"          # For CalculatorTool
+  spec.add_development_dependency "tsort"            # dentaku requires it; no longer a default gem in Ruby 4.1
   spec.add_development_dependency "sequel"           # For DatabaseQueryTool
   spec.add_development_dependency "openweathermap"   # For WeatherTool
   spec.add_development_dependency "pdf-reader"       # For Doc::PdfReaderTool

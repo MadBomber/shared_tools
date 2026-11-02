@@ -21,7 +21,7 @@ module SharedTools
       MAX_BYTES = 5 * 1024 * 1024
       PERMITTED = [Date, Time, Symbol].freeze
 
-      def self.name = 'yaml_query'
+      def self.tool_name = 'yaml_query'
 
       description "Query YAML with a path expression, or pretty-print it. Provide either a file " \
                   "path or an inline yaml string. Loaded safely (no object deserialization). Path " \

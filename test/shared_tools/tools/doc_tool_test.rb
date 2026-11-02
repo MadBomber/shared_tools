@@ -9,7 +9,7 @@ class DocToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'doc_tool', SharedTools::Tools::DocTool.name
+    assert_equal 'doc', SharedTools::Tools::DocTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

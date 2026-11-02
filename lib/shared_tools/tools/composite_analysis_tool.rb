@@ -5,7 +5,7 @@ require 'json'
 module SharedTools
   module Tools
     class CompositeAnalysisTool < RubyLLM::Tool
-      def self.name = "composite_analysis"
+      def self.tool_name = "composite_analysis"
 
       description <<~'DESCRIPTION'
         Perform comprehensive multi-stage data analysis by orchestrating multiple specialized analysis steps

@@ -29,7 +29,7 @@ class ParseRubyToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "parse_ruby", SharedTools::Tools::ParseRubyTool.name
+    assert_equal "parse_ruby", SharedTools::Tools::ParseRubyTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

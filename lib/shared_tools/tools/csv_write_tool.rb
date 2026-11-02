@@ -14,7 +14,7 @@ module SharedTools
     #   tool = SharedTools::Tools::CsvWriteTool.new
     #   tool.execute(path: "./out.csv", headers: ["name", "age"], rows: [["Alice", 30]])
     class CsvWriteTool < ::RubyLLM::Tool
-      def self.name = 'csv_write'
+      def self.tool_name = 'csv_write'
 
       description "Write rows to a CSV file. Provide rows as an array of arrays (each inner array " \
                   "is a row of cell values, written as strings), with an optional headers array " \

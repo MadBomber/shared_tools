@@ -160,7 +160,7 @@ Then implement:
 module SharedTools
   module Tools
     class MyNewTool < ::RubyLLM::Tool
-      def self.name = 'my_new_tool'
+      def self.tool_name = 'my_new'
 
       description "Tool description"
 
@@ -238,7 +238,7 @@ Then create a Pull Request on GitHub.
 module SharedTools
   module Tools
     class MyTool < ::RubyLLM::Tool
-      def self.name = 'my_tool'
+      def self.tool_name = 'my'
 
       description <<~TEXT
         What this tool does.

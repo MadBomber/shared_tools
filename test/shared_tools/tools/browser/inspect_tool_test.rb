@@ -34,7 +34,7 @@ class InspectToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'browser_inspect', SharedTools::Tools::Browser::InspectTool.name
+    assert_equal 'browser_inspect', SharedTools::Tools::Browser::InspectTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

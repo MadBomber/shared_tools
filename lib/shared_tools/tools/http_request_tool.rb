@@ -21,7 +21,7 @@ module SharedTools
       MUTATING_METHODS = %w[POST PUT PATCH DELETE].freeze
       SHOWN_HEADERS = %w[content-type content-length location etag last-modified].freeze
 
-      def self.name = 'http_request'
+      def self.tool_name = 'http_request'
 
       description "Make an HTTP request to an http/https URL and return the status, headers, and " \
                   "body. GET and HEAD are available by default; POST/PUT/PATCH/DELETE require user " \

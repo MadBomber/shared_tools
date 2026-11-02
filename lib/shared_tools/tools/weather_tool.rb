@@ -11,7 +11,7 @@ end
 module SharedTools
   module Tools
     class WeatherTool < RubyLLM::Tool
-      def self.name = 'weather_tool'
+      def self.tool_name = 'weather'
 
       def available?
         OPENWEATHERMAP_AVAILABLE

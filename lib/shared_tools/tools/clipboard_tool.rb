@@ -13,7 +13,7 @@ module SharedTools
     #   tool.execute(action: 'read')
     #   tool.execute(action: 'clear')
     class ClipboardTool < ::RubyLLM::Tool
-      def self.name = 'clipboard_tool'
+      def self.tool_name = 'clipboard'
 
       description <<~DESC
         Read from, write to, and clear the system clipboard.

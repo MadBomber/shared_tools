@@ -9,7 +9,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Disk::DirectoryCreateTool.new(root: "./project")
       #   tool.execute(path: "./foo/bar")
       class DirectoryCreateTool < ::RubyLLM::Tool
-        def self.name = 'disk_directory_create'
+        def self.tool_name = 'disk_directory_create'
 
         description "Creates a directory."
 

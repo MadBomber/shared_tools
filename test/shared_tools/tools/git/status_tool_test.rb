@@ -17,7 +17,7 @@ class GitStatusToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "git_status", SharedTools::Tools::Git::StatusTool.name
+    assert_equal "git_status", SharedTools::Tools::Git::StatusTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

@@ -7,7 +7,7 @@ require 'fileutils'
 module SharedTools
   module Tools
     class WorkflowManagerTool < RubyLLM::Tool
-      def self.name = 'workflow_manager'
+      def self.tool_name = 'workflow_manager'
 
       description <<~'DESCRIPTION'
         Manage complex multi-step workflows with persistent state tracking across tool invocations.

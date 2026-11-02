@@ -23,7 +23,7 @@ module SharedTools
 
       MAX_BYTES = 10 * 1024 * 1024
 
-      def self.name = 'multi_edit'
+      def self.tool_name = 'multi_edit'
 
       description "Apply multiple find/replace edits to a single file atomically. Provide edits as " \
                   "an array of objects with old_string, new_string, and optional replace_all. Edits " \

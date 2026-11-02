@@ -22,7 +22,7 @@ module SharedTools
       FRAMEWORKS = %w[pytest unittest].freeze
       DEFAULT_TIMEOUT = 180
 
-      def self.name = 'python_tests'
+      def self.tool_name = 'python_tests'
 
       description "Run a Python project's test suite from root and report results. Uses pytest by " \
                   "default, or unittest (python -m unittest discover) when framework is unittest. " \

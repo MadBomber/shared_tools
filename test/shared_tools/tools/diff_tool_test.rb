@@ -8,7 +8,7 @@ class DiffToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "diff", SharedTools::Tools::DiffTool.name
+    assert_equal "diff", SharedTools::Tools::DiffTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

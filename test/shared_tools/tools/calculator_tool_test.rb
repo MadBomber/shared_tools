@@ -8,7 +8,7 @@ class CalculatorToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'calculator', SharedTools::Tools::CalculatorTool.name
+    assert_equal 'calculator', SharedTools::Tools::CalculatorTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

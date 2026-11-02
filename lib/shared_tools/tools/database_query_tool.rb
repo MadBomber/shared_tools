@@ -11,7 +11,7 @@ end
 module SharedTools
   module Tools
     class DatabaseQueryTool < RubyLLM::Tool
-      def self.name = 'database_query'
+      def self.tool_name = 'database_query'
 
       def available?
         SEQUEL_AVAILABLE

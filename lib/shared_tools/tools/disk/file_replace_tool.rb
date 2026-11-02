@@ -13,7 +13,7 @@ module SharedTools
       #     path: "README.md"
       #   )
       class FileReplaceTool < ::RubyLLM::Tool
-        def self.name = 'disk_file_replace'
+        def self.tool_name = 'disk_file_replace'
 
         description "Replaces a specific string in a file (old_text => new_text)."
 

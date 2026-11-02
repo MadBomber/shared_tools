@@ -21,7 +21,7 @@ module SharedTools
       REGEX_TIMEOUT = 2
       IGNORED_DIRS = %w[.git .hg .svn node_modules .bundle tmp].freeze
 
-      def self.name = 'replace_in_files'
+      def self.tool_name = 'replace_in_files'
 
       description "Replace occurrences of a pattern with a replacement across files in root " \
                   "matching a glob (default '**/*'). Literal by default; set regex true to use a " \

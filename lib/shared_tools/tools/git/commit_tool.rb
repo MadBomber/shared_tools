@@ -16,7 +16,7 @@ module SharedTools
       class CommitTool < ::RubyLLM::Tool
         include Helpers
 
-        def self.name = 'git_commit'
+        def self.tool_name = 'git_commit'
 
         description "Commit staged changes in the repository with a message. Set all to also " \
                     "stage modified/deleted tracked files first (git commit -a). Does not push."

@@ -36,7 +36,7 @@ class NotificationToolTest < Minitest::Test
 
   # Tool metadata
   def test_tool_name
-    assert_equal 'notification_tool', SharedTools::Tools::NotificationTool.name
+    assert_equal 'notification', SharedTools::Tools::NotificationTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

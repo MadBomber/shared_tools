@@ -19,7 +19,7 @@ module SharedTools
     class JsonQueryTool < ::RubyLLM::Tool
       MAX_BYTES = 5 * 1024 * 1024
 
-      def self.name = 'json_query'
+      def self.tool_name = 'json_query'
 
       description "Query JSON with a path expression, or pretty-print it. Provide either a file " \
                   "path or an inline json string. Path syntax: keys separated by dots, [n] for " \

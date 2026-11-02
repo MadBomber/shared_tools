@@ -14,7 +14,7 @@ module SharedTools
     #   tool = SharedTools::Tools::ProcessKillTool.new
     #   tool.execute(id: "proc_1")
     class ProcessKillTool < ::RubyLLM::Tool
-      def self.name = 'process_kill'
+      def self.tool_name = 'process_kill'
 
       description "Stop a background process (started with process_start) and return any final " \
                   "output. Terminates the whole process group, escalating to SIGKILL if needed."

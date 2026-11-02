@@ -18,7 +18,7 @@ module SharedTools
       MAX_ENTRIES = 500
       IGNORED_DIRS = %w[.git .hg .svn node_modules .bundle tmp].freeze
 
-      def self.name = 'tree'
+      def self.tool_name = 'tree'
 
       description "Show a directory tree, to a limited depth. Directories are marked with a " \
                   "trailing slash. Skips ignored directories (node_modules, .git, ...) and hidden " \

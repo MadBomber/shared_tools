@@ -15,7 +15,7 @@ module SharedTools
       class ShowTool < ::RubyLLM::Tool
         include Helpers
 
-        def self.name = 'git_show'
+        def self.tool_name = 'git_show'
 
         description "Show a git object in the repository. With no path, shows the commit at ref " \
                     "(message and diff). With a path, shows that file's contents as of ref. Defaults " \

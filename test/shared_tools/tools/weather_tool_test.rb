@@ -9,7 +9,7 @@ class WeatherToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'weather_tool', SharedTools::Tools::WeatherTool.name
+    assert_equal 'weather', SharedTools::Tools::WeatherTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

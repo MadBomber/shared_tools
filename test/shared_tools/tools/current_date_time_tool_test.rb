@@ -8,7 +8,7 @@ class CurrentDateTimeToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'current_date_time_tool', SharedTools::Tools::CurrentDateTimeTool.name
+    assert_equal 'current_date_time', SharedTools::Tools::CurrentDateTimeTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool
@@ -109,5 +109,20 @@ class CurrentDateTimeToolTest < Minitest::Test
   def test_quarter_is_between_1_and_4
     result = @tool.execute(format: 'date')
     assert_includes 1..4, result[:quarter]
+  end
+  # Sunday 22:58 at UTC-6 is already Monday 04:58 in UTC. Every local field
+  # must stay in the local zone; only iso8601_utc may report the UTC instant.
+  def test_local_fields_are_not_converted_to_utc
+    local_now = Time.new(2026, 11, 1, 22, 58, 38, "-06:00")
+
+    result = Time.stub(:now, local_now) { @tool.execute(format: 'full') }
+
+    assert_equal 1,        result[:day]
+    assert_equal 'Sunday', result[:day_of_week]
+    assert_equal 22,       result[:hour]
+    assert_equal '-0600',  result[:utc_offset]
+    assert_equal(-6.0,     result[:utc_offset_hours])
+    assert_equal '2026-11-01T22:58:38-06:00', result[:iso8601]
+    assert_equal '2026-11-02T04:58:38Z',      result[:iso8601_utc]
   end
 end

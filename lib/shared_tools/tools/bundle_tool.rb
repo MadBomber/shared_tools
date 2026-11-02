@@ -21,7 +21,7 @@ module SharedTools
       NAME_RE = /\A[A-Za-z0-9_.-]+\z/
       DEFAULT_TIMEOUT = 180
 
-      def self.name = 'bundle'
+      def self.tool_name = 'bundle'
 
       description "Run Bundler in a project. Actions: install, update, outdated, check, lock, add. " \
                   "For 'add' provide a gem name; for 'update' a gem name is optional (omit to update " \

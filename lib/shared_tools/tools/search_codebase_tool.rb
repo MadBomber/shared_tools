@@ -29,7 +29,7 @@ module SharedTools
       REGEX_TIMEOUT = 2
       IGNORED_DIRS = %w[.git .hg .svn node_modules .bundle tmp].freeze
 
-      def self.name = 'search_codebase'
+      def self.tool_name = 'search_codebase'
 
       description "Search file contents for a regular expression under a directory. Returns " \
                   "'path:line: text' for each match, or context blocks when context/before/after " \

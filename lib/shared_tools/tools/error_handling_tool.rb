@@ -22,7 +22,7 @@ module SharedTools
     class ResourceNotFoundError < StandardError; end
 
     class ErrorHandlingTool < RubyLLM::Tool
-      def self.name = 'error_handling_tool'
+      def self.tool_name = 'error_handling'
 
       description <<~'DESCRIPTION'
         Reference tool demonstrating comprehensive error handling patterns and resilience strategies

@@ -13,7 +13,7 @@ module SharedTools
         STDOUT_MAX = 5000
         STDERR_MAX = 2000
 
-        def self.name = 'eval_shell'
+        def self.tool_name = 'eval_shell'
 
         description "Execute a shell command safely and return the result."
 

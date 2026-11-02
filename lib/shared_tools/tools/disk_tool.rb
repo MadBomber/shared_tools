@@ -13,7 +13,7 @@ module SharedTools
     #   disk.execute(action: SharedTools::Tools::DiskTool::Action::FILE_READ, path: "./demo.rb")
     #   disk.execute(action: SharedTools::Tools::DiskTool::Action::FILE_DELETE, path: "./demo.rb")
     class DiskTool < ::RubyLLM::Tool
-      def self.name = 'disk_tool' 
+      def self.tool_name = 'disk'
       description <<~TEXT
         A tool for interacting with a system. It is able to list, create, delete, move and modify directories and files.
       TEXT

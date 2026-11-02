@@ -17,7 +17,7 @@ module SharedTools
     class GlobTool < ::RubyLLM::Tool
       MAX_RESULTS = 1_000
 
-      def self.name = 'glob'
+      def self.tool_name = 'glob'
 
       description "Find files matching a glob pattern within a directory (e.g. '**/*.rb', " \
                   "'app/models/*.rb'). Returns matching paths, sorted, relative to base."

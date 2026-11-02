@@ -15,7 +15,7 @@ class LintToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "lint", SharedTools::Tools::LintTool.name
+    assert_equal "lint", SharedTools::Tools::LintTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

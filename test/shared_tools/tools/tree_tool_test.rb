@@ -20,7 +20,7 @@ class TreeToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "tree", SharedTools::Tools::TreeTool.name
+    assert_equal "tree", SharedTools::Tools::TreeTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

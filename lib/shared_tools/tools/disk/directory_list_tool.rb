@@ -9,7 +9,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Disk::SummaryTool.new(root: "./project")
       #   tool.execute
       class DirectoryListTool < ::RubyLLM::Tool
-        def self.name = 'disk_directory_list'
+        def self.tool_name = 'disk_directory_list'
 
         description "Summarizes the contents (files and directories) of a directory."
 

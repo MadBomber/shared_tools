@@ -9,7 +9,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Disk::DirectoryDeleteTool.new(root: "./project")
       #   tool.execute(path: "./foo/bar")
       class DirectoryDeleteTool < ::RubyLLM::Tool
-        def self.name = 'disk_directory_delete'
+        def self.tool_name = 'disk_directory_delete'
 
         description "Deletes a directory."
 

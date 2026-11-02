@@ -17,7 +17,7 @@ module SharedTools
         MAX_COUNT     = 200
         FORMAT        = "%h %ad %an: %s"
 
-        def self.name = 'git_log'
+        def self.tool_name = 'git_log'
 
         description "Show recent git commit history for the repository (hash, date, author, " \
                     "subject). Optionally limit the count or scope to a path. Read-only."

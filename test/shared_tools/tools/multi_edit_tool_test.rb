@@ -18,7 +18,7 @@ class MultiEditToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "multi_edit", SharedTools::Tools::MultiEditTool.name
+    assert_equal "multi_edit", SharedTools::Tools::MultiEditTool.tool_name
   end
 
   def test_applies_sequential_edits

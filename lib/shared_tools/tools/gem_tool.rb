@@ -26,7 +26,7 @@ module SharedTools
       NAME_RE = /\A[A-Za-z0-9_.-]+\z/
       HOST = "https://rubygems.org"
 
-      def self.name = 'gem'
+      def self.tool_name = 'gem'
 
       description "Look up RubyGems.org metadata for a gem (read-only). Actions: info (summary), " \
                   "version (latest version), dependencies (runtime deps), search (find gems by " \

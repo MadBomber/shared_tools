@@ -6,7 +6,7 @@ require 'securerandom'
 module SharedTools
   module Tools
     class SecureToolTemplate < RubyLLM::Tool
-      def self.name = 'secure_tool_template'
+      def self.tool_name = 'secure_tool_template'
 
       description <<~'DESCRIPTION'
         Reference template demonstrating comprehensive security best practices for safe tool development.

@@ -17,7 +17,7 @@ class GitDiffToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "git_diff", SharedTools::Tools::Git::DiffTool.name
+    assert_equal "git_diff", SharedTools::Tools::Git::DiffTool.tool_name
   end
 
   def test_no_changes

@@ -17,7 +17,7 @@ class ReplaceInFilesToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "replace_in_files", SharedTools::Tools::ReplaceInFilesTool.name
+    assert_equal "replace_in_files", SharedTools::Tools::ReplaceInFilesTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

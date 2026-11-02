@@ -9,7 +9,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Disk::FileReadTool.new
       #   tool.execute(path: "./README.md") # => "..."
       class FileReadTool < ::RubyLLM::Tool
-        def self.name = 'disk_file_read'
+        def self.tool_name = 'disk_file_read'
 
         description "Reads the contents of a file."
 

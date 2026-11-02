@@ -344,7 +344,7 @@ require_relative '../../shared_tools'
 module SharedTools
   module Tools
     class MyTool < ::RubyLLM::Tool
-      def self.name = 'my_tool'
+      def self.tool_name = 'my'
 
       description <<~TEXT
         Brief description of what this tool does.

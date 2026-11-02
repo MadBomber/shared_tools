@@ -17,7 +17,7 @@ class GitGrepToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "git_grep", SharedTools::Tools::Git::GrepTool.name
+    assert_equal "git_grep", SharedTools::Tools::Git::GrepTool.tool_name
   end
 
   def test_finds_matches

@@ -9,7 +9,7 @@ module SharedTools
       #    tool = SharedTools::Tools::Disk::FileWriteTool.new(root: "./project")
       #    tool.execute(path: "./README.md", text: "Hello World")
       class FileWriteTool < ::RubyLLM::Tool
-        def self.name = 'disk_file_write'
+        def self.tool_name = 'disk_file_write'
 
         description "Writes the contents of a file."
 

@@ -11,7 +11,7 @@ module SharedTools
     #   tool.execute                     # all categories
     #   tool.execute(category: 'cpu')    # CPU only
     class SystemInfoTool < ::RubyLLM::Tool
-      def self.name = 'system_info_tool'
+      def self.tool_name = 'system_info'
 
       description <<~DESC
         Retrieve system information from the local machine.

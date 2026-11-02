@@ -20,7 +20,7 @@ module SharedTools
       KINDS = %w[class module method constant].freeze
       MAX_BYTES = 5 * 1024 * 1024
 
-      def self.name = 'parse_ruby'
+      def self.tool_name = 'parse_ruby'
 
       description "Outline a Ruby file's structure (classes, modules, methods, constants with line " \
                   "numbers), or locate definitions. Give a query to find definitions whose name " \

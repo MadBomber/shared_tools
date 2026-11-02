@@ -8,7 +8,7 @@ class DnsToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'dns_tool', SharedTools::Tools::DnsTool.name
+    assert_equal 'dns', SharedTools::Tools::DnsTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

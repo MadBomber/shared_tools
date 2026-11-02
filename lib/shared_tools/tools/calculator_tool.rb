@@ -11,7 +11,7 @@ end
 module SharedTools
   module Tools
     class CalculatorTool < RubyLLM::Tool
-      def self.name = 'calculator'
+      def self.tool_name = 'calculator'
 
       def available?
         DENTAKU_AVAILABLE

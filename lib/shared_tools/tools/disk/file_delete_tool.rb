@@ -9,7 +9,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Disk::FileDeleteTool.new(root: "./project")
       #   tool.execute(path: "./README.md")
       class FileDeleteTool < ::RubyLLM::Tool
-        def self.name = 'disk_file_delete'
+        def self.tool_name = 'disk_file_delete'
 
         description "Deletes a file."
 

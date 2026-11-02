@@ -19,7 +19,7 @@ class GitAddToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "git_add", SharedTools::Tools::Git::AddTool.name
+    assert_equal "git_add", SharedTools::Tools::Git::AddTool.tool_name
   end
 
   def test_stages_specific_paths

@@ -18,7 +18,7 @@ module SharedTools
     # @example Text-to-speech
     #   tool.execute(action: 'speak', message: 'Task finished')
     class NotificationTool < ::RubyLLM::Tool
-      def self.name = 'notification_tool'
+      def self.tool_name = 'notification'
 
       description <<~DESC.strip
         Send desktop notifications, modal alerts, or text-to-speech messages.

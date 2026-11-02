@@ -15,7 +15,7 @@ module SharedTools
       class AddTool < ::RubyLLM::Tool
         include Helpers
 
-        def self.name = 'git_add'
+        def self.tool_name = 'git_add'
 
         description "Stage changes in the repository. Pass specific paths, or set all to stage " \
                     "every change (git add -A)."

@@ -8,7 +8,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Eval::PythonEvalTool.new
       #   tool.execute(code: "print('Hello'); result = 2 + 2")
       class PythonEvalTool < ::RubyLLM::Tool
-        def self.name = 'eval_python'
+        def self.tool_name = 'eval_python'
 
         description <<~DESCRIPTION
                       Execute Python source code safely and return the result.

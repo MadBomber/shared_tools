@@ -8,7 +8,7 @@ module SharedTools
       #   tool = SharedTools::Tools::Browser::TextFieldSetTool.new(browser:)
       #   tool.execute(selector: "...", text: "...")
       class TextFieldAreaSetTool < ::RubyLLM::Tool
-        def self.name = 'browser_text_field_set'
+        def self.tool_name = 'browser_text_field_set'
 
         description "A browser automation tool for clicking a specific link."
 

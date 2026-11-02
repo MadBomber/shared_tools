@@ -16,7 +16,7 @@ module SharedTools
       MAX_BYTES = 10 * 1024 * 1024
       DEFAULT_LIMIT = 100
 
-      def self.name = 'csv_read'
+      def self.tool_name = 'csv_read'
 
       description "Read a CSV file and return its rows. By default the first row is treated as a " \
                   "header. Use limit to cap the number of data rows returned."

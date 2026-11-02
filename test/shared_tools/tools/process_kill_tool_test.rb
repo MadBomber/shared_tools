@@ -14,7 +14,7 @@ class ProcessKillToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "process_kill", SharedTools::Tools::ProcessKillTool.name
+    assert_equal "process_kill", SharedTools::Tools::ProcessKillTool.tool_name
   end
 
   def test_kills_a_running_process

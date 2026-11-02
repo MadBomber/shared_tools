@@ -10,13 +10,9 @@ require "test_helper"
 # #execute) was never defined and calls failed with
 # "NotImplementedError: Subclasses must implement #execute".
 class ToolClassesTest < Minitest::Test
-  # Many tools override `self.name` to return their tool name, so read the
-  # real constant path through Module#name.
-  MODULE_NAME = Module.instance_method(:name)
-
   def tool_classes
     @tool_classes ||= SharedTools.tools.select do |klass|
-      MODULE_NAME.bind_call(klass).to_s.start_with?("SharedTools::")
+      klass.name.to_s.start_with?("SharedTools::")
     end
   end
 
@@ -35,14 +31,14 @@ class ToolClassesTest < Minitest::Test
 
   def test_every_tool_defines_its_own_execute
     inherited = tool_classes.select { |klass| klass.instance_method(:execute).owner == ::RubyLLM::Tool }
-    assert_empty inherited.map { MODULE_NAME.bind_call(it) },
+    assert_empty inherited.map { it.name },
                  "these tools do not define #execute (a class body probably failed to load)"
   end
 
   def test_every_tool_has_an_object_parameters_schema
     tool_classes.each do |klass|
       schema = instance_of(klass).parameters_schema
-      label  = MODULE_NAME.bind_call(klass)
+      label  = klass.name
 
       assert_kind_of Hash, schema, "#{label} has no parameters schema"
       assert_equal "object", schema["type"], "#{label} schema type"
@@ -54,7 +50,7 @@ class ToolClassesTest < Minitest::Test
 
   def test_every_schema_property_is_accepted_by_execute
     tool_classes.each do |klass|
-      label  = MODULE_NAME.bind_call(klass)
+      label  = klass.name
       params = klass.instance_method(:execute).parameters
       next if params.any? { |kind, _| kind == :keyrest }
 
@@ -67,11 +63,25 @@ class ToolClassesTest < Minitest::Test
 
   def test_every_tool_has_a_description_and_name
     tool_classes.each do |klass|
-      label = MODULE_NAME.bind_call(klass)
+      label = klass.name
 
       refute_empty klass.description.to_s.strip, "#{label} has no description"
       refute_empty klass.tool_name.to_s, "#{label} has no tool name"
     end
+  end
+
+  # ruby_llm 2.1 derives the model-visible name from ::tool_name. Overriding
+  # Class#name instead breaks inspect and constant-lookup error messages.
+  def test_no_tool_overrides_class_name
+    overriders = tool_classes.select { |klass| klass.singleton_class.instance_methods(false).include?(:name) }
+    assert_empty overriders.map(&:to_s), "override ::tool_name, not ::name"
+  end
+
+  def test_tool_names_are_unique_and_valid
+    names = tool_classes.map(&:tool_name)
+
+    assert_empty names.tally.select { |_, count| count > 1 }.keys, "duplicate tool names"
+    names.each { |name| assert_match(/\A[a-z0-9_]{1,64}\z/, name) }
   end
 
   def test_no_ruby_llm_1x_dsl_left_in_lib

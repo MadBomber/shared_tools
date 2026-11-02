@@ -11,7 +11,7 @@ module SharedTools
     module Browser
       # A browser automation tool for finding UI elements by their text content.
       class InspectTool < ::RubyLLM::Tool
-        def self.name = 'browser_inspect'
+        def self.tool_name = 'browser_inspect'
 
         include InspectUtils
 

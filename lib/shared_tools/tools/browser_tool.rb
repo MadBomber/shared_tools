@@ -6,7 +6,7 @@ module SharedTools
   module Tools
     # A tool for controller a browser.
     class BrowserTool < ::RubyLLM::Tool
-      def self.name = 'browser_tool' 
+      def self.tool_name = 'browser'
       module Action
         VISIT = "visit"
         PAGE_INSPECT = "page_inspect"

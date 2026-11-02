@@ -11,7 +11,7 @@ module SharedTools
     module Browser
       # A browser automation tool for inspecting elements using CSS selectors.
       class SelectorInspectTool < ::RubyLLM::Tool
-        def self.name = 'browser_selector_inspect'
+        def self.tool_name = 'browser_selector_inspect'
 
         include InspectUtils
 

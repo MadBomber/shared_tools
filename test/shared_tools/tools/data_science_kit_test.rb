@@ -8,7 +8,7 @@ class DataScienceKitTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal 'data_science_kit', SharedTools::Tools::DataScienceKit.name
+    assert_equal 'data_science_kit', SharedTools::Tools::DataScienceKit.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool

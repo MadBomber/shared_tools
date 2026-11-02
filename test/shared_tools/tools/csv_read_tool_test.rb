@@ -15,7 +15,7 @@ class CsvReadToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "csv_read", SharedTools::Tools::CsvReadTool.name
+    assert_equal "csv_read", SharedTools::Tools::CsvReadTool.tool_name
   end
 
   def test_reads_rows_with_headers

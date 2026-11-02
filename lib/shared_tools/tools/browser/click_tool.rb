@@ -11,7 +11,7 @@ module SharedTools
       #   tool.execute(selector: "some text")
       #   tool.execute(selector: "//div[@role='button']")
       class ClickTool < ::RubyLLM::Tool
-        def self.name = 'browser_click'
+        def self.tool_name = 'browser_click'
 
         description "A browser automation tool for clicking any clickable element."
 

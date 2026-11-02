@@ -19,7 +19,7 @@ class GitLogToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "git_log", SharedTools::Tools::Git::LogTool.name
+    assert_equal "git_log", SharedTools::Tools::Git::LogTool.tool_name
   end
 
   def test_shows_recent_commits

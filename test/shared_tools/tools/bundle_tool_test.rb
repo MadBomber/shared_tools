@@ -15,7 +15,7 @@ class BundleToolTest < Minitest::Test
   end
 
   def test_tool_name
-    assert_equal "bundle", SharedTools::Tools::BundleTool.name
+    assert_equal "bundle", SharedTools::Tools::BundleTool.tool_name
   end
 
   def test_inherits_from_ruby_llm_tool
