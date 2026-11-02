@@ -31,6 +31,8 @@ module SharedTools
     class Tavily < ::RubyLLM::MCP
       extend ClientSupport
 
+      description "Tavily web search and page extraction for research and current events"
+
       requires_envars "TAVILY_API_KEY"
 
       url "https://mcp.tavily.com/mcp/"

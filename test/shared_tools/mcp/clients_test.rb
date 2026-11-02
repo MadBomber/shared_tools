@@ -43,6 +43,22 @@ class MCPClientsTest < Minitest::Test
     assert_equal all_servers.map(&:to_s).sort, SharedTools::MCP.clients.map(&:to_s).sort
   end
 
+  def test_every_client_has_a_description
+    all_servers.each do |klass|
+      refute_empty klass.description.to_s.strip, klass.to_s
+      assert_equal klass.description, klass.new.description, klass.to_s
+    end
+  end
+
+  def test_subclasses_inherit_the_description_unless_they_set_their_own
+    child = Class.new(SharedTools::MCP::GitHub)
+    assert_equal SharedTools::MCP::GitHub.description, child.description
+
+    child.description "custom"
+    assert_equal "custom", child.description
+    assert_equal "custom", child.new.description
+  end
+
   def test_stdio_commands
     STDIO_SERVERS.each do |klass, argv|
       assert_equal argv, klass.command, klass.to_s

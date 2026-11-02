@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "ruby_llm", ">= 2.1.1", "< 3"
   spec.add_dependency "zeitwerk"
   spec.add_dependency "nokogiri"
+  spec.add_dependency "csv" # CsvReadTool/CsvWriteTool; a bundled (not default) gem since Ruby 3.4
 
   # Ruby 4.x ships bigdecimal-4.x as a default gem. Pin it explicitly so that
   # transitive deps (e.g. dentaku) cannot re-activate an older installed 3.x

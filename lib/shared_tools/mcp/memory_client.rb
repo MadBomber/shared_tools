@@ -30,6 +30,8 @@ module SharedTools
     class Memory < ::RubyLLM::MCP
       extend ClientSupport
 
+      description "Persistent knowledge graph memory: remember and recall facts, entities, and relations across conversations"
+
       command "npx", "-y", "@modelcontextprotocol/server-memory"
       # An unset MEMORY_FILE_PATH resolves to "", which the server treats as unset.
       env "MEMORY_FILE_PATH" => env_from("MEMORY_FILE_PATH")

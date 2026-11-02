@@ -29,6 +29,8 @@ module SharedTools
     class Chart < ::RubyLLM::MCP
       extend ClientSupport
 
+      description "Generate charts and data visualisations (bar, line, pie, maps, diagrams)"
+
       command "npx", "-y", "@antv/mcp-server-chart"
     end
   end

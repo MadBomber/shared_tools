@@ -30,6 +30,8 @@ module SharedTools
     class SequentialThinking < ::RubyLLM::MCP
       extend ClientSupport
 
+      description "Step-by-step chain-of-thought reasoning for complex, multi-stage problems"
+
       command "npx", "-y", "@modelcontextprotocol/server-sequential-thinking"
     end
   end

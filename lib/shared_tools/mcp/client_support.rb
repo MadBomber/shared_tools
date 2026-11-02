@@ -50,8 +50,27 @@ module SharedTools
     end
 
     module ClientSupport
+      # Instance-side reader, so a server instance answers #description the
+      # way robot_lab's RobotLab::MCP::Server does.
+      module InstanceMethods
+        def description
+          self.class.description.to_s
+        end
+      end
+
       def self.extended(klass)
+        klass.include(InstanceMethods)
         SharedTools::MCP.register(klass)
+      end
+
+      # Declares (or, with no argument, returns) a short description of what
+      # the server offers. robot_lab's mcp_discovery scores servers by name
+      # plus description, so a description lets it pick this server for
+      # relevant messages. Subclasses inherit their parent's description.
+      def description(text = nil)
+        return @description || (superclass.description if superclass.respond_to?(:description)) if text.nil?
+
+        @description = text.to_s
       end
 
       # Declares (or, with no arguments, returns) the environment variables

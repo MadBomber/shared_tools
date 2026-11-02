@@ -32,6 +32,8 @@ module SharedTools
     class Notion < ::RubyLLM::MCP
       extend ClientSupport
 
+      description "Notion workspace pages, databases, and search"
+
       requires_envars   "NOTION_TOKEN"
       requires_packages "notion-mcp-server"
 

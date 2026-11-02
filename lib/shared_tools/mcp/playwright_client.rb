@@ -32,6 +32,8 @@ module SharedTools
     class Playwright < ::RubyLLM::MCP
       extend ClientSupport
 
+      description "Browser automation: navigate web pages, click, type, fill forms, take screenshots"
+
       command "npx", "-y", "@playwright/mcp"
     end
   end

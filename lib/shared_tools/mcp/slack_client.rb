@@ -39,6 +39,8 @@ module SharedTools
     class Slack < ::RubyLLM::MCP
       extend ClientSupport
 
+      description "Slack channels, messages, threads, users, and search"
+
       TOKEN_ENVARS = %w[SLACK_MCP_XOXP_TOKEN SLACK_MCP_XOXB_TOKEN].freeze
 
       requires_packages "slack-mcp-server"

@@ -32,6 +32,8 @@ module SharedTools
     class HuggingFace < ::RubyLLM::MCP
       extend ClientSupport
 
+      description "Hugging Face Hub: search models, datasets, Spaces, and papers"
+
       requires_envars   "HF_TOKEN"
       requires_packages "hf-mcp-server"
 

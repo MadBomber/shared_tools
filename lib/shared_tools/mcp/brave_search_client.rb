@@ -30,6 +30,8 @@ module SharedTools
     class BraveSearch < ::RubyLLM::MCP
       extend ClientSupport
 
+      description "Brave web search: current web pages, news, and local results"
+
       requires_envars "BRAVE_API_KEY"
 
       command "npx", "-y", "@modelcontextprotocol/server-brave-search"

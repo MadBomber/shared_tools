@@ -30,6 +30,8 @@ module SharedTools
     class GitHub < ::RubyLLM::MCP
       extend ClientSupport
 
+      description "GitHub repositories, issues, pull requests, code search, commits, branches, and releases"
+
       self.default_name = "github"
 
       requires_envars   "GITHUB_PERSONAL_ACCESS_TOKEN"
