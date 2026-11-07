@@ -21,13 +21,16 @@ module SharedTools
         # @param text [String]
         # @param duration [Integer]
         def hold_key(text:, duration:)
-          options = text.to_s.split('+')
+          options = text.to_s.downcase.split('+').map(&:strip)
           key     = options.pop
           mask    = options.reduce(0) { |m, opt| m | MacOS::Library::CoreGraphics::EventFlags.find(opt) }
 
           @keyboard.key_down(key, mask: mask)
-          Kernel.sleep(duration.to_f)
-          @keyboard.key_up(key, mask: mask)
+          begin
+            Kernel.sleep(duration.to_f)
+          ensure
+            @keyboard.key_up(key, mask: mask)
+          end
 
           { success: true, key: text, duration: duration }
         end

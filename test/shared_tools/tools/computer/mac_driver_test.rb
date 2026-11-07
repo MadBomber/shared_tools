@@ -37,6 +37,21 @@ class MacDriverTest < Minitest::Test
     assert result[:success]
   end
 
+  def test_hold_key_accepts_mixed_case_and_spaces
+    @driver.hold_key(text: "Cmd + A", duration: 0)
+
+    cmd = MacOS::Library::CoreGraphics::EventFlags.find("cmd")
+    assert_equal [[:down, "a", cmd], [:up, "a", cmd]], @keyboard.calls
+  end
+
+  def test_hold_key_releases_the_key_when_interrupted
+    Kernel.stub(:sleep, ->(_) { raise Interrupt }) do
+      assert_raises(Interrupt) { @driver.hold_key(text: "shift+a", duration: 5) }
+    end
+
+    assert_equal %i[down up], @keyboard.calls.map(&:first)
+  end
+
   def test_scroll_posts_a_scroll_wheel_event
     posted = []
     MacOS::Library::CoreGraphics.stub(:CGEventPost, ->(tap, event) { posted << [tap, event] }) do
