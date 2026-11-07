@@ -37,13 +37,13 @@ end
 Raised when required gems or resources are unavailable:
 
 ```ruby
+# Require the gem on demand; `defined?(Ferrum)` alone is false until
+# something has required it (see SharedTools::Tools::Browser::DefaultDriver).
 def default_driver
-  if defined?(Watir)
-    Browser::WatirDriver.new
-  else
-    raise LoadError, "BrowserTool requires the 'watir' gem. " \
-                    "Install it with: gem install watir"
-  end
+  klass = DefaultDriver.driver_class
+  raise LoadError, "Browser tools require a driver. Install the 'ferrum' gem (or 'watir')" unless klass
+
+  klass.new(logger: @logger)
 end
 ```
 

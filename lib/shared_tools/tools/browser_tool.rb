@@ -146,19 +146,19 @@ module SharedTools
 
 
       # @param logger [Logger] optional logger
-      # @param driver [SharedTools::Tools::Browser::BaseDriver] optional, will attempt to create WatirDriver when execute is called
+      # @param driver [SharedTools::Tools::Browser::BaseDriver] optional; when nil, execute builds a FerrumDriver (or WatirDriver)
       def initialize(logger: nil, driver: nil)
         @logger = logger || RubyLLM.logger
-        @driver = driver  # Defer default_driver to execute time to support RubyLLM tool discovery
+        @driver = driver  # Defer driver selection to execute time to support RubyLLM tool discovery
       end
 
       # Set driver after instantiation (useful when tool is discovered by RubyLLM)
       attr_writer :driver
 
       # Reports whether this tool can function.
-      # Returns true when a driver was injected or the watir gem is loaded.
+      # Returns true when a driver was injected or the ferrum or watir gem can be loaded.
       def available?
-        !!@driver || defined?(Watir)
+        !!(@driver || Browser::DefaultDriver.driver_class)
       end
 
       def cleanup!
@@ -176,7 +176,7 @@ module SharedTools
       # @return [String]
       def execute(action:, url: nil, selector: nil, value: nil, context_size: 2, full_html: false, text_content: nil)
         # Lazily resolve driver at execute time
-        @driver ||= default_driver
+        @driver ||= Browser::DefaultDriver.build(logger: @logger)
 
         case action.to_s.downcase
         when Action::VISIT
@@ -252,15 +252,6 @@ module SharedTools
       # @return [Browser::PageScreenshotTool]
       def page_screenshot_tool
         Browser::PageScreenshotTool.new(driver: @driver, logger: @logger)
-      end
-
-      # @return [Browser::BaseDriver]
-      def default_driver
-        if defined?(Watir)
-          Browser::WatirDriver.new(logger: @logger)
-        else
-          raise LoadError, "BrowserTool requires a driver. Either install the 'watir' gem or pass a driver: parameter"
-        end
       end
     end
   end

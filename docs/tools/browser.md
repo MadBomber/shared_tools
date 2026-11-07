@@ -1,16 +1,20 @@
 # BrowserTool
 
-Web browser automation tool using Watir for visiting pages, inspecting content, clicking elements, filling forms, and capturing screenshots.
+Web browser automation tool using Ferrum (or Watir) for visiting pages, inspecting content, clicking elements, filling forms, and capturing screenshots.
 
 ## Installation
 
-BrowserTool requires the Watir gem:
+BrowserTool needs a driver gem. Ferrum is preferred; it talks to Chrome directly, so no chromedriver is needed:
+
+```ruby
+gem 'ferrum'
+```
+
+When ferrum is not installed, BrowserTool falls back to Watir, which also needs a browser driver (ChromeDriver, GeckoDriver, etc.):
 
 ```ruby
 gem 'watir'
 ```
-
-You also need a browser driver (ChromeDriver, GeckoDriver, etc.):
 
 ```bash
 # macOS
@@ -25,7 +29,7 @@ apt-get install chromium-chromedriver
 ```ruby
 require 'shared_tools'
 
-# Initialize with default Watir driver
+# Initialize with the default driver (Ferrum, or Watir when ferrum is not installed)
 browser = SharedTools::Tools::BrowserTool.new
 
 # Visit a website
