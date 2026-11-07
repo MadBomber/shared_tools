@@ -207,16 +207,18 @@ module SharedTools
       # @raise [LoadError] when not on macOS or the macos gem is not installed
       # @return [Computer::BaseDriver]
       def default_driver
-        raise LoadError, "ComputerTool requires a platform-specific driver. Either install the required gem for your platform or pass a driver: parameter" unless mac_driver_available?
+        raise LoadError, "ComputerTool needs a driver. On macOS install the 'macos' gem; elsewhere pass a driver: parameter" unless mac_driver_available?
 
         Computer::MacDriver.new
       end
 
+      # @param platform [String] defaults to RUBY_PLATFORM
+      # @param gem_name [String] require path of the macOS automation gem
       # @return [Boolean]
-      def mac_driver_available?
-        return false unless RUBY_PLATFORM.include?('darwin')
+      def mac_driver_available?(platform: RUBY_PLATFORM, gem_name: 'macos')
+        return false unless platform.include?('darwin')
 
-        require 'macos'
+        require gem_name
         true
       rescue LoadError
         false

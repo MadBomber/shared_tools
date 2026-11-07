@@ -23,7 +23,7 @@ module SharedTools
         def hold_key(text:, duration:)
           options = text.to_s.split('+')
           key     = options.pop
-          mask    = options.reduce(0) { |m, opt| m | Library::CoreGraphics::EventFlags.find(opt) }
+          mask    = options.reduce(0) { |m, opt| m | MacOS::Library::CoreGraphics::EventFlags.find(opt) }
 
           @keyboard.key_down(key, mask: mask)
           Kernel.sleep(duration.to_f)
@@ -98,8 +98,8 @@ module SharedTools
         # @param direction [String] "up", "down", "left", or "right"
         def scroll(amount:, direction:)
           # Attach CGEventCreateScrollWheelEvent2 if not already done
-          unless Library::CoreGraphics.respond_to?(:CGEventCreateScrollWheelEvent2)
-            Library::CoreGraphics.module_eval do
+          unless MacOS::Library::CoreGraphics.respond_to?(:CGEventCreateScrollWheelEvent2)
+            MacOS::Library::CoreGraphics.module_eval do
               attach_function :CGEventCreateScrollWheelEvent2,
                               [:pointer, :uint32, :uint32, :int32, :int32, :int32],
                               :pointer
@@ -116,11 +116,11 @@ module SharedTools
                              else              [0,    0]
                              end
 
-          event = Library::CoreGraphics.CGEventCreateScrollWheelEvent2(nil, 1, 2, delta_y, delta_x, 0)
-          Library::CoreGraphics.CGEventPost(
-            Library::CoreGraphics::EventTapLocation::HID_EVENT_TAP, event
+          event = MacOS::Library::CoreGraphics.CGEventCreateScrollWheelEvent2(nil, 1, 2, delta_y, delta_x, 0)
+          MacOS::Library::CoreGraphics.CGEventPost(
+            MacOS::Library::CoreGraphics::EventTapLocation::HID_EVENT_TAP, event
           )
-          Library::CoreGraphics.CFRelease(event)
+          MacOS::Library::CoreGraphics.CFRelease(event)
 
           { success: true, direction: direction, amount: amt }
         end

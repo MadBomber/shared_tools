@@ -207,6 +207,14 @@ class ComputerToolTest < Minitest::Test
     end
   end
 
+  def test_mac_driver_available_is_false_off_macos
+    refute SharedTools::Tools::ComputerTool.new.send(:mac_driver_available?, platform: "x86_64-linux")
+  end
+
+  def test_mac_driver_available_is_false_without_the_gem
+    refute SharedTools::Tools::ComputerTool.new.send(:mac_driver_available?, platform: "arm64-darwin", gem_name: "shared_tools_no_such_gem")
+  end
+
   # Same defect as issue #3: under aia, `SharedTools.load_all_tools` loads
   # ComputerTool but nothing requires the macos gem, so `defined?(MacOS)` was
   # false even with the gem installed. Run in a fresh process so this suite's
