@@ -2,6 +2,7 @@
 
 require "simplecov"
 SimpleCov.start do
+  root File.expand_path("..", __dir__)
   add_filter "/test/"
   add_filter "/vendor/"
 
