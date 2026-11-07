@@ -49,6 +49,7 @@
 - Added `test/shared_tools/url_guard_test.rb` and `test/shared_tools/command_guard_test.rb` covering the new security modules directly.
 - Added `test/shared_tools/tools/{todo_write,bash,run_tests,python_tests}_tool_test.rb`.
 - Added `init_git_repo` / `git_commit_all` test helpers to `test/test_helper.rb`.
+- `test/test_helper.rb` now pins SimpleCov's `root` to the project directory. When run from inside `test/`, it measured no lines (reported as 100%, so `minimum_coverage` always passed) and wrote its report to `test/coverage/`, which had been committed. That report is no longer tracked.
 
 ### [0.4.4] - 2026-06-06
 
