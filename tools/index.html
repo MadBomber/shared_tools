@@ -1760,7 +1760,7 @@
 <p>SharedTools provides a collection of LLM-callable tools for common operations. Each tool follows a consistent facade pattern with an action-based interface.</p>
 <h2 id="core-tools">Core Tools<a class="headerlink" href="#core-tools" title="Permanent link">&para;</a></h2>
 <h3 id="browsertool"><a href="browser/">BrowserTool</a><a class="headerlink" href="#browsertool" title="Permanent link">&para;</a></h3>
-<p>Web browser automation using Watir for visiting pages, inspecting content, clicking elements, filling forms, and capturing screenshots.</p>
+<p>Web browser automation using Ferrum (or Watir) for visiting pages, inspecting content, clicking elements, filling forms, and capturing screenshots.</p>
 <p><strong>Actions:</strong> <code>visit</code>, <code>page_inspect</code>, <code>ui_inspect</code>, <code>selector_inspect</code>, <code>click</code>, <code>text_field_set</code>, <code>screenshot</code></p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">browser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SharedTools</span><span class="o">::</span><span class="no">Tools</span><span class="o">::</span><span class="no">BrowserTool</span><span class="o">.</span><span class="n">new</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">browser</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="ss">action</span><span class="p">:</span><span class="w"> </span><span class="s2">"visit"</span><span class="p">,</span><span class="w"> </span><span class="ss">url</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com"</span><span class="p">)</span>
@@ -1962,7 +1962,7 @@
 <tr>
 <td>BrowserTool</td>
 <td>Web automation</td>
-<td>watir</td>
+<td>ferrum (or watir)</td>
 <td>No</td>
 </tr>
 <tr>

@@ -1981,7 +1981,7 @@
 <p>SharedTools provides a collection of reusable tools designed to work seamlessly with the <a href="https://github.com/mariochavez/ruby_llm">RubyLLM</a> framework. Each tool extends <code>RubyLLM::Tool</code> and provides a clean, consistent interface for common operations that LLM agents need to perform.</p>
 <h3 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Browser Automation</strong>: Control web browsers with Watir for visiting pages, clicking elements, filling forms, and taking screenshots</li>
+<li><strong>Browser Automation</strong>: Control web browsers with Ferrum (or Watir) for visiting pages, clicking elements, filling forms, and taking screenshots</li>
 <li><strong>File System Operations</strong>: Secure file and directory operations with path traversal protection</li>
 <li><strong>Code Evaluation</strong>: Execute Ruby, Python, and shell commands with authorization controls</li>
 <li><strong>Database Operations</strong>: Execute SQL queries against SQLite, PostgreSQL, and other databases</li>
@@ -2043,7 +2043,7 @@
 <h2 id="available-tools">Available Tools<a class="headerlink" href="#available-tools" title="Permanent link">&para;</a></h2>
 <h3 id="core-tools">Core Tools<a class="headerlink" href="#core-tools" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong><a href="tools/browser/">BrowserTool</a></strong> - Web browser automation with Watir</li>
+<li><strong><a href="tools/browser/">BrowserTool</a></strong> - Web browser automation with Ferrum (or Watir)</li>
 <li><strong><a href="tools/disk/">DiskTool</a></strong> - File and directory operations</li>
 <li><strong><a href="tools/eval/">EvalTool</a></strong> - Code execution (Ruby, Python, Shell)</li>
 <li><strong><a href="tools/doc/">DocTool</a></strong> - Document reading: plain text, PDF, Word, and spreadsheets</li>
@@ -2176,7 +2176,7 @@ external services. Each client is opt-in — require only the ones you need.</p>
 <ul>
 <li>Ruby &gt;= 3.3.0</li>
 <li>RubyLLM gem</li>
-<li>Optional: watir (browser), sqlite3/pg (databases), pdf-reader (PDFs), docx (Word), roo (spreadsheets)</li>
+<li>Optional: ferrum or watir (browser), sqlite3/pg (databases), pdf-reader (PDFs), docx (Word), roo (spreadsheets)</li>
 </ul>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
 <p>MIT License - see <a href="https://github.com/madbomber/shared_tools/blob/main/LICENSE">LICENSE</a> for details.</p>

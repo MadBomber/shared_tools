@@ -2034,10 +2034,10 @@
 <h2 id="optional-dependencies">Optional Dependencies<a class="headerlink" href="#optional-dependencies" title="Permanent link">&para;</a></h2>
 <p>Depending on which tools you plan to use, you may need additional gems:</p>
 <h3 id="browser-automation">Browser Automation<a class="headerlink" href="#browser-automation" title="Permanent link">&para;</a></h3>
-<p>For the <code>BrowserTool</code>:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'watir'</span>
+<p>For the <code>BrowserTool</code>, install Ferrum (preferred; it drives Chrome directly):</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">gem</span><span class="w"> </span><span class="s1">'ferrum'</span>
 </span></code></pre></div>
-<p>Watir also requires a browser driver. Install ChromeDriver:</p>
+<p>Or install Watir, which BrowserTool uses when ferrum is not installed. Watir also requires a browser driver. Install ChromeDriver:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># macOS</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>brew<span class="w"> </span>install<span class="w"> </span>--cask<span class="w"> </span>chromedriver
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
