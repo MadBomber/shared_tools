@@ -31,7 +31,7 @@ class ToolClassesTest < Minitest::Test
 
   def test_every_tool_defines_its_own_execute
     inherited = tool_classes.select { |klass| klass.instance_method(:execute).owner == ::RubyLLM::Tool }
-    assert_empty inherited.map { it.name },
+    assert_empty inherited.map(&:name),
                  "these tools do not define #execute (a class body probably failed to load)"
   end
 
@@ -87,7 +87,7 @@ class ToolClassesTest < Minitest::Test
   def test_no_ruby_llm_1x_dsl_left_in_lib
     lib   = File.expand_path("../../lib", __dir__)
     stale = Dir.glob("#{lib}/**/*.rb").select do |path|
-      File.read(path).match?(/^\s*(params\s+do\b|param\s+:)/)
+      File.read(path, encoding: "UTF-8").match?(/^\s*(params\s+do\b|param\s+:)/)
     end
 
     assert_empty stale, "ruby_llm 1.x `params do` / `param :` found"
