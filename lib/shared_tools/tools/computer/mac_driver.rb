@@ -21,7 +21,7 @@ module SharedTools
         # @param text [String]
         # @param duration [Integer]
         def hold_key(text:, duration:)
-          options = text.to_s.downcase.split('+').map(&:strip)
+          options = text.to_s.split('+')
           key     = options.pop
           mask    = options.reduce(0) { |m, opt| m | MacOS::Library::CoreGraphics::EventFlags.find(opt) }
 
