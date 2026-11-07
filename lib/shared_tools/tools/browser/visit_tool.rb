@@ -31,13 +31,7 @@ module SharedTools
       private
 
         def default_driver
-          if defined?(Ferrum)
-            FerrumDriver.new(logger: @logger)
-          elsif defined?(Watir)
-            WatirDriver.new(logger: @logger)
-          else
-            raise LoadError, "Browser tools require a driver. Install the 'ferrum' gem or pass a driver: parameter"
-          end
+          DefaultDriver.build(logger: @logger)
         end
       end
     end

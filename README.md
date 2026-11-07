@@ -43,8 +43,8 @@ gem install shared_tools
 Depending on which tools you use, you may need additional gems:
 
 ```ruby
-# For BrowserTool
-gem 'watir'
+# For BrowserTool (ferrum is preferred; watir is the fallback)
+gem 'ferrum'
 
 # For DatabaseTool and DatabaseQueryTool
 gem 'sqlite3'  # or pg, mysql2, etc.

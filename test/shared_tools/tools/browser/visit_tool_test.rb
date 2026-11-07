@@ -52,10 +52,11 @@ class VisitToolTest < Minitest::Test
     assert_equal "https://second.com", @driver.last_url
   end
 
-  def test_raises_error_without_driver_when_watir_not_loaded
-    # When Watir is not loaded, creating a tool without a driver should raise LoadError
-    assert_raises(LoadError) do
-      SharedTools::Tools::Browser::VisitTool.new
+  def test_raises_error_without_driver_when_no_driver_gem_loads
+    SharedTools::Tools::Browser::DefaultDriver.stub(:gem_loaded?, false) do
+      assert_raises(LoadError) do
+        SharedTools::Tools::Browser::VisitTool.new
+      end
     end
   end
 end

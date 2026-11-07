@@ -146,7 +146,7 @@ module SharedTools
 
 
       # @param logger [Logger] optional logger
-      # @param driver [SharedTools::Tools::Browser::BaseDriver] optional, will attempt to create WatirDriver when execute is called
+      # @param driver [SharedTools::Tools::Browser::BaseDriver] optional; when nil, execute builds a FerrumDriver (or WatirDriver)
       def initialize(logger: nil, driver: nil)
         @logger = logger || RubyLLM.logger
         @driver = driver  # Defer default_driver to execute time to support RubyLLM tool discovery
@@ -156,9 +156,9 @@ module SharedTools
       attr_writer :driver
 
       # Reports whether this tool can function.
-      # Returns true when a driver was injected or the watir gem is loaded.
+      # Returns true when a driver was injected or the ferrum or watir gem can be loaded.
       def available?
-        !!@driver || defined?(Watir)
+        !!@driver || !Browser::DefaultDriver.driver_class.nil?
       end
 
       def cleanup!
@@ -256,11 +256,7 @@ module SharedTools
 
       # @return [Browser::BaseDriver]
       def default_driver
-        if defined?(Watir)
-          Browser::WatirDriver.new(logger: @logger)
-        else
-          raise LoadError, "BrowserTool requires a driver. Either install the 'watir' gem or pass a driver: parameter"
-        end
+        Browser::DefaultDriver.build(logger: @logger)
       end
     end
   end
