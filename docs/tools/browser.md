@@ -29,7 +29,7 @@ apt-get install chromium-chromedriver
 ```ruby
 require 'shared_tools'
 
-# Initialize with default Watir driver
+# Initialize with the default driver (Ferrum, or Watir when ferrum is not installed)
 browser = SharedTools::Tools::BrowserTool.new
 
 # Visit a website

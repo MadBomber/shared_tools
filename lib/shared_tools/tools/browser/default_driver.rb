@@ -27,13 +27,24 @@ module SharedTools
           klass.new(logger:)
         end
 
+        # A LoadError raised from inside the gem (a broken dependency) is
+        # re-raised rather than reported as "not installed". Results are
+        # cached, so a missing gem costs one failed require per process.
+        #
         # @param name [String] gem require path
         # @return [Boolean]
         def gem_loaded?(name)
-          require name
-          true
-        rescue LoadError
-          false
+          @gem_loaded ||= {}
+          return @gem_loaded[name] if @gem_loaded.key?(name)
+
+          @gem_loaded[name] = begin
+            require name
+            true
+          rescue LoadError => e
+            raise unless e.path == name
+
+            false
+          end
         end
       end
     end
