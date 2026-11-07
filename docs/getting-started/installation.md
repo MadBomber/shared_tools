@@ -43,13 +43,13 @@ Depending on which tools you plan to use, you may need additional gems:
 
 ### Browser Automation
 
-For the `BrowserTool`:
+For the `BrowserTool`, install Ferrum (preferred; it drives Chrome directly):
 
 ```ruby
-gem 'watir'
+gem 'ferrum'
 ```
 
-Watir also requires a browser driver. Install ChromeDriver:
+Or install Watir, which BrowserTool uses when ferrum is not installed. Watir also requires a browser driver. Install ChromeDriver:
 
 ```bash
 # macOS

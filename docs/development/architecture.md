@@ -365,7 +365,7 @@ raise ArgumentError, "url required for visit action" if url.nil?
 
 2. **LoadError**: Missing dependencies
 ```ruby
-raise LoadError, "watir gem required" unless defined?(Watir)
+raise LoadError, "ferrum gem required" unless DefaultDriver.gem_loaded?("ferrum")
 ```
 
 3. **NotImplementedError**: Unimplemented driver methods

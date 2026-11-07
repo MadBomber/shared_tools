@@ -36,7 +36,7 @@ class DefaultDriverTest < Minitest::Test
   # the gem installed. Run in a fresh process so this suite's own requires
   # can't hide that.
   def test_browser_tool_finds_an_installed_driver_gem_in_a_fresh_process
-    skip "neither ferrum nor watir is installed" unless %w[ferrum watir].any? { Gem::Specification.find_all_by_name(it).any? }
+    skip "neither ferrum nor watir is installed" unless %w[ferrum watir].any? { |name| Gem::Specification.find_all_by_name(name).any? }
 
     script = <<~RUBY
       require "shared_tools"
