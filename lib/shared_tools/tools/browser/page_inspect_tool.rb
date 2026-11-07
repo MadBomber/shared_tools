@@ -22,8 +22,8 @@ module SharedTools
         end
 
         def initialize(driver: nil, logger: nil)
-          @driver = driver || default_driver
           @logger = logger || RubyLLM.logger
+          @driver = driver || DefaultDriver.build(logger: @logger)
         end
 
         def execute(summarize: false)
@@ -38,12 +38,6 @@ module SharedTools
           else
             doc.to_html
           end
-        end
-
-      private
-
-        def default_driver
-          DefaultDriver.build(logger: @logger)
         end
       end
     end

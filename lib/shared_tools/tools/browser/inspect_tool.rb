@@ -24,8 +24,8 @@ module SharedTools
         end
 
         def initialize(driver: nil, logger: nil)
-          @driver = driver || default_driver
           @logger = logger || RubyLLM.logger
+          @driver = driver || DefaultDriver.build(logger: @logger)
         end
 
         def execute(text_content:, selector: nil, context_size: 2)
@@ -42,10 +42,6 @@ module SharedTools
         end
 
       private
-
-        def default_driver
-          DefaultDriver.build(logger: @logger)
-        end
 
         def find_elements_by_text(doc, text, context_size, additional_selector = nil)
           elements = get_elements_matching_text(doc, text, additional_selector)

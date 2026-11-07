@@ -18,8 +18,8 @@ module SharedTools
         end
 
         def initialize(driver: nil, logger: nil)
-          @driver = driver || default_driver
           @logger = logger || RubyLLM.logger
+          @driver = driver || DefaultDriver.build(logger: @logger)
         end
 
         # @param selector [String] The ID / name of the text field / text area to interact with.
@@ -28,12 +28,6 @@ module SharedTools
           @logger.info("#{self.class.name}##{__method__} selector=#{selector.inspect}")
 
           @driver.fill_in(selector:, text:)
-        end
-
-      private
-
-        def default_driver
-          DefaultDriver.build(logger: @logger)
         end
       end
     end

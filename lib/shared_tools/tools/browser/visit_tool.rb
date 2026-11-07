@@ -17,8 +17,8 @@ module SharedTools
         end
 
         def initialize(driver: nil, logger: nil)
-          @driver = driver || default_driver
           @logger = logger || RubyLLM.logger
+          @driver = driver || DefaultDriver.build(logger: @logger)
         end
 
         # @param url [String] A URL (e.g. https://news.ycombinator.com).
@@ -26,12 +26,6 @@ module SharedTools
           @logger.info("#{self.class.name}##{__method__} url=#{url.inspect}")
 
           @driver.goto(url:)
-        end
-
-      private
-
-        def default_driver
-          DefaultDriver.build(logger: @logger)
         end
       end
     end

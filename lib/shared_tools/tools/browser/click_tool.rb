@@ -28,8 +28,8 @@ module SharedTools
         end
 
         def initialize(driver: nil, logger: nil)
-          @driver = driver || default_driver
           @logger = logger || RubyLLM.logger
+          @driver = driver || DefaultDriver.build(logger: @logger)
         end
 
         # @param selector [String] CSS selector, ID, text content, or other identifier for the element to click.
@@ -37,12 +37,6 @@ module SharedTools
           @logger.info("#{self.class.name}##{__method__} selector=#{selector.inspect}")
 
           @driver.click(selector:)
-        end
-
-      private
-
-        def default_driver
-          DefaultDriver.build(logger: @logger)
         end
       end
     end
