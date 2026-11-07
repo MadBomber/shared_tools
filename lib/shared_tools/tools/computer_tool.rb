@@ -200,13 +200,26 @@ module SharedTools
 
     private
 
+      # The macos gem is required here, on demand, because eager loading
+      # (SharedTools.load_all_tools) never loads tools/computer.rb, which is
+      # the only other place that requires it.
+      #
+      # @raise [LoadError] when not on macOS or the macos gem is not installed
       # @return [Computer::BaseDriver]
       def default_driver
-        if RUBY_PLATFORM.include?('darwin') && defined?(MacOS)
-          Computer::MacDriver.new
-        else
-          raise LoadError, "ComputerTool requires a platform-specific driver. Either install the required gem for your platform or pass a driver: parameter"
-        end
+        raise LoadError, "ComputerTool requires a platform-specific driver. Either install the required gem for your platform or pass a driver: parameter" unless mac_driver_available?
+
+        Computer::MacDriver.new
+      end
+
+      # @return [Boolean]
+      def mac_driver_available?
+        return false unless RUBY_PLATFORM.include?('darwin')
+
+        require 'macos'
+        true
+      rescue LoadError
+        false
       end
     end
   end
