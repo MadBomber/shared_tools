@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "open3"
+require "rbconfig"
 
 class ComputerToolTest < Minitest::Test
   class MockDriver
@@ -195,5 +197,41 @@ class ComputerToolTest < Minitest::Test
     assert_equal "down", SharedTools::Tools::ComputerTool::ScrollDirection::DOWN
     assert_equal "left", SharedTools::Tools::ComputerTool::ScrollDirection::LEFT
     assert_equal "right", SharedTools::Tools::ComputerTool::ScrollDirection::RIGHT
+  end
+
+  def test_default_driver_raises_load_error_without_mac_driver
+    tool = SharedTools::Tools::ComputerTool.new(logger: Logger.new(IO::NULL))
+    tool.stub(:mac_driver_available?, false) do
+      error = assert_raises(LoadError) { tool.send(:default_driver) }
+      assert_match(/driver: parameter/, error.message)
+    end
+  end
+
+  def test_mac_driver_available_is_false_off_macos
+    refute SharedTools::Tools::ComputerTool.new.send(:mac_driver_available?, platform: "x86_64-linux")
+  end
+
+  def test_mac_driver_available_is_false_without_the_gem
+    refute SharedTools::Tools::ComputerTool.new.send(:mac_driver_available?, platform: "arm64-darwin", gem_name: "shared_tools_no_such_gem")
+  end
+
+  # Same defect as issue #3: under aia, `SharedTools.load_all_tools` loads
+  # ComputerTool but nothing requires the macos gem, so `defined?(MacOS)` was
+  # false even with the gem installed. Run in a fresh process so this suite's
+  # own requires can't hide that.
+  def test_default_driver_finds_the_installed_macos_gem_in_a_fresh_process
+    skip "macOS only" unless RUBY_PLATFORM.include?("darwin")
+    skip "the macos gem is not installed" if Gem::Specification.find_all_by_name("macos").empty?
+
+    script = <<~RUBY
+      require "shared_tools"
+      SharedTools.load_all_tools
+      tool = SharedTools::Tools::ComputerTool.new(logger: Logger.new(IO::NULL))
+      exit(tool.send(:default_driver).is_a?(SharedTools::Tools::Computer::MacDriver) ? 0 : 1)
+    RUBY
+    lib = File.expand_path("../../../lib", __dir__)
+    _out, err, status = Open3.capture3(RbConfig.ruby, "-I", lib, "-e", script)
+
+    assert status.success?, "ComputerTool#default_driver failed with the macos gem installed\n#{err}"
   end
 end
