@@ -9,7 +9,7 @@ module SharedTools
       class BaseDriver
         # @param root [String]
         def initialize(root:)
-          @root = Pathname(root)
+          @root = Pathname(File.absolute_path(root))
         end
 
         # @param path [String]
@@ -71,9 +71,10 @@ module SharedTools
         #
         # @return Pathname
         def resolve!(path:)
-          @root.join(path).tap do |resolved|
-            relative = resolved.ascend.any? { |ancestor| ancestor.eql?(@root) }
-            raise SecurityError, "unknown path=#{resolved}" unless relative
+          root = Pathname(File.absolute_path(@root))
+          (root + path).cleanpath.tap do |resolved|
+            relative = resolved.ascend.any? { |ancestor| ancestor.eql?(root) }
+            raise SecurityError, "unknown path=#{path}" unless relative
           end
         end
 
