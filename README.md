@@ -4,7 +4,7 @@
   <p><em>A Ruby gem providing LLM-callable tools for browser automation, file operations, code evaluation, document processing, network queries, data science, workflow management, and more</em></p>
 
   [![Gem Version](https://badge.fury.io/rb/shared_tools.svg)](https://badge.fury.io/rb/shared_tools)
-  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
+  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
   [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue.svg)](https://madbomber.github.io/shared_tools)
 </div>
 
@@ -12,7 +12,7 @@
 
 ## Overview
 
-SharedTools is a comprehensive collection of production-ready tools designed for LLM (Large Language Model) applications. Built on the [RubyLLM](https://github.com/mariochavez/ruby_llm) framework, it provides a unified interface for common automation tasks while maintaining safety through a human-in-the-loop authorization system.
+SharedTools is a comprehensive collection of production-ready tools designed for LLM (Large Language Model) applications. Built on the [RubyLLM](https://github.com/crmne/ruby_llm) framework, it provides a unified interface for common automation tasks while maintaining safety through a human-in-the-loop authorization system.
 
 ### Key Features
 
@@ -48,18 +48,24 @@ gem 'ferrum'
 
 # For DatabaseTool and DatabaseQueryTool
 gem 'sqlite3'  # or pg, mysql2, etc.
+gem 'sequel'   # DatabaseQueryTool
 
 # For DocTool
 gem 'pdf-reader'   # PDF support
 gem 'docx'         # Microsoft Word (.docx) support
 gem 'roo'          # Spreadsheet support: CSV, XLSX, ODS, XLSM
 
-# Core dependencies (automatically installed)
-gem 'dentaku'        # For CalculatorTool
-gem 'openweathermap' # For WeatherTool
-gem 'sequel'         # For DatabaseQueryTool
-gem 'nokogiri'       # For various tools
+# For CalculatorTool
+gem 'dentaku'
+
+# For WeatherTool
+gem 'openweathermap'
+
+# For ComputerTool (macOS only)
+gem 'macos'
 ```
+
+`ruby_llm`, `zeitwerk`, `nokogiri`, and `csv` are installed with the gem.
 
 ## Quick Start
 
@@ -292,12 +298,12 @@ results = database.execute(
 
 Safe code evaluation for Ruby, Python, and shell commands.
 
-**Languages:** `ruby`, `python`, `shell`
+**Actions:** `ruby`, `python`, `shell`
 
 ```ruby
 eval_tool = SharedTools::Tools::EvalTool.new
-result = eval_tool.execute(language: "ruby", code: "puts 2 + 2")
-output = eval_tool.execute(language: "shell", code: "ls -la")
+result = eval_tool.execute(action: "ruby", code: "puts 2 + 2")
+output = eval_tool.execute(action: "shell", command: "ls -la")
 ```
 
 [📖 Full Eval Documentation](https://madbomber.github.io/shared_tools/tools/eval/)
@@ -752,11 +758,10 @@ bundle install
 bundle exec rake test
 
 # Run specific test file
-bundle exec ruby test/shared_tools/tools/browser_tool_test.rb
-
-# Run with SimpleCov coverage report
-COVERAGE=true bundle exec rake test
+bundle exec ruby -Itest test/shared_tools/tools/browser_tool_test.rb
 ```
+
+Every test run writes a SimpleCov coverage report to `coverage/index.html`.
 
 ### Building Documentation
 
@@ -787,12 +792,12 @@ Contributions are welcome! Here's how you can help:
 
 ## Requirements
 
-- Ruby 3.0 or higher
+- Ruby 3.3 or higher
 - RubyLLM gem for LLM integration
 
 ## License
 
-This gem is available as open source under the terms of the [MIT License](LICENSE.txt).
+This gem is available as open source under the terms of the [MIT License](LICENSE).
 
 ## Special Thanks
 
@@ -806,7 +811,7 @@ Also checkout the wonderful ruby gem [ruby_llm-toolbox](https://rubygems.org/gem
 - **RubyGems**: [rubygems.org/gems/shared_tools](https://rubygems.org/gems/shared_tools)
 - **Source Code**: [github.com/madbomber/shared_tools](https://github.com/madbomber/shared_tools)
 - **Issue Tracker**: [github.com/madbomber/shared_tools/issues](https://github.com/madbomber/shared_tools/issues)
-- **RubyLLM**: [github.com/mariochavez/ruby_llm](https://github.com/mariochavez/ruby_llm)
+- **RubyLLM**: [github.com/crmne/ruby_llm](https://github.com/crmne/ruby_llm)
 
 ## Support
 
