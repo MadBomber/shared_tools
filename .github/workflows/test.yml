@@ -1,0 +1,30 @@
+name: Test
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Browser tools launch headless Chrome on #new; give slow runners room.
+      FERRUM_PROCESS_TIMEOUT: "30"
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.3", "3.4", "4.0"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      # ClipboardTool tests need a working clipboard: xclip on a virtual X display.
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq xclip xvfb
+      - run: xvfb-run -a bundle exec rake test
