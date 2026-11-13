@@ -44,7 +44,7 @@ Execute code in multiple languages with authorization controls.
 
 ```ruby
 eval_tool = SharedTools::Tools::EvalTool.new
-result = eval_tool.execute(language: "ruby", code: "[1,2,3].sum")
+result = eval_tool.execute(action: "ruby", code: "[1,2,3].sum")
 ```
 
 [View EvalTool Documentation →](eval.md)
@@ -273,7 +273,7 @@ Cron expression parsing and next-run time calculation.
 
 ```ruby
 cron = SharedTools::Tools::CronTool.new
-cron.execute(expression: "0 9 * * MON-FRI")
+cron.execute(action: "parse", expression: "0 9 * * MON-FRI")
 ```
 
 ---
