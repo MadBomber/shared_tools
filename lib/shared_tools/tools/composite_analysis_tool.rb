@@ -1,10 +1,14 @@
 # composite_analysis_tool.rb - Tool that orchestrates multiple analysis steps
 require 'ruby_llm/tool'
 require 'json'
+require 'csv'
+require_relative 'http_helpers'
 
 module SharedTools
   module Tools
     class CompositeAnalysisTool < RubyLLM::Tool
+      include HttpHelpers
+
       def self.tool_name = "composite_analysis"
 
       description <<~'DESCRIPTION'
@@ -182,52 +186,50 @@ module SharedTools
         lines
       end
 
-      # Fetch data from web URL
+      # Fetch data from a web URL through the SSRF-guarded HTTP client
+      # (HttpHelpers#guarded_get). Raises on a blocked URL, a network error or
+      # an HTTP error status, so the caller reports failure instead of
+      # analysing something other than the requested source.
       def fetch_web_data(url)
         @logger.debug("Fetching web data from: #{url}")
 
-        # In a real implementation, this would use HTTP client
-        # For simulation, return sample data based on URL patterns
-        case url
-        when /\.json$/
-          simulate_json_data
-        when /\.csv$/
-          simulate_csv_data
+        response = guarded_get(url)
+        raise HttpHelpers::FetchError, "HTTP #{response.status} from #{response.final_url}" if response.status >= 400
+
+        content_type = Array(response.headers["content-type"]).first.to_s
+        parse_fetched_body(response.body.to_s, content_type, url)
+      end
+
+      # Parse a fetched body: CSV (by content type or .csv URL) with the csv
+      # library, anything else as inline data (JSON, tables, CSV text, lines).
+      def parse_fetched_body(body, content_type, url)
+        if content_type.match?(%r{text/csv}i) || URI(url).path.to_s.downcase.end_with?('.csv')
+          parse_csv(body)
         else
-          simulate_api_response
+          parse_inline_data(body)
         end
       end
 
-      # Read data from local file
+      # Read data from a local file. Raises ArgumentError when the file does
+      # not exist.
       def read_file_data(file_path)
         @logger.debug("Reading file data from: #{file_path}")
 
-        # Check if file exists (for real files)
-        unless File.exist?(file_path)
-          # For demo/testing, return simulated data based on file extension
-          @logger.warn("File not found (#{file_path}), using simulated data")
-          case File.extname(file_path).downcase
-          when '.json'
-            return simulate_json_data
-          when '.txt'
-            return ["Sample text line 1", "Sample text line 2", "Sample text line 3"]
-          else
-            return simulate_csv_data
-          end
-        end
+        raise ArgumentError, "File not found: #{file_path}" unless File.file?(file_path)
 
-        # Determine file type and parse accordingly
         case File.extname(file_path).downcase
         when '.json'
           JSON.parse(File.read(file_path))
-        when '.txt'
-          File.readlines(file_path).map(&:chomp)
+        when '.csv'
+          parse_csv(File.read(file_path))
         else
-          # For real CSV files in production, would need csv gem
-          # For now, return simulated data
-          @logger.warn("CSV parsing requires csv gem, using simulated data")
-          simulate_csv_data
+          File.readlines(file_path).map(&:chomp)
         end
+      end
+
+      # Parse CSV text (first row is the header) into an array of row hashes.
+      def parse_csv(text)
+        CSV.parse(text, headers: true).map(&:to_h)
       end
 
       # Analyze the structure of the data
@@ -550,36 +552,6 @@ module SharedTools
         when 0.3...0.7 then 'moderate'
         else 'strong'
         end
-      end
-
-      # Simulation methods for testing
-
-      def simulate_json_data
-        {
-          "users" => [
-            {"id" => 1, "name" => "Alice", "age" => 30, "score" => 85},
-            {"id" => 2, "name" => "Bob", "age" => 25, "score" => 92},
-            {"id" => 3, "name" => "Charlie", "age" => 35, "score" => 78}
-          ]
-        }
-      end
-
-      def simulate_csv_data
-        [
-          {"id" => "1", "product" => "Widget A", "sales" => "100", "revenue" => "1000.50", "category" => "Electronics"},
-          {"id" => "2", "product" => "Widget B", "sales" => "150", "revenue" => "2250.75", "category" => "Electronics"},
-          {"id" => "3", "product" => "Gadget C", "sales" => "80", "revenue" => "960.00", "category" => "Home"},
-          {"id" => "4", "product" => "Tool D", "sales" => "120", "revenue" => "1800.00", "category" => "Tools"},
-          {"id" => "5", "product" => "Widget E", "sales" => "90", "revenue" => "1350.00", "category" => "Electronics"}
-        ]
-      end
-
-      def simulate_api_response
-        {
-          "status" => "success",
-          "data" => simulate_csv_data,
-          "timestamp" => Time.now.iso8601
-        }
       end
     end
   end
