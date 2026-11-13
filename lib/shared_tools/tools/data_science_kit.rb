@@ -91,7 +91,8 @@ module SharedTools
         @logger = logger || RubyLLM.logger
       end
 
-      def execute(analysis_type:, data_source: nil, data: nil, **parameters)
+      def execute(analysis_type:, data_source: nil, data: nil, parameters: nil, **top_level_parameters)
+        parameters = merge_parameters(top_level_parameters, parameters)
         analysis_start = Time.now
 
         begin
@@ -155,6 +156,14 @@ module SharedTools
       end
 
       private
+
+      # Settings may arrive as top-level keywords or, as the schema declares
+      # them, nested under :parameters. A model sends the nested form, with
+      # string keys (ruby_llm symbolizes only top-level keys). Nested values
+      # win over top-level ones.
+      def merge_parameters(top_level, nested)
+        top_level.merge((nested || {}).to_h.transform_keys(&:to_sym))
+      end
 
       # Load data from various sources
       def load_data(source)
