@@ -213,7 +213,7 @@ module SharedTools
       end
 
       def binary?(file)
-        File.binread(file, 1024).to_s.include?(" ".b)
+        File.binread(file, 1024).to_s.include?("\0".b)
       rescue StandardError
         false
       end
