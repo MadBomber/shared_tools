@@ -3,6 +3,7 @@
 ## Unreleased
 
 #### Fixes
+- `CompositeAnalysisTool` and `DataScienceKit` now honour settings sent in the nested `options:` / `parameters:` object their schemas declare (and the README and `docs/tools/index.md` show), including the string keys a model sends. Before, they read settings only from top-level keywords, so e.g. `options: {visualization_limit: 1}` or `parameters: {include_quartiles: false}` was silently ignored. Top-level keywords still work; a nested value wins (#31).
 - `WorkflowManagerTool` no longer creates its storage directory (`.workflows/` in the working directory by default) when it is instantiated; it is created when a workflow is first saved. Before, merely loading the tool (as aia and `RubyLLM.chat.with_tools` do) left an empty `.workflows/` behind, and so did the test suite (#32).
 - `CronTool`'s `next_times` no longer fails when called during minute :59 of an hour (`Time.new` with minute 60 raised `ArgumentError: min out of range`, so about 1 call in 60 failed); it now starts from the next whole minute (#25).
 - `README.md`: the `EvalTool` example now passes `action:` (it raised `ArgumentError: missing keyword: :action`); also corrected the minimum Ruby version, the license and RubyLLM links, which gems are optional, and the test commands.
