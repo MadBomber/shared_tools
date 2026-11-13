@@ -357,9 +357,11 @@ module SharedTools
         {"action": "action1", "param": "value"}
       TEXT
 
-      param :action, desc: "The action to perform (action1, action2)"
-      param :required_param, desc: "Required parameter"
-      param :optional_param, desc: "Optional parameter (default: value)"
+      parameters do
+        string :action,         description: "The action to perform (action1, action2)"
+        string :required_param, description: "Required parameter"
+        string :optional_param, description: "Optional parameter (default: value)", required: false
+      end
 
       def initialize(driver: nil, logger: nil)
         @driver = driver

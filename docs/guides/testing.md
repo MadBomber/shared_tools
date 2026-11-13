@@ -119,18 +119,16 @@ Use real LLM for integration tests:
 
 ```ruby
 RSpec.describe "Full LLM integration", :slow, :integration do
-  let(:agent) do
-    RubyLLM::Agent.new(
-      tools: [
-        SharedTools::Tools::BrowserTool.new(driver: mock_browser),
-        SharedTools::Tools::DiskTool.new(driver: mock_disk)
-      ]
+  let(:chat) do
+    RubyLLM.chat.with_tools(
+      SharedTools::Tools::BrowserTool.new(driver: mock_browser),
+      SharedTools::Tools::DiskTool.new(driver: mock_disk)
     )
   end
 
   it "scrapes and saves data" do
     # This makes a real LLM API call
-    response = agent.process("Visit example.com and save the title to title.txt")
+    response = chat.ask("Visit example.com and save the title to title.txt")
 
     # Verify the LLM used the right tools
     expect(mock_browser).to have_received(:goto)
@@ -243,12 +241,12 @@ RSpec.describe "Tool usage tracking" do
   let(:browser) { instance_spy(SharedTools::Tools::BrowserTool) }
   let(:disk) { instance_spy(SharedTools::Tools::DiskTool) }
 
-  let(:agent) do
-    LLMAgent.new(tools: [browser, disk])
+  let(:chat) do
+    RubyLLM.chat.with_tools(browser, disk)
   end
 
   it "uses browser before disk" do
-    agent.process("Scrape example.com and save to file.txt")
+    chat.ask("Scrape example.com and save to file.txt")
 
     # Verify order of operations
     expect(browser).to have_received(:execute).ordered
@@ -256,7 +254,7 @@ RSpec.describe "Tool usage tracking" do
   end
 
   it "passes correct parameters" do
-    agent.process("Visit https://example.com")
+    chat.ask("Visit https://example.com")
 
     expect(browser).to have_received(:execute).with(
       hash_including(
@@ -276,7 +274,7 @@ Record full LLM interactions for regression testing:
 RSpec.describe "LLM snapshots" do
   it "matches recorded interaction" do
     VCR.use_cassette("scraping_workflow") do
-      result = agent.process("Scrape products from example.com")
+      result = chat.ask("Scrape products from example.com")
 
       expect(result).to match_snapshot("scraping_workflow_result")
     end
@@ -450,19 +448,20 @@ end
 RSpec.describe "LLM provider compatibility" do
   let(:tools) { [SharedTools::Tools::BrowserTool.new] }
 
-  shared_examples "LLM provider" do |provider_name|
+  shared_examples "LLM provider" do |provider_name, model|
     it "works with #{provider_name}" do
-      agent = create_agent_for(provider_name, tools: tools)
+      chat = RubyLLM.chat(provider: provider_name, model: model).with_tools(*tools)
 
-      result = agent.process("Visit example.com")
+      result = chat.ask("Visit example.com")
 
       expect(result).to be_truthy
     end
   end
 
-  include_examples "LLM provider", :openai
-  include_examples "LLM provider", :anthropic
-  include_examples "LLM provider", :ollama
+  # Use models your account (or local Ollama install) has available
+  include_examples "LLM provider", :openai, "gpt-4.1-mini"
+  include_examples "LLM provider", :anthropic, "claude-haiku-4-5"
+  include_examples "LLM provider", :ollama, "llama3.2"
 end
 ```
 
@@ -609,8 +608,8 @@ end
 it "generates correct parameters" do
   tool = spy("BrowserTool")
 
-  agent = LLMAgent.new(tools: [tool])
-  agent.process("Visit example.com")
+  chat = RubyLLM.chat.with_tools(tool)
+  chat.ask("Visit example.com")
 
   # Inspect what parameters the LLM generated
   expect(tool).to have_received(:execute) do |**params|
