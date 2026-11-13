@@ -154,6 +154,21 @@ class CronToolTest < Minitest::Test
     assert_raises(ArgumentError) { @tool.send(:parse_number, '-1') }
   end
 
+  def test_next_times_during_minute_59
+    Time.stub(:now, Time.new(2026, 1, 1, 10, 59, 30)) do
+      result = @tool.execute(action: 'next_times', expression: '* * * * *', count: 2)
+      assert result[:success], result[:error]
+      assert_equal ['2026-01-01 11:00 (Thursday)', '2026-01-01 11:01 (Thursday)'], result[:next_times]
+    end
+  end
+
+  def test_next_minute_rolls_over_hour_day_and_year
+    assert_equal Time.new(2027, 1, 1, 0, 0, 0),
+                 @tool.send(:next_minute, Time.new(2026, 12, 31, 23, 59, 59))
+    assert_equal Time.new(2026, 5, 4, 3, 3, 0),
+                 @tool.send(:next_minute, Time.new(2026, 5, 4, 3, 2, 0))
+  end
+
   # generate action
   def test_generate_returns_expression
     result = @tool.execute(action: 'generate', description: 'every day at 9am')

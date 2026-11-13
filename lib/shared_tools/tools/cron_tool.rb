@@ -116,9 +116,7 @@ module SharedTools
         wdays_set = wdays_set.map { |d| d == 7 ? 0 : d }.uniq.sort
 
         times  = []
-        t      = Time.now
-        # Advance to the next minute boundary
-        t      = Time.new(t.year, t.month, t.day, t.hour, t.min + 1, 0)
+        t      = next_minute(Time.now)
         limit  = 527_040 # 1 year of minutes — safety cap
 
         while times.size < count && limit > 0
@@ -348,6 +346,12 @@ module SharedTools
       # -------------------------------------------------------------------------
       # Helpers
       # -------------------------------------------------------------------------
+
+      # The start of the minute after +time+. Works from epoch seconds, so
+      # hh:59 rolls over to the next hour (and day, month, year).
+      def next_minute(time)
+        Time.at((time.to_i / 60 + 1) * 60)
+      end
 
       def require_expr!(expr)
         raise ArgumentError, "expression is required for this action" if expr.nil? || expr.strip.empty?

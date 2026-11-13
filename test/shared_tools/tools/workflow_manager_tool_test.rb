@@ -24,6 +24,36 @@ class WorkflowManagerToolTest < Minitest::Test
     assert_kind_of ::RubyLLM::Tool, @tool
   end
 
+  # Storage directory is created only when a workflow is saved (#32)
+  def test_new_does_not_create_storage_dir
+    missing = File.join(@temp_dir, "missing")
+    SharedTools::Tools::WorkflowManagerTool.new(storage_dir: missing)
+    refute Dir.exist?(missing)
+  end
+
+  def test_new_with_default_storage_dir_does_not_create_it
+    Dir.chdir(@temp_dir) do
+      SharedTools::Tools::WorkflowManagerTool.new
+      assert_empty Dir.children(".")
+    end
+  end
+
+  def test_list_on_missing_storage_dir_returns_none
+    missing = File.join(@temp_dir, "missing")
+    result = SharedTools::Tools::WorkflowManagerTool.new(storage_dir: missing).execute(action: "list")
+    assert result[:success]
+    assert_equal 0, result[:total]
+    refute Dir.exist?(missing)
+  end
+
+  def test_start_creates_missing_storage_dir
+    missing = File.join(@temp_dir, "nested", "missing")
+    tool = SharedTools::Tools::WorkflowManagerTool.new(storage_dir: missing)
+    result = tool.execute(action: "start", step_name: "init")
+    assert result[:success], result[:error]
+    assert File.exist?(File.join(missing, "workflow_#{result[:workflow_id]}.json"))
+  end
+
   # Start workflow tests
   def test_start_workflow_success
     result = @tool.execute(
