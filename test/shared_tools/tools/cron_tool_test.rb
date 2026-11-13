@@ -92,6 +92,68 @@ class CronToolTest < Minitest::Test
     assert_equal times.sort, times
   end
 
+  # field parsing (#26)
+  def test_validate_rejects_non_numeric_weekday
+    result = @tool.execute(action: 'validate', expression: '0 9 * * MON')
+    refute result[:valid]
+    assert_includes result[:error], 'MON'
+  end
+
+  def test_validate_rejects_non_numeric_tokens_in_any_field
+    ['x * * * *', '0 9a * * *', '0 9 1, * *', '*/x * * * *', '1-x * * * *'].each do |expr|
+      refute @tool.execute(action: 'validate', expression: expr)[:valid], "expected #{expr.inspect} to be invalid"
+    end
+  end
+
+  def test_validate_rejects_out_of_bounds_stepped_range
+    result = @tool.execute(action: 'validate', expression: '0-99/5 * * * *')
+    refute result[:valid]
+    assert_includes result[:error], 'out of bounds'
+  end
+
+  def test_validate_rejects_out_of_bounds_step_start
+    refute @tool.execute(action: 'validate', expression: '75/5 * * * *')[:valid]
+  end
+
+  def test_validate_rejects_reversed_range
+    result = @tool.execute(action: 'validate', expression: '5-1 * * * *')
+    refute result[:valid]
+    assert_includes result[:error], 'reversed'
+    refute @tool.execute(action: 'validate', expression: '30-10/5 * * * *')[:valid]
+  end
+
+  def test_validate_still_accepts_valid_ranges_and_steps
+    ['0-30/5 * * * *', '5/15 * * * *', '0 9-17 * * 1-5', '0 0 * * 7', '1,2,3 * * * *'].each do |expr|
+      assert @tool.execute(action: 'validate', expression: expr)[:valid], "expected #{expr.inspect} to be valid"
+    end
+  end
+
+  def test_next_times_matches_day_of_month_or_weekday_when_both_restricted
+    Time.stub(:now, Time.new(2026, 1, 1, 0, 0, 30)) do
+      result = @tool.execute(action: 'next_times', expression: '0 0 1 * 1', count: 6)
+      assert result[:success], result[:error]
+      assert_equal ['2026-01-05', '2026-01-12', '2026-01-19', '2026-01-26', '2026-02-01', '2026-02-02'],
+                   result[:next_times].map { |t| t[0, 10] }
+    end
+  end
+
+  def test_day_matches_or_when_both_restricted_and_when_a_field_starts_with_star
+    first_sunday = Time.new(2026, 2, 1) # the 1st, a Sunday
+    # Day-of-month matches, weekday (Monday) does not.
+    assert @tool.send(:day_matches?, first_sunday, [1], [1], '1', '1')
+    refute @tool.send(:day_matches?, first_sunday, [1], [1], '1', '*/3')
+    assert @tool.send(:day_matches?, first_sunday, (1..31).to_a, [0], '*', '0')
+    refute @tool.send(:day_matches?, first_sunday, (1..31).to_a, [1], '*', '1')
+  end
+
+  def test_parse_number
+    assert_equal 7, @tool.send(:parse_number, '07')
+    assert_raises(ArgumentError) { @tool.send(:parse_number, 'MON') }
+    assert_raises(ArgumentError) { @tool.send(:parse_number, '') }
+    assert_raises(ArgumentError) { @tool.send(:parse_number, nil) }
+    assert_raises(ArgumentError) { @tool.send(:parse_number, '-1') }
+  end
+
   # generate action
   def test_generate_returns_expression
     result = @tool.execute(action: 'generate', description: 'every day at 9am')
