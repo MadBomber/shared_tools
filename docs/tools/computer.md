@@ -42,17 +42,23 @@ result = computer.execute(
 
 # Double click
 result = computer.execute(
-  action: SharedTools::Tools::ComputerTool::Action::MOUSE_CLICK,
+  action: SharedTools::Tools::ComputerTool::Action::MOUSE_DOUBLE_CLICK,
   coordinate: { x: 100, y: 200 },
-  mouse_button: "left",
-  num_clicks: 2
+  mouse_button: "left"
+)
+
+# Triple click
+result = computer.execute(
+  action: SharedTools::Tools::ComputerTool::Action::MOUSE_TRIPLE_CLICK,
+  coordinate: { x: 100, y: 200 }
 )
 ```
 
 **Parameters:**
 - `coordinate`: Hash with `x` and `y` keys (required)
 - `mouse_button`: "left" (default), "right", or "middle"
-- `num_clicks`: Number of clicks (default: 1)
+
+Use the `MOUSE_DOUBLE_CLICK` and `MOUSE_TRIPLE_CLICK` actions for multiple clicks.
 
 #### Mouse Move
 
@@ -207,9 +213,8 @@ computer.execute(
 ```ruby
 # Triple-click to select line
 computer.execute(
-  action: SharedTools::Tools::ComputerTool::Action::MOUSE_CLICK,
-  coordinate: { x: 400, y: 300 },
-  num_clicks: 3
+  action: SharedTools::Tools::ComputerTool::Action::MOUSE_TRIPLE_CLICK,
+  coordinate: { x: 400, y: 300 }
 )
 
 # Copy
@@ -239,38 +244,40 @@ computer.execute(
 
 ## Working with Drivers
 
-### Built-in Mock Driver
+### Default Driver
 
-The default driver is a mock implementation useful for testing:
+With no `driver:`, `ComputerTool` uses `SharedTools::Tools::Computer::MacDriver` on macOS when the `macos` gem is installed. Anywhere else it raises `LoadError` unless you pass a driver:
 
 ```ruby
 computer = SharedTools::Tools::ComputerTool.new
-# Uses mock driver by default
+# macOS + `macos` gem: uses Computer::MacDriver
 ```
 
-### Platform-Specific Drivers
+### Custom Drivers
 
-For real automation, implement platform-specific drivers:
+Subclass `SharedTools::Tools::Computer::BaseDriver` and implement its methods. `ComputerTool` passes the mouse button to the driver as `button:`, and calls `type(text:)` for typing:
 
 ```ruby
-# macOS example using AppleScript/CGEvent
-class MacOSDriver
-  def mouse_click(coordinate:, mouse_button: "left", num_clicks: 1)
-    # Use CGEvent or AppleScript
-    system("cliclick c:#{coordinate[:x]},#{coordinate[:y]}")
+# macOS example using cliclick
+class CliclickDriver < SharedTools::Tools::Computer::BaseDriver
+  def mouse_click(coordinate:, button:)
+    system("cliclick", "c:#{coordinate[:x]},#{coordinate[:y]}")
   end
 
-  def type_text(text:)
-    # Type using CGEvent
+  def type(text:)
+    system("cliclick", "t:#{text}")
   end
 
-  # ... other methods
+  # ... key, hold_key, mouse_position, mouse_move, mouse_down, mouse_up,
+  # scroll, screenshot (see Computer::BaseDriver)
 end
 
 computer = SharedTools::Tools::ComputerTool.new(
-  driver: MacOSDriver.new
+  driver: CliclickDriver.new(display_width: 1920, display_height: 1080, display_number: 1)
 )
 ```
+
+`BaseDriver` implements `mouse_double_click` and `mouse_triple_click` by calling `mouse_click` two or three times.
 
 ## Best Practices
 
@@ -284,9 +291,10 @@ computer = SharedTools::Tools::ComputerTool.new(
 
 ```ruby
 # Add waits between actions
-computer.execute(action: :mouse_click, coordinate: {x: 100, y: 200})
-computer.execute(action: :wait, duration: 0.5)
-computer.execute(action: :type, text: "Hello")
+# Actions are strings ("mouse_click"), not symbols
+computer.execute(action: "mouse_click", coordinate: {x: 100, y: 200})
+computer.execute(action: "wait", duration: 0.5)
+computer.execute(action: "type", text: "Hello")
 ```
 
 ### Error Handling
