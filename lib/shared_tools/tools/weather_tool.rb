@@ -1,5 +1,5 @@
 # weather_tool.rb - API integration example
-require 'ruby_llm/tool'
+require_relative '../../shared_tools'
 
 OPENWEATHERMAP_AVAILABLE = begin
   require 'openweathermap'

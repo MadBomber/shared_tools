@@ -1,5 +1,5 @@
 # secure_tool_template.rb - Comprehensive security best practices template
-require 'ruby_llm/tool'
+require_relative '../../shared_tools'
 require 'timeout'
 require 'securerandom'
 

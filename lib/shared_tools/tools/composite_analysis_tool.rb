@@ -1,5 +1,5 @@
 # composite_analysis_tool.rb - Tool that orchestrates multiple analysis steps
-require 'ruby_llm/tool'
+require_relative '../../shared_tools'
 require 'json'
 
 module SharedTools
