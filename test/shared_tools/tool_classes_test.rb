@@ -92,6 +92,17 @@ class ToolClassesTest < Minitest::Test
 
     assert_empty stale, "ruby_llm 1.x `params do` / `param :` found"
   end
+
+  # docs/development/changelog.md is release history and keeps the old APIs.
+  def test_docs_do_not_teach_removed_ruby_llm_apis
+    docs  = File.expand_path("../../docs", __dir__)
+    pages = Dir.glob("#{docs}/**/*.md") - ["#{docs}/development/changelog.md"]
+    stale = pages.select do |path|
+      File.read(path, encoding: "UTF-8").match?(/^\s*(params\s+do\b|param\s+:)|RubyLLM::Agent\.new\(\s*tools:/)
+    end
+
+    assert_empty stale, "ruby_llm 1.x `param :` DSL or `RubyLLM::Agent.new(tools:)` found in docs"
+  end
 end
 
 # The tools aia's demo 18 hands to a model. Call them the way a chat does

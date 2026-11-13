@@ -279,8 +279,10 @@ class MyTool < ::RubyLLM::Tool
   description "What this tool does"
 
   # DSL for parameters
-  param :action, desc: "Action to perform"
-  param :path, desc: "Path parameter"
+  parameters do
+    string :action, description: "Action to perform"
+    string :path,   description: "Path parameter"
+  end
 
   # Initialize with optional dependencies
   def initialize(driver: nil, logger: nil)

@@ -30,8 +30,10 @@ module SharedTools
       TEXT
 
       # 3. Define parameters
-      param :action, desc: "The action to perform"
-      param :path, desc: "The file path (optional)", required: false
+      parameters do
+        string :action, description: "The action to perform"
+        string :path,   description: "The file path (optional)", required: false
+      end
 
       # 4. Implement initialization
       def initialize(driver: nil, logger: nil)
@@ -51,40 +53,47 @@ end
 
 ## The Parameter DSL
 
-### Defining Parameters with `param`
+### Defining Parameters with `parameters do ... end`
 
-The `param` method defines the parameters your tool accepts:
+The `parameters` block defines the parameters your tool accepts. Declare each
+one with its JSON type (`string`, `integer`, `number`, `boolean`, `array`,
+`object`). Parameters are required unless you pass `required: false`:
 
 ```ruby
 class BrowserTool < ::RubyLLM::Tool
-  # Required parameter
-  param :action, desc: "The browser action to perform"
+  parameters do
+    # Required parameter
+    string :action, description: "The browser action to perform"
 
-  # Optional parameter
-  param :url, desc: "The URL to visit (required for visit action)"
+    # Optional parameter
+    string :url, description: "The URL to visit (required for visit action)", required: false
 
-  # Parameter with detailed description
-  param :selector, desc: <<~TEXT
-    A CSS selector to locate an element:
+    # Parameter with detailed description
+    string :selector, description: <<~TEXT.strip, required: false
+      A CSS selector to locate an element:
 
-    * 'button[type="submit"]': selects a submit button
-    * '.class-name': selects elements by class
-    * '#id-name': selects an element by ID
+      * 'button[type="submit"]': selects a submit button
+      * '.class-name': selects elements by class
+      * '#id-name': selects an element by ID
 
-    Required for click and text_field_set actions.
-  TEXT
+      Required for click and text_field_set actions.
+    TEXT
 
-  # Parameter with examples
-  param :context_size, desc: <<~TEXT
-    Number of parent elements to include (default: 2).
+    # Parameter with examples
+    integer :context_size, description: <<~TEXT.strip, required: false
+      Number of parent elements to include (default: 2).
 
-    Examples:
-    - 1: Show only immediate parent
-    - 2: Show parent and grandparent (default)
-    - 3: Show three levels of context
-  TEXT
+      Examples:
+      - 1: Show only immediate parent
+      - 2: Show parent and grandparent (default)
+      - 3: Show three levels of context
+    TEXT
+  end
 end
 ```
+
+The ruby_llm 1.x `param :name, desc:` macro no longer exists; under ruby_llm 2.x
+it raises `NoMethodError`.
 
 ### Parameter Description Best Practices
 
@@ -97,7 +106,7 @@ end
 Example of a well-documented parameter:
 
 ```ruby
-param :action, desc: <<~TEXT
+string :action, description: <<~TEXT.strip
   The browser action to perform. Options:
   * `visit`: Navigate to a website (requires url)
   * `page_inspect`: Get page HTML or summary (optional: full_html)
