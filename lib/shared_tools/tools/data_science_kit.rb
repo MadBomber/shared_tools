@@ -513,7 +513,7 @@ module SharedTools
 
         data.first.keys.select do |key|
           sample_values = data.first(10).map { |row| row[key] }
-          sample_values.all? { |v| v.to_s.match?(/^-?\d+\.?\d*$/) }
+          sample_values.all? { |v| v.to_s.match?(/\A-?\d++\.?\d*+\z/) }
         end
       end
 
@@ -523,7 +523,7 @@ module SharedTools
         data.first.keys.select do |key|
           sample_values = data.first(10).map { |row| row[key] }
           unique_ratio = sample_values.uniq.length.to_f / sample_values.length
-          unique_ratio < 0.7 && !sample_values.all? { |v| v.to_s.match?(/^-?\d+\.?\d*$/) }
+          unique_ratio < 0.7 && !sample_values.all? { |v| v.to_s.match?(/\A-?\d++\.?\d*+\z/) }
         end
       end
 
