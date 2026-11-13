@@ -62,7 +62,9 @@ module SharedTools
         @logger = logger || RubyLLM.logger
       end
 
-      def execute(data_source: nil, data: nil, analysis_type: "standard", **options)
+      def execute(data_source: nil, data: nil, analysis_type: "standard", options: nil, **top_level_options)
+        options = merge_options(top_level_options, options)
+
         if data_source.nil? && data.nil?
           return { success: false, error: "Either data_source or data must be provided." }
         end
@@ -136,6 +138,14 @@ module SharedTools
       end
 
       private
+
+      # Settings may arrive as top-level keywords or, as the schema declares
+      # them, nested under :options. A model sends the nested form, with
+      # string keys (ruby_llm symbolizes only top-level keys). Nested values
+      # win over top-level ones.
+      def merge_options(top_level, nested)
+        top_level.merge((nested || {}).to_h.transform_keys(&:to_sym))
+      end
 
       # Parse inline data string into a Ruby structure.
       # Handles pipe-delimited markdown tables, CSV, JSON, and plain text.

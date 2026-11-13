@@ -67,7 +67,6 @@ module SharedTools
       def initialize(logger: nil, storage_dir: nil)
         @logger = logger || RubyLLM.logger
         @storage_dir = storage_dir || ".workflows"
-        FileUtils.mkdir_p(@storage_dir) unless Dir.exist?(@storage_dir)
       end
 
       def execute(action:, workflow_id: nil, **step_data)
@@ -314,6 +313,7 @@ module SharedTools
       # Save workflow state to disk
       def save_workflow_state(workflow_id, state)
         file_path = workflow_file_path(workflow_id)
+        FileUtils.mkdir_p(@storage_dir)
         File.write(file_path, JSON.pretty_generate(state))
         @logger.debug("Workflow state saved: #{file_path}")
       rescue => e

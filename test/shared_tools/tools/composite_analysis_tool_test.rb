@@ -501,4 +501,36 @@ class CompositeAnalysisToolTest < Minitest::Test
       assert result[:success], "Should handle #{ext} files"
     end
   end
+
+  # Nested options, as the schema declares them (#31)
+  NUMERIC_CSV = "a,b,c\n1,2,3\n2,4,7\n3,5,9\n4,9,12\n"
+
+  def test_nested_options_visualization_limit_with_string_keys
+    default = @tool.execute(data: NUMERIC_CSV)
+    assert_operator default[:analysis][:visualizations].length, :>, 1
+
+    result = @tool.execute(data: NUMERIC_CSV, options: { "visualization_limit" => 1 })
+    assert result[:success], result[:error]
+    assert_equal 1, result[:analysis][:visualizations].length
+  end
+
+  def test_nested_options_include_correlations_false
+    default = @tool.execute(data: NUMERIC_CSV, analysis_type: "comprehensive")
+    assert default[:analysis][:correlations]
+
+    result = @tool.execute(data: NUMERIC_CSV, analysis_type: "comprehensive",
+                           options: { "include_correlations" => false })
+    assert result[:success], result[:error]
+    assert_nil result[:analysis][:correlations]
+  end
+
+  def test_top_level_options_still_work
+    result = @tool.execute(data: NUMERIC_CSV, visualization_limit: 1)
+    assert_equal 1, result[:analysis][:visualizations].length
+  end
+
+  def test_merge_options
+    assert_equal({ a: 1, b: 3 }, @tool.send(:merge_options, { a: 1, b: 2 }, { "b" => 3 }))
+    assert_equal({ a: 1 }, @tool.send(:merge_options, { a: 1 }, nil))
+  end
 end
