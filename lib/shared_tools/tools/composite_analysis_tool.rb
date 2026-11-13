@@ -418,7 +418,7 @@ module SharedTools
       def infer_column_type(values)
         sample = values.first(100)
 
-        numeric_count = sample.count { |v| v.to_s.match?(/^-?\d+\.?\d*$/) }
+        numeric_count = sample.count { |v| v.to_s.match?(/\A-?\d++\.?\d*+\z/) }
         return 'numeric' if numeric_count > sample.length * 0.8
 
         # Check for categorical data
