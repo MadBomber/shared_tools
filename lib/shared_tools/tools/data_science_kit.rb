@@ -294,13 +294,13 @@ module SharedTools
             min: sorted.first.round(2),
             max: sorted.last.round(2),
             mean: (values.sum / values.length).round(2),
-            median: sorted[sorted.length / 2].round(2),
+            median: percentile(sorted, 0.5).round(2),
             std_dev: calculate_std_dev(values).round(2)
           }
 
           if include_quartiles
-            stats[:q1] = sorted[sorted.length / 4].round(2)
-            stats[:q3] = sorted[(sorted.length * 3) / 4].round(2)
+            stats[:q1] = percentile(sorted, 0.25).round(2)
+            stats[:q3] = percentile(sorted, 0.75).round(2)
             stats[:iqr] = (stats[:q3] - stats[:q1]).round(2)
           end
 
@@ -516,6 +516,15 @@ module SharedTools
           unique_ratio = sample_values.uniq.length.to_f / sample_values.length
           unique_ratio < 0.7 && !sample_values.all? { |v| v.to_s.match?(/^-?\d+\.?\d*$/) }
         end
+      end
+
+      # Linear interpolation between closest ranks (R type 7, the default in
+      # R, NumPy and Excel's PERCENTILE.INC). `sorted` must be sorted ascending.
+      def percentile(sorted, fraction)
+        position = (sorted.length - 1) * fraction
+        lower = sorted[position.floor]
+        upper = sorted[position.ceil]
+        lower + ((upper - lower) * (position - position.floor))
       end
 
       def calculate_std_dev(values)

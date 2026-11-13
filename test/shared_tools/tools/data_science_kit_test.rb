@@ -42,6 +42,31 @@ class DataScienceKitTest < Minitest::Test
     assert stats[:iqr]
   end
 
+  def test_statistical_summary_median_and_quartiles_even_count
+    result = @tool.execute(
+      analysis_type: "statistical_summary",
+      data: "v,w\n1,1\n2,1\n3,1\n4,1"
+    )
+
+    stats = result[:result][:column_statistics]["v"]
+    assert_equal 2.5, stats[:median]
+    assert_equal 1.75, stats[:q1]
+    assert_equal 3.25, stats[:q3]
+    assert_equal 1.5, stats[:iqr]
+  end
+
+  def test_statistical_summary_median_and_quartiles_odd_count
+    result = @tool.execute(
+      analysis_type: "statistical_summary",
+      data: "v,w\n1,1\n2,1\n3,1\n4,1\n5,1"
+    )
+
+    stats = result[:result][:column_statistics]["v"]
+    assert_equal 3.0, stats[:median]
+    assert_equal 2.0, stats[:q1]
+    assert_equal 4.0, stats[:q3]
+  end
+
   def test_statistical_summary_detects_outliers
     result = @tool.execute(
       analysis_type: "statistical_summary",
