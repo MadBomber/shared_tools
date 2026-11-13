@@ -1,21 +1,29 @@
 # frozen_string_literal: true
 
 require 'test_helper'
+require 'open3'
+require 'rbconfig'
 
 # Every lib/shared_tools/tools/*_tool.rb gets a lib/shared_tools/*_tool.rb
 # shim so `require "shared_tools/<name>_tool"` works for each tool.
 class RequireShimsTest < Minitest::Test
-  LIB_DIR = File.expand_path('../../lib/shared_tools', __dir__)
-  TOOL_NAMES = Dir[File.join(LIB_DIR, 'tools', '*_tool.rb')].map { |path| File.basename(path, '.rb') }.sort
+  LIB_DIR = File.expand_path('../../lib', __dir__)
+  TOOL_NAMES = Dir[File.join(LIB_DIR, 'shared_tools/tools/*_tool.rb')].map do |path|
+    File.basename(path, '.rb')
+  end.sort
 
-  def test_tools_directory_has_tools
+  def test_every_tool_has_a_shim
     refute_empty TOOL_NAMES
+    missing = TOOL_NAMES.reject { |name| File.exist?(File.join(LIB_DIR, "shared_tools/#{name}.rb")) }
+    assert_empty missing, 'tools without a lib/shared_tools/<name>.rb require shim'
   end
 
-  TOOL_NAMES.each do |name|
-    define_method("test_require_shim_for_#{name}") do
-      assert File.exist?(File.join(LIB_DIR, "#{name}.rb")), "missing shim lib/shared_tools/#{name}.rb"
-      require "shared_tools/#{name}"
-    end
+
+  # Loaded in a child process: requiring tool files directly in the test
+  # process interferes with Zeitwerk autoloading for later tests.
+  def test_every_shim_loads
+    script = TOOL_NAMES.map { |name| "require 'shared_tools/#{name}'" }.join(';')
+    _out, err, status = Open3.capture3(RbConfig.ruby, '-I', LIB_DIR, '-e', script)
+    assert status.success?, err
   end
 end
