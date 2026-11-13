@@ -491,4 +491,27 @@ class DataScienceKitTest < Minitest::Test
       assert_equal target, result[:result][:target_column]
     end
   end
+
+  # Nested parameters, as the schema declares them (#31)
+  XY_JSON = '[{"x":1,"y":2},{"x":2,"y":4},{"x":3,"y":7},{"x":4,"y":8}]'
+
+  def test_nested_parameters_include_quartiles_false_with_string_keys
+    default = @tool.execute(analysis_type: "statistical_summary", data: XY_JSON)
+    assert default[:result][:column_statistics]["x"].key?(:q1)
+
+    result = @tool.execute(analysis_type: "statistical_summary", data: XY_JSON,
+                           parameters: { "include_quartiles" => false })
+    assert result[:success], result[:error]
+    refute result[:result][:column_statistics]["x"].key?(:q1)
+  end
+
+  def test_top_level_parameters_still_work
+    result = @tool.execute(analysis_type: "statistical_summary", data: XY_JSON, include_quartiles: false)
+    refute result[:result][:column_statistics]["x"].key?(:q1)
+  end
+
+  def test_merge_parameters
+    assert_equal({ a: 1, b: 3 }, @tool.send(:merge_parameters, { a: 1, b: 2 }, { "b" => 3 }))
+    assert_equal({ a: 1 }, @tool.send(:merge_parameters, { a: 1 }, nil))
+  end
 end
