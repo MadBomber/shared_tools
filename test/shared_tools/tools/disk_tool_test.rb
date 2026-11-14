@@ -35,6 +35,17 @@ class DiskToolTest < Minitest::Test
     assert_equal "file_replace", SharedTools::Tools::DiskTool::Action::FILE_REPLACE
   end
 
+  def test_actions_lists_every_action_constant
+    action_module = SharedTools::Tools::DiskTool::Action
+    expected = action_module.constants.map { |name| action_module.const_get(name) }
+    assert_equal expected.sort, SharedTools::Tools::DiskTool::ACTIONS.sort
+  end
+
+  def test_unknown_action_returns_an_error
+    result = @tool.execute(action: "bogus", path: "./test.txt")
+    assert_equal "Unsupported action: bogus. Supported actions are: #{SharedTools::Tools::DiskTool::ACTIONS.join(', ')}", result[:error]
+  end
+
   def test_file_create_action
     @tool.execute(action: SharedTools::Tools::DiskTool::Action::FILE_CREATE, path: "./test.txt")
     assert File.exist?(File.join(@temp_dir, "test.txt"))
