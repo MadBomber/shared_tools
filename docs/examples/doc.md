@@ -8,7 +8,7 @@ This example demonstrates how to use the DocTool facade to read and extract text
 
 ## Example Code
 
-View the complete example: [doc_tool_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/doc_tool_example.rb)
+View the complete example: [doc_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/doc_tool_demo.rb)
 
 ## Key Features
 
@@ -225,7 +225,7 @@ end
 
 ```bash
 cd examples
-bundle exec ruby doc_tool_example.rb
+bundle exec ruby doc_tool_demo.rb
 ```
 
 The example requires a test PDF file at `test/fixtures/test.pdf`. If you don't have one, you'll need to provide a sample PDF.

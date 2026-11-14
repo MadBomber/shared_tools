@@ -337,5 +337,5 @@ On macOS, enable accessibility permissions:
 ## See Also
 
 - [BrowserTool](browser.md) - For web automation
-- [Examples](../examples/index.md#computer-tool-example) - More examples
+- [Examples](../examples/index.md#computer_tool_demorb) - More examples
 - [Driver Guide](../guides/drivers.md) - Custom driver creation

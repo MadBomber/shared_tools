@@ -8,7 +8,7 @@ This example demonstrates how to use the DatabaseTool to execute SQL statements.
 
 ## Example Code
 
-View the complete example: [database_tool_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/database_tool_example.rb)
+View the complete example: [database_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/database_tool_demo.rb)
 
 ## Requirements
 
@@ -271,7 +271,7 @@ end
 
 ```bash
 cd examples
-bundle exec ruby database_tool_example.rb
+bundle exec ruby database_tool_demo.rb
 ```
 
 The example creates an in-memory SQLite database, performs various operations, and demonstrates the tool's capabilities.

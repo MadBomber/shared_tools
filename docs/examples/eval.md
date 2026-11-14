@@ -8,7 +8,7 @@ This example demonstrates how to use the EvalTool facade to execute code in diff
 
 ## Example Code
 
-View the complete example: [eval_tool_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/eval_tool_example.rb)
+View the complete example: [eval_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/eval_tool_demo.rb)
 
 ## Key Features
 
@@ -220,7 +220,7 @@ end
 
 ```bash
 cd examples
-bundle exec ruby eval_tool_example.rb
+bundle exec ruby eval_tool_demo.rb
 ```
 
 The example demonstrates various code evaluation scenarios with auto-execution enabled for demonstration purposes.
