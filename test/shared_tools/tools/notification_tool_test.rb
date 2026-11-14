@@ -166,4 +166,37 @@ class NotificationToolTest < Minitest::Test
     result = null.speak(text: 'hi')
     refute result[:success]
   end
+
+  # MacDriver AppleScript quoting (osascript is stubbed; nothing is displayed)
+  TRICKY_TEXT = 'Total: #{count} #$x #@y say "hi" C:\dir'
+  TRICKY_LITERAL = '"Total: #{count} #$x #@y say \"hi\" C:\\\\dir"'
+
+  def osascript_calls
+    calls  = []
+    status = Struct.new(:success?).new(true)
+    capture = lambda do |*args|
+      calls << args
+      ['button returned:OK', '', status]
+    end
+    Open3.stub(:capture3, capture) { yield SharedTools::Tools::Notification::MacDriver.new }
+    calls
+  end
+
+  def test_mac_notify_quotes_text_as_applescript_literals
+    calls = osascript_calls do |driver|
+      driver.notify(message: TRICKY_TEXT, title: TRICKY_TEXT, subtitle: TRICKY_TEXT, sound: 'Glass')
+    end
+    expected = "display notification #{TRICKY_LITERAL} with title #{TRICKY_LITERAL} " \
+               "subtitle #{TRICKY_LITERAL} sound name \"Glass\""
+    assert_equal [['osascript', '-e', expected]], calls
+  end
+
+  def test_mac_alert_quotes_text_as_applescript_literals
+    calls = osascript_calls do |driver|
+      driver.alert(message: TRICKY_TEXT, title: TRICKY_TEXT, buttons: [TRICKY_TEXT, 'OK'], default_button: TRICKY_TEXT)
+    end
+    expected = "display dialog #{TRICKY_LITERAL} with title #{TRICKY_LITERAL} " \
+               "buttons {#{TRICKY_LITERAL}, \"OK\"} default button #{TRICKY_LITERAL}"
+    assert_equal [['osascript', '-e', expected]], calls
+  end
 end
