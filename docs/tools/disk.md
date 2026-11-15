@@ -549,4 +549,4 @@ disk.execute(action: "file_read", path: "../../etc/passwd")
 
 - [Basic Usage](../getting-started/basic-usage.md) - Common patterns
 - [Working with Drivers](../guides/drivers.md) - Custom driver implementation
-- [Examples](https://github.com/madbomber/shared_tools/tree/main/examples/disk_tool_example.rb)
+- [Examples](https://github.com/madbomber/shared_tools/tree/main/examples/disk_tool_demo.rb)

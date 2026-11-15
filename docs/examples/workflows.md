@@ -4,7 +4,7 @@ This guide demonstrates how to combine multiple SharedTools to create powerful, 
 
 ## Overview
 
-The [comprehensive_workflow_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/comprehensive_workflow_example.rb) demonstrates a realistic scenario that many LLM applications face: collecting data from one source, processing it, and generating multiple output formats.
+The [comprehensive_workflow_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/comprehensive_workflow_demo.rb) demonstrates a realistic scenario that many LLM applications face: collecting data from one source, processing it, and generating multiple output formats.
 
 ## The Workflow: Web Scraping to Database to Reports
 

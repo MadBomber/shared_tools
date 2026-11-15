@@ -273,7 +273,7 @@ Cron expression parsing and next-run time calculation.
 
 ```ruby
 cron = SharedTools::Tools::CronTool.new
-cron.execute(action: "parse", expression: "0 9 * * MON-FRI")
+cron.execute(action: "parse", expression: "0 9 * * 1-5")  # numeric fields only
 ```
 
 ---

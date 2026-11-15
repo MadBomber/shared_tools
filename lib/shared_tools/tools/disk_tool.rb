@@ -125,6 +125,8 @@ module SharedTools
         when Action::FILE_READ then @driver.file_read(path:)
         when Action::FILE_WRITE then @driver.file_write(path:, text:)
         when Action::FILE_REPLACE then @driver.file_replace(old_text:, new_text:, path:)
+        else
+          { error: "Unsupported action: #{action}. Supported actions are: #{ACTIONS.join(', ')}" }
         end
       end
     end

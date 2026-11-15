@@ -502,4 +502,4 @@ Error: Permission denied accessing browser
 
 - [Basic Usage](../getting-started/basic-usage.md) - Common patterns
 - [Working with Drivers](../guides/drivers.md) - Custom driver implementation
-- [Examples](https://github.com/madbomber/shared_tools/tree/main/examples/browser_tool_example.rb)
+- [Examples](https://github.com/madbomber/shared_tools/tree/main/examples/browser_tool_demo.rb)
