@@ -324,12 +324,14 @@ module SharedTools
       end
 
       # Open a TCP connection to a WHOIS server on port 43, send the query,
-      # and return the full plain-text response.
+      # and return the full plain-text response.  Both the connect and each
+      # read/write give up after WHOIS_TIMEOUT seconds.
       def whois_query(server, query)
         @logger.debug("WHOIS query: #{server} <- #{query}")
         response = String.new(encoding: 'binary')
 
         Socket.tcp(server, WHOIS_PORT, connect_timeout: WHOIS_TIMEOUT) do |sock|
+          sock.timeout = WHOIS_TIMEOUT # a server that never answers raises IO::TimeoutError
           sock.write("#{query}\r\n")
           response << sock.read
         end
