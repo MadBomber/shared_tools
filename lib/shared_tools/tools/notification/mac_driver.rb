@@ -13,10 +13,10 @@ module SharedTools
         # @param sound [String, nil] e.g. 'Glass', 'Ping'
         # @return [Hash]
         def notify(message:, title: nil, subtitle: nil, sound: nil)
-          parts = ["display notification #{message.inspect}"]
-          parts << "with title #{title.inspect}" if title
-          parts << "subtitle #{subtitle.inspect}"  if subtitle
-          parts << "sound name #{sound.inspect}"   if sound
+          parts = ["display notification #{applescript_string(message)}"]
+          parts << "with title #{applescript_string(title)}" if title
+          parts << "subtitle #{applescript_string(subtitle)}" if subtitle
+          parts << "sound name #{applescript_string(sound)}" if sound
           run_osascript(parts.join(' '))
             .then { |r| r[:success] ? r.merge(action: 'notify') : r }
         end
@@ -27,11 +27,11 @@ module SharedTools
         # @param default_button [String, nil]
         # @return [Hash] includes :button with label of clicked button
         def alert(message:, title: nil, buttons: ['OK'], default_button: nil)
-          btn_list  = buttons.map(&:inspect).join(', ')
-          script    = "display dialog #{message.inspect}"
-          script   += " with title #{title.inspect}" if title
+          btn_list  = buttons.map { |b| applescript_string(b) }.join(', ')
+          script    = "display dialog #{applescript_string(message)}"
+          script   += " with title #{applescript_string(title)}" if title
           script   += " buttons {#{btn_list}}"
-          script   += " default button #{default_button.inspect}" if default_button
+          script   += " default button #{applescript_string(default_button)}" if default_button
 
           stdout, stderr, status = Open3.capture3('osascript', '-e', script)
           if status.success?
@@ -55,6 +55,12 @@ module SharedTools
         end
 
         private
+
+        # AppleScript string literal: only backslash and double quote are escaped.
+        # (String#inspect also emits \# before {, $ and @, which osascript rejects.)
+        def applescript_string(text)
+          %("#{text.to_s.gsub(/[\\"]/) { |c| "\\#{c}" }}")
+        end
 
         def run_osascript(script)
           _, stderr, status = Open3.capture3('osascript', '-e', script)
