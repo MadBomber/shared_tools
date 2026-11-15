@@ -539,4 +539,4 @@ result = eval_tool.execute(
 
 - [Authorization Guide](../guides/authorization.md) - Control operation approval
 - [Basic Usage](../getting-started/basic-usage.md) - Common patterns
-- [Examples](https://github.com/madbomber/shared_tools/tree/main/examples/eval_tool_example.rb)
+- [Examples](https://github.com/madbomber/shared_tools/tree/main/examples/eval_tool_demo.rb)
