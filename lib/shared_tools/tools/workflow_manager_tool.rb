@@ -1,5 +1,5 @@
 # workflow_manager_tool.rb - Managing state across tool invocations
-require 'ruby_llm/tool'
+require_relative '../../shared_tools'
 require 'securerandom'
 require 'json'
 require 'fileutils'

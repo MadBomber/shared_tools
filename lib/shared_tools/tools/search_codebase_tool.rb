@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative '../../shared_tools'
 require "find"
 require "pathname"
 

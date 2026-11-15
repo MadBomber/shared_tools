@@ -1,5 +1,5 @@
 # data_science_kit.rb - Analytics and ML tools
-require 'ruby_llm/tool'
+require_relative '../../shared_tools'
 require 'json'
 
 module SharedTools

@@ -26,4 +26,35 @@ class RequireShimsTest < Minitest::Test
     _out, err, status = Open3.capture3(RbConfig.ruby, '-I', LIB_DIR, '-e', script)
     assert status.success?, err
   end
+
+  # Each lib/shared_tools/tools/*.rb must load on its own, as the docs show
+  # (`require 'shared_tools/tools/weather_tool'`), without the caller having
+  # required ruby_llm or shared_tools first. The child process forks once per
+  # file (in parallel), so every file is required into a process that has
+  # loaded nothing from this gem.
+  STANDALONE_SCRIPT = <<~'RUBY'
+    pids = ARGV.map do |path|
+      fork do
+        require path
+        exit!(0)
+      rescue Exception => e
+        $stderr.write("#{path}: #{e.class}: #{e.message}\n")
+        exit!(1)
+      end
+    end
+    ok = pids.map { |pid| Process.wait2(pid).last.success? }.all?
+    exit(ok ? 0 : 1)
+  RUBY
+
+  def test_every_tool_file_loads_standalone
+    skip 'needs Process.fork' unless Process.respond_to?(:fork)
+
+    files = Dir[File.join(LIB_DIR, 'shared_tools/tools/*.rb')].sort.map do |path|
+      path.delete_prefix("#{LIB_DIR}/").delete_suffix('.rb')
+    end
+    refute_empty files
+
+    _out, err, status = Open3.capture3(RbConfig.ruby, '-I', LIB_DIR, '-e', STANDALONE_SCRIPT, *files)
+    assert status.success?, "tool files that fail to load on their own:\n#{err}"
+  end
 end

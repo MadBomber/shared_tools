@@ -14,7 +14,7 @@
 # The DispatcherTool can then call the tool with the parameters and return the result.
 
 
-require 'ruby_llm/tool'
+require_relative '../../shared_tools'
 
 module Tools
   # A tool for reading the contents of a file.

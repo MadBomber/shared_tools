@@ -1,5 +1,5 @@
 # calculator_tool.rb - Safe mathematical calculator
-require 'ruby_llm/tool'
+require_relative '../../shared_tools'
 
 DENTAKU_AVAILABLE = begin
   require 'dentaku'

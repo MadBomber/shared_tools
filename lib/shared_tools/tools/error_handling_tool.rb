@@ -1,5 +1,5 @@
 # error_handling_tool.rb - Comprehensive error handling demonstration
-require 'ruby_llm/tool'
+require_relative '../../shared_tools'
 require 'securerandom'
 require 'net/http'
 require 'json'
