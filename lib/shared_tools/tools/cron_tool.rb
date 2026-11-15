@@ -122,8 +122,7 @@ module SharedTools
         while times.size < count && limit > 0
           limit -= 1
           if months_set.include?(t.month) &&
-             days_set.include?(t.day) &&
-             wdays_set.include?(t.wday) &&
+             day_matches?(t, days_set, wdays_set, parts[2], parts[4]) &&
              hrs_set.include?(t.hour) &&
              mins_set.include?(t.min)
             times << t.strftime('%Y-%m-%d %H:%M (%A)')
@@ -227,21 +226,18 @@ module SharedTools
         return range.to_a if value == '*'
 
         result = []
-        value.split(',').each do |part|
+        value.split(',', -1).each do |part|
           if part.include?('/')
-            base_str, step_str = part.split('/')
-            step = step_str.to_i
+            base_str, step_str, extra = part.split('/', -1)
+            raise ArgumentError, "Invalid step expression '#{part}'" if extra
+            step = parse_number(step_str)
             raise ArgumentError, "Step must be >= 1, got #{step}" if step < 1
             base_set = base_str == '*' ? range.to_a : expand_range_part(base_str, range)
             result.concat(base_set.each_with_index.filter_map { |v, i| v if (i % step).zero? })
           elsif part.include?('-')
-            a, b = part.split('-').map(&:to_i)
-            unless range_with_sunday(range).cover?(a) && range_with_sunday(range).cover?(b)
-              raise ArgumentError, "Range #{part} is out of bounds for #{range}"
-            end
-            result.concat((a..b).to_a)
+            result.concat(expand_range_part(part, range))
           else
-            v = part.to_i
+            v = parse_number(part)
             unless range_with_sunday(range).cover?(v)
               raise ArgumentError, "Value #{v} is out of range #{range}"
             end
@@ -252,13 +248,48 @@ module SharedTools
         result.uniq.sort
       end
 
+      # Expand "a-b" to a..b, or a bare start "a" (the base of "a/step") to
+      # a..range.last. Both ends must be in bounds and a must not exceed b.
       def expand_range_part(str, range)
+        bounds = range_with_sunday(range)
+
         if str.include?('-')
-          a, b = str.split('-').map(&:to_i)
+          a_str, b_str, extra = str.split('-', -1)
+          raise ArgumentError, "Invalid range '#{str}'" if extra
+          a = parse_number(a_str)
+          b = parse_number(b_str)
+          unless bounds.cover?(a) && bounds.cover?(b)
+            raise ArgumentError, "Range #{str} is out of bounds for #{range}"
+          end
+          raise ArgumentError, "Range #{str} is reversed; the start must not exceed the end" if a > b
           (a..b).to_a
         else
-          v = str.to_i
+          v = parse_number(str)
+          raise ArgumentError, "Value #{v} is out of range #{range}" unless bounds.cover?(v)
           (v..range.last).to_a
+        end
+      end
+
+      # Parse a decimal cron number. Anything else, such as "MON", "1x" or an
+      # empty string, raises ArgumentError instead of quietly becoming 0.
+      def parse_number(str)
+        unless str.is_a?(String) && str.match?(/\A\d+\z/)
+          raise ArgumentError, "Invalid number '#{str}' in cron field; only numeric values are supported"
+        end
+        Integer(str, 10)
+      end
+
+      # Day-of-month and day-of-week follow Vixie cron: when both fields are
+      # restricted (neither starts with '*'), a day matches if EITHER does;
+      # otherwise both must match (the '*' side matches every day anyway).
+      def day_matches?(time, days_set, wdays_set, day_field, weekday_field)
+        dom = days_set.include?(time.day)
+        dow = wdays_set.include?(time.wday)
+
+        if day_field.start_with?('*') || weekday_field.start_with?('*')
+          dom && dow
+        else
+          dom || dow
         end
       end
 
