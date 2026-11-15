@@ -114,6 +114,18 @@ class ComputerToolTest < Minitest::Test
     assert_equal "wait", SharedTools::Tools::ComputerTool::Action::WAIT
   end
 
+  def test_actions_lists_every_action_constant
+    action_module = SharedTools::Tools::ComputerTool::Action
+    expected = action_module.constants.map { |name| action_module.const_get(name) }
+    assert_equal expected.sort, SharedTools::Tools::ComputerTool::ACTIONS.sort
+  end
+
+  def test_unknown_action_returns_an_error
+    result = @tool.execute(action: "bogus")
+    assert_equal "Unsupported action: bogus. Supported actions are: #{SharedTools::Tools::ComputerTool::ACTIONS.join(', ')}", result[:error]
+    assert_nil @driver.last_action
+  end
+
   def test_key_action
     @tool.execute(action: SharedTools::Tools::ComputerTool::Action::KEY, text: "Return")
     assert_equal :key, @driver.last_action

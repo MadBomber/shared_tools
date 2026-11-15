@@ -49,6 +49,8 @@ module SharedTools
         Action::MOUSE_POSITION,
         Action::MOUSE_MOVE,
         Action::MOUSE_CLICK,
+        Action::MOUSE_DOUBLE_CLICK,
+        Action::MOUSE_TRIPLE_CLICK,
         Action::MOUSE_DOWN,
         Action::MOUSE_DRAG,
         Action::MOUSE_UP,
@@ -195,6 +197,8 @@ module SharedTools
         when Action::TYPE then @driver.type(text:)
         when Action::SCROLL then @driver.scroll(amount: scroll_amount, direction: scroll_direction)
         when Action::WAIT then @driver.wait(duration:)
+        else
+          { error: "Unsupported action: #{action}. Supported actions are: #{ACTIONS.join(', ')}" }
         end
       end
 
