@@ -249,7 +249,7 @@ SharedTools::Tools::ProcessKillTool.new.execute(id: id)
 
 ### 🌐 Network Tools
 
-Guarded HTTP — every request and redirect hop is checked against SSRF (server-side request forgery): only http/https, no embedded credentials, and the resolved IP is rejected (and the connection pinned to it) if it's private, loopback, link-local, cloud-metadata, or otherwise reserved.
+Guarded HTTP — every request and redirect hop is checked against SSRF (server-side request forgery): only http/https, no embedded credentials, and the request is rejected if any resolved IP is private, loopback, link-local, cloud-metadata, or otherwise reserved. The connection is pinned to a vetted IP; if one is unreachable (e.g. IPv6 with no IPv6 route), the next vetted IP is tried.
 
 - **`WebFetchTool`** — fetches a URL and returns readable text (HTML is stripped to text). Read-only, no authorization needed.
 - **`HttpRequestTool`** — a general HTTP client returning status, key headers, and body. GET/HEAD need no authorization; POST/PUT/PATCH/DELETE require it.
