@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
 
   # Core runtime dependencies
   spec.add_dependency "ruby_llm", ">= 2.1.1", "< 3"
-  spec.add_dependency "zeitwerk"
+  spec.add_dependency "zeitwerk", ">= 2.6" # for_gem(warn_on_extra_files:) is new in 2.6.0
   spec.add_dependency "nokogiri"
   spec.add_dependency "csv" # CsvReadTool/CsvWriteTool; a bundled (not default) gem since Ruby 3.4
 

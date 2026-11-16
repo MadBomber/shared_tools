@@ -120,4 +120,14 @@ class SharedToolsTest < Minitest::Test
     assert_includes tool_names, 'workflow_manager'
     assert_includes tool_names, 'dns'
   end
+
+  # lib/shared_tools.rb calls Zeitwerk::Loader.for_gem(warn_on_extra_files: false),
+  # which zeitwerk 2.5.x rejects with ArgumentError.
+  def test_gemspec_requires_a_zeitwerk_that_accepts_warn_on_extra_files
+    spec     = Gem::Specification.load(File.expand_path("../shared_tools.gemspec", __dir__))
+    zeitwerk = spec.runtime_dependencies.find { |dep| dep.name == "zeitwerk" }
+
+    refute zeitwerk.match?("zeitwerk", "2.5.4"), "zeitwerk 2.5.x cannot load the gem"
+    assert zeitwerk.match?("zeitwerk", "2.6.0")
+  end
 end
