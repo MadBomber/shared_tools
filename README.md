@@ -792,7 +792,7 @@ Contributions are welcome! Here's how you can help:
 
 ## Requirements
 
-- Ruby 3.3 or higher
+- Ruby 4.0 or higher
 - RubyLLM gem for LLM integration
 
 ## License
