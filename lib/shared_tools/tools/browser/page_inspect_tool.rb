@@ -22,8 +22,8 @@ module SharedTools
         end
 
         def initialize(driver: nil, logger: nil)
-          @driver = driver || default_driver
           @logger = logger || RubyLLM.logger
+          @driver = driver || DefaultDriver.build(logger: @logger)
         end
 
         def execute(summarize: false)
@@ -37,18 +37,6 @@ module SharedTools
             PageInspect::HtmlSummarizer.summarize_interactive_elements(doc)
           else
             doc.to_html
-          end
-        end
-
-      private
-
-        def default_driver
-          if defined?(Ferrum)
-            FerrumDriver.new(logger: @logger)
-          elsif defined?(Watir)
-            WatirDriver.new(logger: @logger)
-          else
-            raise LoadError, "Browser tools require a driver. Install the 'ferrum' gem or pass a driver: parameter"
           end
         end
       end

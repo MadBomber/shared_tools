@@ -8,7 +8,7 @@ This example demonstrates how to use the BrowserTool facade to automate browser 
 
 ## Example Code
 
-View the complete example: [browser_tool_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/browser_tool_example.rb)
+View the complete example: [browser_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/browser_tool_demo.rb)
 
 ## Key Features
 
@@ -137,7 +137,7 @@ browser.cleanup!
 
 ```bash
 cd examples
-bundle exec ruby browser_tool_example.rb
+bundle exec ruby browser_tool_demo.rb
 ```
 
 The example uses a demo driver that simulates browser interactions. For real browser automation, you would use a driver like `WatirDriver` with a real browser instance.

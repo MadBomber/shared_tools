@@ -86,10 +86,12 @@ module SharedTools
       TEXT
 
       # Define all possible parameters
-      param :action, desc: "The action to perform"
-      param :url, desc: "URL (required for visit)"
-      param :selector, desc: "CSS selector (required for click)"
-      param :full_html, desc: "Get full HTML vs summary"
+      parameters do
+        string  :action,    description: "The action to perform"
+        string  :url,       description: "URL (required for visit)", required: false
+        string  :selector,  description: "CSS selector (required for click)", required: false
+        boolean :full_html, description: "Get full HTML vs summary", required: false
+      end
 
       def initialize(driver: nil, logger: nil)
         @driver = driver || default_driver

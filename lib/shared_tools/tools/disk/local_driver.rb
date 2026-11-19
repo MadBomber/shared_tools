@@ -71,20 +71,6 @@ module SharedTools
         def file_write(path:, text:)
           File.write(resolve!(path:), text)
         end
-
-      protected
-
-        # @param path [String]
-        #
-        # @raise [SecurityError]
-        #
-        # @return Pathname
-        def resolve!(path:)
-          @root.join(path).tap do |resolved|
-            relative = resolved.ascend.any? { |ancestor| ancestor.eql?(@root) }
-            raise SecurityError, "unknown path=#{resolved}" unless relative
-          end
-        end
       end
     end
   end

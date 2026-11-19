@@ -38,6 +38,25 @@ class GitCheckoutToolTest < Minitest::Test
     assert_equal "other", branch
   end
 
+  def test_ref_naming_tracked_file_does_not_discard_changes
+    path = File.join(@repo, "file.txt")
+    File.write(path, "uncommitted\n")
+
+    result = @tool.execute(ref: "file.txt")
+
+    assert result.is_a?(Hash)
+    assert_equal "uncommitted\n", File.read(path)
+  end
+
+  def test_switches_to_commit_sha
+    sha = Dir.chdir(@repo) { `git rev-parse HEAD`.strip }
+
+    @tool.execute(ref: sha)
+
+    head = Dir.chdir(@repo) { `git rev-parse HEAD`.strip }
+    assert_equal sha, head
+  end
+
   def test_invalid_ref_rejected
     result = @tool.execute(ref: "--evil")
 

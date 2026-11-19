@@ -279,8 +279,10 @@ class MyTool < ::RubyLLM::Tool
   description "What this tool does"
 
   # DSL for parameters
-  param :action, desc: "Action to perform"
-  param :path, desc: "Path parameter"
+  parameters do
+    string :action, description: "Action to perform"
+    string :path,   description: "Path parameter"
+  end
 
   # Initialize with optional dependencies
   def initialize(driver: nil, logger: nil)
@@ -365,7 +367,7 @@ raise ArgumentError, "url required for visit action" if url.nil?
 
 2. **LoadError**: Missing dependencies
 ```ruby
-raise LoadError, "watir gem required" unless defined?(Watir)
+raise LoadError, "ferrum gem required" unless DefaultDriver.gem_loaded?("ferrum")
 ```
 
 3. **NotImplementedError**: Unimplemented driver methods

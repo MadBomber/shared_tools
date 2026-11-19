@@ -71,4 +71,13 @@ class UrlGuardTest < Minitest::Test
 
     assert_kind_of String, resolution.address
   end
+
+  def test_resolve_returns_every_vetted_address
+    @guard.stub(:resolve, ["2606:4700:10::ac42:93f3", "172.66.147.243"]) do
+      resolution = @guard.resolve!("https://example.com")
+
+      assert_equal ["2606:4700:10::ac42:93f3", "172.66.147.243"], resolution.addresses
+      assert_equal "2606:4700:10::ac42:93f3", resolution.address
+    end
+  end
 end

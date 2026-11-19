@@ -46,6 +46,9 @@ module SharedTools
           args = ["checkout"]
           args << "-b" if create
           args << ref
+          # "--" makes git read ref only as a branch/commit, never as a pathspec
+          # that would overwrite a tracked file's uncommitted changes.
+          args << "--"
 
           allowed = SharedTools.execute?(tool: self.class.to_s, stuff: args.join(" "))
           unless allowed

@@ -155,13 +155,11 @@ PROMPT
 ```ruby
 require 'ruby_llm'
 
-agent = RubyLLM::Agent.new(
-  tools: [SharedTools::Tools::WeatherTool.new]
-)
+chat = RubyLLM.chat.with_tools(SharedTools::Tools::WeatherTool.new)
 
-agent.process("What's the weather like in Tokyo right now?")
-agent.process("Give me a 3-day forecast for London in metric units.")
-agent.process("I'm planning a trip. Fetch weather for Paris, Barcelona, and Amsterdam and recommend the best destination for outdoor sightseeing.")
+chat.ask("What's the weather like in Tokyo right now?")
+chat.ask("Give me a 3-day forecast for London in metric units.")
+chat.ask("I'm planning a trip. Fetch weather for Paris, Barcelona, and Amsterdam and recommend the best destination for outdoor sightseeing.")
 ```
 
 ## Error Handling

@@ -164,7 +164,9 @@ module SharedTools
 
       description "Tool description"
 
-      param :action, desc: "Action to perform"
+      parameters do
+        string :action, description: "Action to perform"
+      end
 
       def execute(action:)
         # Implementation
@@ -247,9 +249,11 @@ module SharedTools
         - Example usage
       TEXT
 
-      param :action, desc: "Action to perform"
-      param :required_param, desc: "Required parameter"
-      param :optional_param, desc: "Optional parameter"
+      parameters do
+        string :action,         description: "Action to perform"
+        string :required_param, description: "Required parameter"
+        string :optional_param, description: "Optional parameter", required: false
+      end
 
       def initialize(driver: nil, logger: nil)
         @driver = driver

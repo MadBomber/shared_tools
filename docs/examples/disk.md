@@ -8,7 +8,7 @@ This example demonstrates how to use the DiskTool facade to perform file system 
 
 ## Example Code
 
-View the complete example: [disk_tool_example.rb](https://github.com/madbomber/shared_tools/blob/main/examples/disk_tool_example.rb)
+View the complete example: [disk_tool_demo.rb](https://github.com/madbomber/shared_tools/blob/main/examples/disk_tool_demo.rb)
 
 ## Key Features
 
@@ -199,7 +199,7 @@ end
 
 ```bash
 cd examples
-bundle exec ruby disk_tool_example.rb
+bundle exec ruby disk_tool_demo.rb
 ```
 
 The example creates a temporary directory, performs various file operations, and cleans up afterward.

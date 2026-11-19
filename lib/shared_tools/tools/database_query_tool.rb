@@ -1,5 +1,5 @@
 # database_query_tool.rb - Safe database query execution
-require 'ruby_llm/tool'
+require_relative '../../shared_tools'
 
 SEQUEL_AVAILABLE = begin
   require 'sequel'

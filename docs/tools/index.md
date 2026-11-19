@@ -6,7 +6,7 @@ SharedTools provides a collection of LLM-callable tools for common operations. E
 
 ### [BrowserTool](browser.md)
 
-Web browser automation using Watir for visiting pages, inspecting content, clicking elements, filling forms, and capturing screenshots.
+Web browser automation using Ferrum (or Watir) for visiting pages, inspecting content, clicking elements, filling forms, and capturing screenshots.
 
 **Actions:** `visit`, `page_inspect`, `ui_inspect`, `selector_inspect`, `click`, `text_field_set`, `screenshot`
 
@@ -44,7 +44,7 @@ Execute code in multiple languages with authorization controls.
 
 ```ruby
 eval_tool = SharedTools::Tools::EvalTool.new
-result = eval_tool.execute(language: "ruby", code: "[1,2,3].sum")
+result = eval_tool.execute(action: "ruby", code: "[1,2,3].sum")
 ```
 
 [View EvalTool Documentation →](eval.md)
@@ -273,7 +273,7 @@ Cron expression parsing and next-run time calculation.
 
 ```ruby
 cron = SharedTools::Tools::CronTool.new
-cron.execute(expression: "0 9 * * MON-FRI")
+cron.execute(action: "parse", expression: "0 9 * * 1-5")  # numeric fields only
 ```
 
 ---
@@ -326,7 +326,7 @@ error_tool.execute(operation: "process", data: {name: "test", value: 42}, max_re
 
 | Tool | Primary Use | Requires Gem | Requires API Key |
 |------|-------------|-------------|-----------------|
-| BrowserTool | Web automation | watir | No |
+| BrowserTool | Web automation | ferrum (or watir) | No |
 | DiskTool | File operations | None | No |
 | EvalTool | Code execution | None (Python optional) | No |
 | DocTool | Document reading | pdf-reader, docx, roo | No |

@@ -5,6 +5,13 @@ require "test_helper"
 class ClipboardToolTest < Minitest::Test
   def setup
     @tool = SharedTools::Tools::ClipboardTool.new
+    # Save the developer's clipboard so the tests don't destroy it.
+    saved = @tool.execute(action: 'read')
+    @saved_clipboard = saved[:content] if saved[:success]
+  end
+
+  def teardown
+    @tool.execute(action: 'write', text: @saved_clipboard) if @saved_clipboard
   end
 
   def test_tool_name
@@ -18,7 +25,7 @@ class ClipboardToolTest < Minitest::Test
   def test_write_then_read_roundtrip
     text = "clipboard_test_#{Time.now.to_i}"
     write_result = @tool.execute(action: 'write', text: text)
-    assert write_result[:success], "write failed: #{write_result.inspect}"
+    skip_unless_clipboard(write_result)
 
     read_result = @tool.execute(action: 'read')
     assert read_result[:success]
@@ -28,7 +35,7 @@ class ClipboardToolTest < Minitest::Test
   end
 
   def test_clear_empties_clipboard
-    @tool.execute(action: 'write', text: 'something')
+    skip_unless_clipboard(@tool.execute(action: 'write', text: 'something'))
     clear_result = @tool.execute(action: 'clear')
     assert clear_result[:success]
 
@@ -50,5 +57,13 @@ class ClipboardToolTest < Minitest::Test
     refute result[:success]
   rescue => e
     skip "Clipboard not available in this environment: #{e.message}"
+  end
+
+  private
+
+  # The tool reports a missing clipboard program as { success: false }
+  # rather than raising, so check the result instead of rescuing.
+  def skip_unless_clipboard(result)
+    skip "Clipboard not available in this environment: #{result[:error]}" unless result[:success]
   end
 end

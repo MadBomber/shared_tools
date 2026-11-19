@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../../shared_tools'
+
 module SharedTools
   module Tools
     # Cross-platform notification tool for desktop banners, modal dialogs, and TTS.

@@ -1,5 +1,5 @@
 # data_science_kit.rb - Analytics and ML tools
-require 'ruby_llm/tool'
+require_relative '../../shared_tools'
 require 'json'
 
 module SharedTools
@@ -91,7 +91,8 @@ module SharedTools
         @logger = logger || RubyLLM.logger
       end
 
-      def execute(analysis_type:, data_source: nil, data: nil, **parameters)
+      def execute(analysis_type:, data_source: nil, data: nil, parameters: nil, **top_level_parameters)
+        parameters = merge_parameters(top_level_parameters, parameters)
         analysis_start = Time.now
 
         begin
@@ -155,6 +156,14 @@ module SharedTools
       end
 
       private
+
+      # Settings may arrive as top-level keywords or, as the schema declares
+      # them, nested under :parameters. A model sends the nested form, with
+      # string keys (ruby_llm symbolizes only top-level keys). Nested values
+      # win over top-level ones.
+      def merge_parameters(top_level, nested)
+        top_level.merge((nested || {}).to_h.transform_keys(&:to_sym))
+      end
 
       # Load data from various sources
       def load_data(source)
@@ -294,13 +303,13 @@ module SharedTools
             min: sorted.first.round(2),
             max: sorted.last.round(2),
             mean: (values.sum / values.length).round(2),
-            median: sorted[sorted.length / 2].round(2),
+            median: percentile(sorted, 0.5).round(2),
             std_dev: calculate_std_dev(values).round(2)
           }
 
           if include_quartiles
-            stats[:q1] = sorted[sorted.length / 4].round(2)
-            stats[:q3] = sorted[(sorted.length * 3) / 4].round(2)
+            stats[:q1] = percentile(sorted, 0.25).round(2)
+            stats[:q3] = percentile(sorted, 0.75).round(2)
             stats[:iqr] = (stats[:q3] - stats[:q1]).round(2)
           end
 
@@ -504,7 +513,7 @@ module SharedTools
 
         data.first.keys.select do |key|
           sample_values = data.first(10).map { |row| row[key] }
-          sample_values.all? { |v| v.to_s.match?(/^-?\d+\.?\d*$/) }
+          sample_values.all? { |v| v.to_s.match?(/\A-?\d++\.?\d*+\z/) }
         end
       end
 
@@ -514,8 +523,17 @@ module SharedTools
         data.first.keys.select do |key|
           sample_values = data.first(10).map { |row| row[key] }
           unique_ratio = sample_values.uniq.length.to_f / sample_values.length
-          unique_ratio < 0.7 && !sample_values.all? { |v| v.to_s.match?(/^-?\d+\.?\d*$/) }
+          unique_ratio < 0.7 && !sample_values.all? { |v| v.to_s.match?(/\A-?\d++\.?\d*+\z/) }
         end
+      end
+
+      # Linear interpolation between closest ranks (R type 7, the default in
+      # R, NumPy and Excel's PERCENTILE.INC). `sorted` must be sorted ascending.
+      def percentile(sorted, fraction)
+        position = (sorted.length - 1) * fraction
+        lower = sorted[position.floor]
+        upper = sorted[position.ceil]
+        lower + ((upper - lower) * (position - position.floor))
       end
 
       def calculate_std_dev(values)

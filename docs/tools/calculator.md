@@ -263,14 +263,12 @@ puts result[:result]  # => true
 ```ruby
 require 'ruby_llm'
 
-agent = RubyLLM::Agent.new(
-  tools: [
-    SharedTools::Tools::CalculatorTool.new
-  ]
+chat = RubyLLM.chat.with_tools(
+  SharedTools::Tools::CalculatorTool.new
 )
 
 # Let the LLM use the calculator
-response = agent.process("What is the square root of 144 multiplied by 3?")
+response = chat.ask("What is the square root of 144 multiplied by 3?")
 # The agent will use the calculator tool and return: 36
 ```
 

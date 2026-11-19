@@ -42,6 +42,31 @@ class DataScienceKitTest < Minitest::Test
     assert stats[:iqr]
   end
 
+  def test_statistical_summary_median_and_quartiles_even_count
+    result = @tool.execute(
+      analysis_type: "statistical_summary",
+      data: "v,w\n1,1\n2,1\n3,1\n4,1"
+    )
+
+    stats = result[:result][:column_statistics]["v"]
+    assert_equal 2.5, stats[:median]
+    assert_equal 1.75, stats[:q1]
+    assert_equal 3.25, stats[:q3]
+    assert_equal 1.5, stats[:iqr]
+  end
+
+  def test_statistical_summary_median_and_quartiles_odd_count
+    result = @tool.execute(
+      analysis_type: "statistical_summary",
+      data: "v,w\n1,1\n2,1\n3,1\n4,1\n5,1"
+    )
+
+    stats = result[:result][:column_statistics]["v"]
+    assert_equal 3.0, stats[:median]
+    assert_equal 2.0, stats[:q1]
+    assert_equal 4.0, stats[:q3]
+  end
+
   def test_statistical_summary_detects_outliers
     result = @tool.execute(
       analysis_type: "statistical_summary",
@@ -465,5 +490,28 @@ class DataScienceKitTest < Minitest::Test
       assert result[:success], "Should predict for #{target}"
       assert_equal target, result[:result][:target_column]
     end
+  end
+
+  # Nested parameters, as the schema declares them (#31)
+  XY_JSON = '[{"x":1,"y":2},{"x":2,"y":4},{"x":3,"y":7},{"x":4,"y":8}]'
+
+  def test_nested_parameters_include_quartiles_false_with_string_keys
+    default = @tool.execute(analysis_type: "statistical_summary", data: XY_JSON)
+    assert default[:result][:column_statistics]["x"].key?(:q1)
+
+    result = @tool.execute(analysis_type: "statistical_summary", data: XY_JSON,
+                           parameters: { "include_quartiles" => false })
+    assert result[:success], result[:error]
+    refute result[:result][:column_statistics]["x"].key?(:q1)
+  end
+
+  def test_top_level_parameters_still_work
+    result = @tool.execute(analysis_type: "statistical_summary", data: XY_JSON, include_quartiles: false)
+    refute result[:result][:column_statistics]["x"].key?(:q1)
+  end
+
+  def test_merge_parameters
+    assert_equal({ a: 1, b: 3 }, @tool.send(:merge_parameters, { a: 1, b: 2 }, { "b" => 3 }))
+    assert_equal({ a: 1 }, @tool.send(:merge_parameters, { a: 1 }, nil))
   end
 end

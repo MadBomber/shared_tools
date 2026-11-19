@@ -10,7 +10,7 @@ SharedTools provides a collection of reusable tools designed to work seamlessly 
 
 ### Key Features
 
-- **Browser Automation**: Control web browsers with Watir for visiting pages, clicking elements, filling forms, and taking screenshots
+- **Browser Automation**: Control web browsers with Ferrum (or Watir) for visiting pages, clicking elements, filling forms, and taking screenshots
 - **File System Operations**: Secure file and directory operations with path traversal protection
 - **Code Evaluation**: Execute Ruby, Python, and shell commands with authorization controls
 - **Database Operations**: Execute SQL queries against SQLite, PostgreSQL, and other databases
@@ -85,7 +85,7 @@ browser.cleanup!
 ## Available Tools
 
 ### Core Tools
-- **[BrowserTool](tools/browser.md)** - Web browser automation with Watir
+- **[BrowserTool](tools/browser.md)** - Web browser automation with Ferrum (or Watir)
 - **[DiskTool](tools/disk.md)** - File and directory operations
 - **[EvalTool](tools/eval.md)** - Code execution (Ruby, Python, Shell)
 - **[DocTool](tools/doc.md)** - Document reading: plain text, PDF, Word, and spreadsheets
@@ -165,7 +165,7 @@ See [MCP Clients README](https://github.com/madbomber/shared_tools/blob/main/lib
 
 - Ruby >= 3.3.0
 - RubyLLM gem
-- Optional: watir (browser), sqlite3/pg (databases), pdf-reader (PDFs), docx (Word), roo (spreadsheets)
+- Optional: ferrum or watir (browser), sqlite3/pg (databases), pdf-reader (PDFs), docx (Word), roo (spreadsheets)
 
 ## License
 

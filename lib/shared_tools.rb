@@ -7,7 +7,6 @@ require "zeitwerk"
 
 # Set up Zeitwerk loader outside module, then pass reference in
 SharedToolsLoader = Zeitwerk::Loader.for_gem(warn_on_extra_files: false)
-SharedToolsLoader.ignore("#{__dir__}/shared_tools/ruby_llm.rb")
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/mcp.rb")       # Documentation/loader file only
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/mcp")          # Entire mcp directory (naming issues)
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/browser.rb")
@@ -19,7 +18,6 @@ SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/docker.rb")
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/eval.rb")
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/git.rb")
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/notification.rb")
-SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/incomplete")  # Empty/incomplete tools directory
 SharedToolsLoader.ignore("#{__dir__}/shared_tools/tools/enabler.rb") # Experimental; defines Tools::Enabler not SharedTools::Tools::Enabler
 
 # Ignore per-tool shim files (require-path shortcuts: require 'shared_tools/<tool_name>')

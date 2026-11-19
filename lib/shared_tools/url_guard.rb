@@ -14,18 +14,19 @@ module SharedTools
   #     private, loopback, link-local (incl. the cloud metadata IP), CGNAT,
   #     unique-local IPv6, or otherwise reserved.
   #
-  # resolve! also returns a vetted IP so the caller can pin the socket to it
-  # (Net::HTTP#ipaddr=), closing the DNS-rebinding window: the address that
-  # was vetted is exactly the one connected to, while TLS/SNI/cert checks
-  # still use the hostname. Re-run resolve! on every redirect hop (the http
+  # resolve! also returns the vetted IPs so the caller can pin the socket to
+  # one of them (Net::HTTP#ipaddr=), closing the DNS-rebinding window: the
+  # address that was vetted is exactly the one connected to, while
+  # TLS/SNI/cert checks still use the hostname. Re-run resolve! on every redirect hop (the http
   # helper does).
   class UrlGuard
     class Blocked < StandardError; end
 
-    # A vetted result: the parsed URI plus a concrete IP that every
-    # connection should be pinned to, so a second DNS lookup at connect time
-    # can't swap in a private address (DNS rebinding).
-    Resolution = Struct.new(:uri, :address, keyword_init: true)
+    # A vetted result: the parsed URI plus the concrete IPs a connection may
+    # be pinned to, so a second DNS lookup at connect time can't swap in a
+    # private address (DNS rebinding). +address+ is the first of
+    # +addresses+; a caller that cannot reach it may try the others.
+    Resolution = Struct.new(:uri, :address, :addresses, keyword_init: true)
 
     ALLOWED_SCHEMES = %w[http https].freeze
 
@@ -47,8 +48,8 @@ module SharedTools
       resolve!(url).uri
     end
 
-    # Like check!, but also returns a vetted IP address to pin the connection
-    # to (see Resolution). Raises Blocked otherwise.
+    # Like check!, but also returns the vetted IP addresses to pin the
+    # connection to (see Resolution). Raises Blocked otherwise.
     def resolve!(url)
       uri = parse(url)
       raise Blocked, "only http/https URLs are allowed" unless ALLOWED_SCHEMES.include?(uri.scheme)
@@ -57,8 +58,8 @@ module SharedTools
 
       host = uri.host.downcase
       enforce_domain_lists(host)
-      address = vetted_address(host)
-      Resolution.new(uri: uri, address: address)
+      addresses = vetted_addresses(host)
+      Resolution.new(uri: uri, address: addresses.first, addresses: addresses)
     end
 
     private
@@ -78,15 +79,15 @@ module SharedTools
     end
 
     # Resolve the host, block the request if ANY resolved address is in a
-    # blocked range, and return the first address for the caller to pin to.
-    def vetted_address(host)
+    # blocked range, and return every address for the caller to pin to.
+    def vetted_addresses(host)
       addresses = resolve(host)
       raise Blocked, "could not resolve host: #{host}" if addresses.empty?
 
       addresses.each do |addr|
         raise Blocked, "host resolves to a blocked address (#{addr})" if blocked_ip?(addr)
       end
-      addresses.first
+      addresses
     end
 
     def resolve(host)

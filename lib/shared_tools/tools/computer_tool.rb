@@ -49,6 +49,8 @@ module SharedTools
         Action::MOUSE_POSITION,
         Action::MOUSE_MOVE,
         Action::MOUSE_CLICK,
+        Action::MOUSE_DOUBLE_CLICK,
+        Action::MOUSE_TRIPLE_CLICK,
         Action::MOUSE_DOWN,
         Action::MOUSE_DRAG,
         Action::MOUSE_UP,
@@ -195,18 +197,35 @@ module SharedTools
         when Action::TYPE then @driver.type(text:)
         when Action::SCROLL then @driver.scroll(amount: scroll_amount, direction: scroll_direction)
         when Action::WAIT then @driver.wait(duration:)
+        else
+          { error: "Unsupported action: #{action}. Supported actions are: #{ACTIONS.join(', ')}" }
         end
       end
 
     private
 
+      # The macos gem is required here, on demand, because eager loading
+      # (SharedTools.load_all_tools) never loads tools/computer.rb, which is
+      # the only other place that requires it.
+      #
+      # @raise [LoadError] when not on macOS or the macos gem is not installed
       # @return [Computer::BaseDriver]
       def default_driver
-        if RUBY_PLATFORM.include?('darwin') && defined?(MacOS)
-          Computer::MacDriver.new
-        else
-          raise LoadError, "ComputerTool requires a platform-specific driver. Either install the required gem for your platform or pass a driver: parameter"
-        end
+        raise LoadError, "ComputerTool needs a driver. On macOS install the 'macos' gem; elsewhere pass a driver: parameter" unless mac_driver_available?
+
+        Computer::MacDriver.new
+      end
+
+      # @param platform [String] defaults to RUBY_PLATFORM
+      # @param gem_name [String] require path of the macOS automation gem
+      # @return [Boolean]
+      def mac_driver_available?(platform: RUBY_PLATFORM, gem_name: 'macos')
+        return false unless platform.include?('darwin')
+
+        require gem_name
+        true
+      rescue LoadError
+        false
       end
     end
   end

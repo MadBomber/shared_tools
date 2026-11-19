@@ -90,9 +90,43 @@ class DnsToolTest < Minitest::Test
     assert result[:error]
   end
 
+  # A WHOIS server that accepts the connection and never answers
+  def test_whois_gives_up_on_a_silent_server
+    lookup = nil
+    server = TCPServer.new('127.0.0.1', 0)
+    port   = server.addr[1]
+    tcp    = Socket.method(:tcp)
+    silent = ->(_host, _port, **opts, &blk) { tcp.call('127.0.0.1', port, **opts, &blk) }
+    with_whois_timeout(0.5) do
+      Socket.stub(:tcp, silent) do
+        lookup = Thread.new { @tool.execute(action: 'whois', host: '192.0.2.1') }
+        flunk 'WHOIS lookup still blocked after 5s' unless lookup.join(5)
+
+        refute lookup.value[:success]
+        assert_equal 'whois', lookup.value[:type]
+      end
+    end
+  ensure
+    lookup&.kill
+    server&.close
+  end
+
   # Response shape
   def test_result_always_has_success_key
     result = @tool.execute(action: 'a', host: 'localhost')
     assert result.key?(:success)
+  end
+
+  private
+
+  def with_whois_timeout(seconds)
+    klass    = SharedTools::Tools::DnsTool
+    original = klass::WHOIS_TIMEOUT
+    klass.send(:remove_const, :WHOIS_TIMEOUT)
+    klass.const_set(:WHOIS_TIMEOUT, seconds)
+    yield
+  ensure
+    klass.send(:remove_const, :WHOIS_TIMEOUT)
+    klass.const_set(:WHOIS_TIMEOUT, original)
   end
 end
